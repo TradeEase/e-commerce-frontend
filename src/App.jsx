@@ -7,7 +7,9 @@ import adminview from "./admin/adminview";
 import NavBar from "./components/NavBar";
 import Footer from "./components/Footer";
 import Home from "./customer/home";
-import login from "./login/login";
+import LoginPage from './login/LoginPage';
+import Signup from './login/Signup';
+import ForgotPassword from './login/ForgotPassword';
 
 const Layout =()=>{
   return(
@@ -48,6 +50,11 @@ function App(){
     <div className="app">
       <div className="container">
         <RouterProvider router={router} />
+        <Routes>
+                <Route path="/" element={<LoginPage />} />
+                <Route path="/signup" element={<Signup />} />
+                <Route path="/forgot-password" element={<ForgotPassword />} />
+            </Routes>
       </div>
     </div>
     
