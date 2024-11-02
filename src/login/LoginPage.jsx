@@ -1,13 +1,14 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import './Form.css';
+import loginimg from '../assets/LoginIMG.jpg';
 
 function Login() {
     return (
         <div className="auth-container">
             <div className="auth-box">
                 <div className="auth-image">
-                    <img src="LoginIMG.jpg" alt="Login visual" />
+                    <img src={loginimg} alt="Login visual" />
                 </div>
                 <div className="auth-form">
                     <h1>FASCO</h1>

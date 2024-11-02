@@ -33,6 +33,7 @@
 .auth-form {
     flex: 1;
     padding: 2rem;
+    color: #333;
 }
 
 .auth-form h1, .auth-form h2 {
