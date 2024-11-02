@@ -10,7 +10,7 @@ import Home from "./customer/home";
 import LoginPage from './login/LoginPage';
 import Signup from './login/Signup';
 import ForgotPassword from './login/ForgotPassword';
-
+import EnterConfirmationCode from './login/EnterConfirmationCode';
 const Layout =()=>{
   return(
     <div>
