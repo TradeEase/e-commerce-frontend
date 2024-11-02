@@ -13,7 +13,7 @@ const Layout =()=>{
   return(
     <div>
       <NavBar/>
-      <Home/>
+      <Outlet />
       <Footer/>
     </div>
   )
@@ -25,22 +25,19 @@ const router = createBrowserRouter([
     element:<Layout/>, 
     children:[
       {
-        path: "/",
-        element: <home />
+        path: "/home",
+        element: <Home />
       },
       {
         path: "/adminview",
         element: <adminview />
       }
-     
-
     ]
   },
   {
     path: "/login",
     element: <login/>,
-  }
-  
+  }  
 ]);
 
 function App(){
@@ -49,11 +46,8 @@ function App(){
       <div className="container">
         <RouterProvider router={router} />
       </div>
-    </div>
-    
+    </div> 
   )
 }
-
-
 
 export default App;
