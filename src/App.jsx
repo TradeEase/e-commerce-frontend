@@ -6,14 +6,14 @@ import {
 import adminview from "./admin/adminview";
 import NavBar from "./components/NavBar";
 import Footer from "./components/Footer";
-import home from "./customer/home";
+import Home from "./customer/home";
 import login from "./login/login";
 
 const Layout =()=>{
   return(
     <div>
       <NavBar/>
-      <Outlet/>
+      <Home/>
       <Footer/>
     </div>
   )
