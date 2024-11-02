@@ -3,7 +3,7 @@ import {
   RouterProvider,
   Outlet
 } from "react-router-dom";
-import adminview from "./admin/adminview";
+import AdminView from "./admin/adminview";
 import NavBar from "./components/NavBar";
 import Footer from "./components/Footer";
 import Home from "./customer/home";
@@ -11,56 +11,53 @@ import LoginPage from './login/LoginPage';
 import Signup from './login/Signup';
 import ForgotPassword from './login/ForgotPassword';
 
-const Layout =()=>{
-  return(
+const Layout = () => {
+  return (
     <div>
-      <NavBar/>
-      <Home/>
-      <Footer/>
+      <NavBar />
+      <Outlet /> {/* This renders nested routes */}
+      <Footer />
     </div>
-  )
-}
+  );
+};
 
 const router = createBrowserRouter([
   {
     path: "/",
-    element:<Layout/>, 
-    children:[
+    element: <Layout />,
+    children: [
       {
         path: "/",
-        element: <home />
+        element: <Home />
       },
       {
         path: "/adminview",
-        element: <adminview />
+        element: <AdminView />
       }
-     
-
     ]
   },
   {
     path: "/login",
-    element: <login/>,
+    element: <LoginPage />,
+  },
+  {
+    path: "/signup",
+    element: <Signup />
+  },
+  {
+    path: "/forgot-password",
+    element: <ForgotPassword />
   }
-  
 ]);
 
-function App(){
-  return(
+function App() {
+  return (
     <div className="app">
       <div className="container">
         <RouterProvider router={router} />
-        <Routes>
-                <Route path="/" element={<LoginPage />} />
-                <Route path="/signup" element={<Signup />} />
-                <Route path="/forgot-password" element={<ForgotPassword />} />
-            </Routes>
       </div>
     </div>
-    
-  )
+  );
 }
-
-
 
 export default App;

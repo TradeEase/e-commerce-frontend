@@ -1,13 +1,14 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import './Form.css';
+import signup from '../assets/SignIMG.jpg';
 
 function ForgotPassword() {
     return (
         <div className="auth-container">
             <div className="auth-box">
                 <div className="auth-image">
-                    <img src="SignIMG.jpg" alt="Forgot Password visual" />
+                    <img src={signup} alt="Forgot Password visual" />
                 </div>
                 <div className="auth-form">
                     <h1>FASCO</h1>
