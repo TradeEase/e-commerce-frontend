@@ -10,6 +10,8 @@ import Home from "./customer/home";
 import LoginPage from './login/LoginPage';
 import Signup from './login/Signup';
 import ForgotPassword from './login/ForgotPassword';
+import Orders from "./components/orders/orders";
+import Cancel_Orders from "./components/Cancel_Orders/Cancel_Orders";
 
 const Layout = () => {
   return (
@@ -47,7 +49,15 @@ const router = createBrowserRouter([
   {
     path: "/forgot-password",
     element: <ForgotPassword />
-  }
+  },
+  {
+    path: "/orders",
+    element: <Orders />
+  },
+  {
+    path: "/cancel-orders",
+    element: <Cancel_Orders />
+  },
 ]);
 
 function App() {
