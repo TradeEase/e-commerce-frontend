@@ -12,6 +12,7 @@ import Signup from './login/Signup';
 import ForgotPassword from './login/ForgotPassword';
 import Orders from "./components/orders/orders";
 import Cancel_Orders from "./components/Cancel_Orders/Cancel_Orders";
+import Payments1 from "./components/Payments/Payments1";
 
 const Layout = () => {
   return (
@@ -57,6 +58,10 @@ const router = createBrowserRouter([
   {
     path: "/cancel-orders",
     element: <Cancel_Orders />
+  },
+  {
+    path: "/Payments1",
+    element: <Payments1 />
   },
 ]);
 
