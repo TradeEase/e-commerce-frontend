@@ -3,76 +3,80 @@ import {
   RouterProvider,
   Outlet
 } from "react-router-dom";
-import AdminView from "./admin/adminview";
+import adminview from "./admin/adminview";
 import NavBar from "./components/NavBar";
 import Footer from "./components/Footer";
-import Home from "./customer/home";
-import LoginPage from './login/LoginPage';
-import Signup from './login/Signup';
-import ForgotPassword from './login/ForgotPassword';
-import Orders from "./components/orders/orders";
-import Cancel_Orders from "./components/Cancel_Orders/Cancel_Orders";
-import Payments1 from "./components/Payments/Payments1";
+import home from "./customer/home";
+import login from "./login/login";
+import ProfilePage from "./profile/ProfilePage";
+import ContactUs from "./contact/ContactUs";
+import Categories from "./adminPages/Categories";
+import AdminCreation from "./adminPages/AdminCreation";
 
-const Layout = () => {
-  return (
+
+
+const Layout =()=>{
+  return(
     <div>
-      <NavBar />
-      <Outlet /> {/* This renders nested routes */}
-      <Footer />
+      <NavBar/>
+      <Outlet/>
+      <Footer/>
     </div>
-  );
-};
+  )
+}
 
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <Layout />,
-    children: [
+    element:<Layout/>, 
+    children:[
       {
         path: "/",
-        element: <Home />
+        element: <home />
       },
       {
         path: "/adminview",
-        element: <AdminView />
-      }
+        element: <adminview />
+      },
+      {
+        path: "/profile", 
+        element: <ProfilePage />
+      },
+      {
+        path: "/contact", 
+        element: <ContactUs/>
+      },
+      
+      {
+        path: "/categories", 
+        element: <Categories/>
+      },
+      {
+        path: "/admincreation", 
+        element: <AdminCreation/>
+      },
+     
+
     ]
   },
   {
     path: "/login",
-    element: <LoginPage />,
-  },
-  {
-    path: "/signup",
-    element: <Signup />
-  },
-  {
-    path: "/forgot-password",
-    element: <ForgotPassword />
-  },
-  {
-    path: "/orders",
-    element: <Orders />
-  },
-  {
-    path: "/cancel-orders",
-    element: <Cancel_Orders />
-  },
-  {
-    path: "/Payments1",
-    element: <Payments1 />
-  },
+    element: <login/>,
+  }
+  
 ]);
 
-function App() {
-  return (
+function App(){
+  return(
     <div className="app">
       <div className="container">
         <RouterProvider router={router} />
       </div>
     </div>
-  );
+    
+  )
 }
+
+
 
 export default App;
