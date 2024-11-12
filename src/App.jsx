@@ -7,6 +7,7 @@ import adminview from "./admin/adminview";
 import NavBar from "./components/NavBar";
 import Footer from "./components/Footer";
 import home from "./customer/home";
+import Checkout from "./checkout/Checkout";
 import login from "./login/login";
 import ProfilePage from "./profile/ProfilePage";
 import ContactUs from "./contact/ContactUs";
@@ -31,13 +32,25 @@ const router = createBrowserRouter([
     element:<Layout/>, 
     children:[
       {
+
         path: "/home",
         element: <Home />
+
       },
       {
         path: "/adminview",
         element: <adminview />
       },
+      
+      {
+        path: "/checkout", 
+        element: <Checkout/>
+      },
+
+    ]
+  }
+  
+
       {
         path: "/profile", 
         element: <ProfilePage />
@@ -61,6 +74,7 @@ const router = createBrowserRouter([
     path: "/login",
     element: <login/>,
   }  
+
 ]);
 
 function App(){
@@ -69,8 +83,10 @@ function App(){
       <div className="container">
         <RouterProvider router={router} />
       </div>
+
     </div> 
   )
 }
+
 
 export default App;
