@@ -1,9 +1,14 @@
-import React from 'react';
+import React, { useState } from 'react';
 import './Navbar.css';
+import Notification from '../notificaton/notification';
 import { FaSearch, FaUser, FaStar, FaShoppingCart, FaBell } from 'react-icons/fa';
 
 
 function NavBar() {
+  const [showNotifications, setShowNotifications] = useState(false);
+  const toggleNotifications = () => {
+    setShowNotifications(!showNotifications);
+  };
   return (
     <nav className="navbar">
       <div className="navbar-logo">
@@ -27,7 +32,8 @@ function NavBar() {
         <FaUser className="icon" />
         <FaStar className="icon" />
         <FaShoppingCart className="icon" />
-        <FaBell className="icon" />
+        <FaBell className="icon notification-icon" onClick={toggleNotifications}/>
+        {showNotifications && <Notification />}
       </div>
     </nav>
   )
