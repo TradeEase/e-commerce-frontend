@@ -37,14 +37,14 @@ const ProductsPage = () => {
   return (
     <div>
       <h2 style={{marginTop:'30px'}}>Products</h2>
-      <table style={{ width: '100%', marginTop:'30px', marginBottom: '20px' }}>
+      <table style={{ border: '1px solid black',  width: '100%', marginTop:'30px', marginBottom: '20px' }}>
         <thead>
           <tr >
-            <th style={{ border: '1px solid black', padding: '10px' }}>Product Name</th>
-            <th style={{ border: '1px solid black', padding: '10px' }}>Product ID</th>
-            <th style={{ border: '1px solid black', padding: '10px' }}>Product Description</th>
-            <th style={{ border: '1px solid black', padding: '10px' }}>Actions</th>
-            <th style={{ border: '1px solid black', padding: '10px' }}>Sample Images</th>
+            <th >Product Name</th>
+            <th >Product ID</th>
+            <th >Product Description</th>
+            <th >Actions</th>
+            <th >Sample Images</th>
           </tr>
         </thead>
         <tbody>
