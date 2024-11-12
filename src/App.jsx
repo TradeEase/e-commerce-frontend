@@ -31,8 +31,8 @@ const router = createBrowserRouter([
     element:<Layout/>, 
     children:[
       {
-        path: "/",
-        element: <home />
+        path: "/home",
+        element: <Home />
       },
       {
         path: "/adminview",
@@ -55,15 +55,12 @@ const router = createBrowserRouter([
         path: "/admincreation", 
         element: <AdminCreation/>
       },
-     
-
     ]
   },
   {
     path: "/login",
     element: <login/>,
-  }
-  
+  }  
 ]);
 
 function App(){
@@ -72,11 +69,8 @@ function App(){
       <div className="container">
         <RouterProvider router={router} />
       </div>
-    </div>
-    
+    </div> 
   )
 }
-
-
 
 export default App;
