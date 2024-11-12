@@ -13,6 +13,8 @@ import ProfilePage from "./profile/ProfilePage";
 import ContactUs from "./contact/ContactUs";
 import Categories from "./adminPages/Categories";
 import AdminCreation from "./adminPages/AdminCreation";
+import ProductsPage from "./adminPages/ProductsPage";
+import AdminHomePage from "./adminPages/AdminHomePage";
 
 
 
@@ -68,6 +70,18 @@ const router = createBrowserRouter([
         path: "/admincreation", 
         element: <AdminCreation/>
       },
+
+      {
+        path: "products", 
+        element: <ProductsPage/>
+      },
+      {
+        path: "adminhomepage", 
+        element: <AdminHomePage/>
+      },
+     
+
+
     ]
   },
   {
