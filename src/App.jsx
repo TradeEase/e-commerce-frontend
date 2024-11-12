@@ -7,8 +7,12 @@ import adminview from "./admin/adminview";
 import NavBar from "./components/NavBar";
 import Footer from "./components/Footer";
 import home from "./customer/home";
-
 import Checkout from "./checkout/Checkout";
+import login from "./login/login";
+import ProfilePage from "./profile/ProfilePage";
+import ContactUs from "./contact/ContactUs";
+import Categories from "./adminPages/Categories";
+import AdminCreation from "./adminPages/AdminCreation";
 
 
 
@@ -28,8 +32,10 @@ const router = createBrowserRouter([
     element:<Layout/>, 
     children:[
       {
-        path: "/",
-        element: <home />
+
+        path: "/home",
+        element: <Home />
+
       },
       {
         path: "/adminview",
@@ -44,6 +50,31 @@ const router = createBrowserRouter([
     ]
   }
   
+
+      {
+        path: "/profile", 
+        element: <ProfilePage />
+      },
+      {
+        path: "/contact", 
+        element: <ContactUs/>
+      },
+      
+      {
+        path: "/categories", 
+        element: <Categories/>
+      },
+      {
+        path: "/admincreation", 
+        element: <AdminCreation/>
+      },
+    ]
+  },
+  {
+    path: "/login",
+    element: <login/>,
+  }  
+
 ]);
 
 function App(){
@@ -52,11 +83,10 @@ function App(){
       <div className="container">
         <RouterProvider router={router} />
       </div>
-    </div>
-    
+
+    </div> 
   )
 }
-
 
 
 export default App;
