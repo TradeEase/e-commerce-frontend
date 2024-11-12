@@ -1,0 +1,247 @@
+/* Container styling for the form sections */
+.auth-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #f3f4f6;
+}
+
+/* Auth box with image and form sections */
+.auth-box {
+    display: flex;
+    width: 800px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    overflow: hidden;
+    background-color: #fff;
+}
+
+/* Image section styling */
+.auth-image {
+    flex: 1;
+    background-color: #e8e8e8;
+}
+
+.auth-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Form section styling */
+.auth-form {
+    flex: 1;
+    padding: 2rem;
+    color: #333;
+}
+
+.auth-form h1, .auth-form h2 {
+    text-align: center;
+}
+
+/* Social buttons */
+.social-buttons {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+}
+
+.social-button {
+    flex: 1;
+    margin: 0 0.5rem;
+    padding: 0.8rem;
+    font-size: 0.9rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    cursor: pointer;
+    text-align: center;
+}
+
+.google {
+    background-color: #4285f4;
+    color: white;
+}
+
+.email {
+    background-color: #db4437;
+    color: white;
+}
+
+.divider {
+    text-align: center;
+    color: #999;
+    margin: 1rem 0;
+}
+
+/* Input fields */
+.input-field {
+    width: 100%;
+    padding: 0.8rem;
+    margin-bottom: 1rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+/* Button styling */
+.submit-btn {
+    width: 100%;
+    padding: 0.8rem;
+    background-color: #333;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1rem;
+    margin-top: 1rem;
+}
+
+.submit-btn:hover {
+    background-color: #555;
+}
+
+/* Link styling */
+.links {
+    text-align: center;
+    margin-top: 1rem;
+    font-size: 0.9rem;
+}
+/* Two-column layout for input fields in the signup form */
+.two-column {
+    display: flex;
+    gap: 1rem;
+}
+
+.two-column .input-field {
+    flex: 1;
+}
+/* Form.css */
+
+/* Centered container with consistent width and height */
+.fixed-container {
+    width: 800px; /* Set the width for all pages */
+    height: 500px; /* Set the height for all pages */
+    margin: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Ensure the auth container takes up full viewport for centering */
+.auth-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #f5f5f5;
+}
+/* Form.css */
+
+/* Base styles for the container */
+.fixed-container {
+    width: 800px; /* Default width for large screens */
+    height: auto; /* Allow height to adjust based on content */
+    margin: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+/* Center the form vertically and horizontally in the viewport */
+.auth-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #f5f5f5;
+}
+
+/* Two-column layout for larger screens */
+.two-column {
+    display: flex;
+    gap: 10px;
+}
+
+/* Ensure inputs take up equal width in two-column layout */
+.two-column .input-field {
+    flex: 1;
+}
+
+/* Responsive adjustments */
+@media (max-width: 1024px) {
+    .fixed-container {
+        width: 90%; /* Adjust width for tablets */
+    }
+}
+
+@media (max-width: 768px) {
+    .fixed-container {
+        width: 95%; /* Adjust width for smaller screens */
+    }
+
+    /* Stack inputs in a single column */
+    .two-column {
+        flex-direction: column;
+        gap: 0; /* Remove gap between inputs for a clean stack */
+    }
+}
+
+@media (max-width: 480px) {
+    .fixed-container {
+        width: 100%; /* Full width on very small screens */
+        padding: 10px;
+    }
+
+    /* Further reduce input spacing and font size for small screens */
+    .input-field {
+        font-size: 14px;
+        padding: 10px;
+    }
+
+    h1, h2 {
+        font-size: 1.5rem; /* Reduce heading font size */
+    }
+}
+
+
+.login-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  .google-button,
+  .email-button {
+    display: flex;
+    align-items: center;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+  }
+  
+  .google-button {
+    background-color: #4285f4; /* Google blue */
+    color: white;
+  }
+  
+  .email-button {
+    background-color: #d14836; /* Red color for email */
+    color: white;
+  }
+  
+  .button-logo {
+    width: 20px;
+    height: 20px;
+    margin-right: 10px;
+  }
+  
