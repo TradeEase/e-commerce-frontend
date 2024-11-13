@@ -1,6 +1,8 @@
 import React from 'react';
 import './home.css';
 
+
+
 function home() {
   const products = [
     { id: 1, image: 'https://via.placeholder.com/100', alt: 'Product 1' },
@@ -14,7 +16,9 @@ function home() {
   ];
   return (
     <section className="showcase">
+      
       <div className="showcase-card">
+     
         <div className="showcase-content">
           <h1>Style Haven</h1>
           <p>
@@ -44,6 +48,7 @@ function home() {
           />
         ))}
       </div>
+    
     </section>
   )
 }

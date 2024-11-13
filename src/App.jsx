@@ -1,106 +1,55 @@
 import {
   createBrowserRouter,
   RouterProvider,
-  Outlet
 } from "react-router-dom";
-import adminview from "./admin/adminview";
+
+import Adminview from "./admin/Adminview";
 import NavBar from "./components/NavBar";
 import Footer from "./components/Footer";
-import home from "./customer/home";
+import Home from "./customer/home";
 import Checkout from "./checkout/Checkout";
-import login from "./login/login";
+import Login from "./login/LoginPage";
 import ProfilePage from "./profile/ProfilePage";
 import ContactUs from "./contact/ContactUs";
 import Categories from "./adminPages/Categories";
 import AdminCreation from "./adminPages/AdminCreation";
 import ProductsPage from "./adminPages/ProductsPage";
 import AdminHomePage from "./adminPages/AdminHomePage";
+import Orders from "./Orders/Orders";
 
+// Layout component with Navbar, Outlet, and Footer
+const Layout = ({ element }) => (
+  <div>
+    <NavBar />
+    {element}
+    <Footer />
+  </div>
+);
 
-
-const Layout =()=>{
-  return(
-    <div>
-      <NavBar/>
-      <Outlet/>
-      <Footer/>
-    </div>
-  )
-}
-
+// Router configuration without children structure
 const router = createBrowserRouter([
-  {
-    path: "/",
-    element:<Layout/>, 
-    children:[
-      {
-
-        path: "/home",
-        element: <Home />
-
-      },
-      {
-        path: "/adminview",
-        element: <adminview />
-      },
-      
-      {
-        path: "/checkout", 
-        element: <Checkout/>
-      },
-
-    ]
-  }
-  
-
-      {
-        path: "/profile", 
-        element: <ProfilePage />
-      },
-      {
-        path: "/contact", 
-        element: <ContactUs/>
-      },
-      
-      {
-        path: "/categories", 
-        element: <Categories/>
-      },
-      {
-        path: "/admincreation", 
-        element: <AdminCreation/>
-      },
-
-      {
-        path: "products", 
-        element: <ProductsPage/>
-      },
-      {
-        path: "adminhomepage", 
-        element: <AdminHomePage/>
-      },
-     
-
-
-    ]
-  },
-  {
-    path: "/login",
-    element: <login/>,
-  }  
-
+  { path: "/", element: <Layout element={<Home />} /> },
+  { path: "/adminview", element: <Layout element={<Adminview />} /> },
+  { path: "/checkout", element: <Layout element={<Checkout />} /> },
+  { path: "/profile", element: <Layout element={<ProfilePage />} /> },
+  { path: "/contact", element: <Layout element={<ContactUs />} /> },
+  { path: "/categories", element: <Layout element={<Categories />} /> },
+  { path: "/admincreation", element: <Layout element={<AdminCreation />} /> },
+  { path: "/products", element: <Layout element={<ProductsPage />} /> },
+  { path: "/adminhomepage", element: <Layout element={<AdminHomePage />} /> },
+  { path: "/orders", element: <Layout element={<Orders />} /> },
+  { path: "/login", element: <Login /> },
 ]);
 
-function App(){
-  return(
+// Main App component
+function App() {
+  return (
     <div className="app">
       <div className="container">
         <RouterProvider router={router} />
       </div>
-
-    </div> 
-  )
+    </div>
+  );
 }
-
 
 export default App;
