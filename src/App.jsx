@@ -1,44 +1,58 @@
+import React from 'react';
 import {
   createBrowserRouter,
   RouterProvider,
+  Outlet
 } from "react-router-dom";
 
-import Adminview from "./admin/Adminview";
+// Import your components here
+import AdminView from "./admin/AdminView";
 import NavBar from "./components/NavBar";
 import Footer from "./components/Footer";
-import Home from "./customer/home";
+import Home from "./customer/Home";
 import Checkout from "./checkout/Checkout";
-import Login from "./login/LoginPage";
-import ProfilePage from "./profile/ProfilePage";
-import ContactUs from "./contact/ContactUs";
-import Categories from "./adminPages/Categories";
-import AdminCreation from "./adminPages/AdminCreation";
-import ProductsPage from "./adminPages/ProductsPage";
-import AdminHomePage from "./adminPages/AdminHomePage";
-import Orders from "./Orders/Orders";
+import Cartpage from "./Cartpage/cartpage"; // Ensure case matches file name
+import TestProducts from "./TestProducts/TestProducts"; // Ensure case matches file name
 
-// Layout component with Navbar, Outlet, and Footer
-const Layout = ({ element }) => (
-  <div>
-    <NavBar />
-    {element}
-    <Footer />
-  </div>
-);
+// Layout component with NavBar and Footer wrapping Outlet for nested routes
+const Layout = () => {
+  return (
+    <div>
+      <NavBar />
+      <Outlet />
+      <Footer />
+    </div>
+  );
+};
 
-// Router configuration without children structure
+// Create the router with paths to each route
 const router = createBrowserRouter([
-  { path: "/", element: <Layout element={<Home />} /> },
-  { path: "/adminview", element: <Layout element={<Adminview />} /> },
-  { path: "/checkout", element: <Layout element={<Checkout />} /> },
-  { path: "/profile", element: <Layout element={<ProfilePage />} /> },
-  { path: "/contact", element: <Layout element={<ContactUs />} /> },
-  { path: "/categories", element: <Layout element={<Categories />} /> },
-  { path: "/admincreation", element: <Layout element={<AdminCreation />} /> },
-  { path: "/products", element: <Layout element={<ProductsPage />} /> },
-  { path: "/adminhomepage", element: <Layout element={<AdminHomePage />} /> },
-  { path: "/orders", element: <Layout element={<Orders />} /> },
-  { path: "/login", element: <Login /> },
+  {
+    path: "/",
+    element: <Layout />,
+    children: [
+      {
+        path: "/",
+        element: <Home />
+      },
+      {
+        path: "/adminview",
+        element: <AdminView />
+      },
+      {
+        path: "/checkout",
+        element: <Checkout />
+      },
+      {
+        path: "/cartpage",
+        element: <Cartpage /> // Cartpage route
+      },
+      {
+        path: "/TestProducts", // New route for TestProduct
+        element: <TestProducts />
+      },
+    ]
+  }
 ]);
 
 // Main App component
