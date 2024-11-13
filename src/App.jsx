@@ -1,8 +1,10 @@
+import React from 'react';
 import {
   createBrowserRouter,
   RouterProvider,
   Outlet
 } from "react-router-dom";
+
 import adminview from "./admin/adminview";
 import NavBar from "./components/NavBar";
 import Footer from "./components/Footer";
@@ -14,7 +16,9 @@ import Categories from "./adminPages/Categories";
 import AdminCreation from "./adminPages/AdminCreation";
 import ProductsPage from "./adminPages/ProductsPage";
 import AdminHomePage from "./adminPages/AdminHomePage";
-
+import Checkout from "./checkout/Checkout";
+import Cartpage from "./Cartpage/cartpage"; // Ensure case matches file name
+import TestProducts from "./TestProducts/TestProducts"; // Ensure case matches file name
 
 
 
@@ -66,6 +70,14 @@ const router = createBrowserRouter([
         path: "adminhomepage", 
         element: <AdminHomePage/>
       },
+        {
+        path: "/cartpage",
+        element: <Cartpage /> // Cartpage route
+      },
+      {
+        path: "/TestProducts", // New route for TestProduct
+        element: <TestProducts />
+      },
       
      
 
@@ -76,6 +88,7 @@ const router = createBrowserRouter([
     element: <login/>,
   }
   
+
 ]);
 
 function App(){
