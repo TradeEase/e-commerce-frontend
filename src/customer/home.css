@@ -1,87 +1,88 @@
 .showcase {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 2rem;
-    font-family: Arial, sans-serif;
-    background-color: white;
+  display: flex;
+  margin-top: 400px;
+  flex-direction: column;
+  align-items: center;
+  padding: 5rem;
+  font-family: Arial, sans-serif;
+  background-color: white;
 }
 
 .showcase-card {
-    display: flex;
+  display: flex;
 }
 
 .showcase-content {
-    text-align: center;
-    max-width: 400px;
-    display: inline;
-    margin-right: 300px;
+  text-align: center;
+  /* max-width: 400px; */
+  display: inline;
+  margin-right: 300px;
 }
 
 .showcase-content h1 {
-    font-size: 2rem;
-    margin-bottom: 0.5rem;
-    color: black;
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+  color: black;
 }
 
 .showcase-content p {
-    font-size: 1rem;
-    color: #555;
-    margin-bottom: 1rem;
-    line-height: 1.5;
+  font-size: 1rem;
+  color: #555;
+  margin-bottom: 1rem;
+  line-height: 1.5;
 }
 
 .buttons {
-    display: flex;
-    gap: 1rem;
-    justify-content: center;
-    margin-bottom: 2rem;
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  margin-bottom: 2rem;
 }
 
 .primary-button {
-    background-color: #0d1b2a;
-    color: white;
-    border: none;
-    padding: 0.5rem 1rem;
-    border-radius: 20px;
-    cursor: pointer;
+  background-color: #0d1b2a;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  cursor: pointer;
 }
 
 .secondary-button {
-    background-color: transparent;
-    color: #0d1b2a;
-    border: 2px solid #0d1b2a;
-    padding: 0.5rem 1rem;
-    border-radius: 20px;
-    cursor: pointer;
+  background-color: transparent;
+  color: #0d1b2a;
+  border: 2px solid #0d1b2a;
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  cursor: pointer;
 }
 
 .showcase-image img {
-    width: 200px;
-    margin-top: 1rem;
-    margin-left: -100px;
+  width: 200px;
+  margin-top: 1rem;
+  margin-left: -100px;
 }
 
 .breadcrumb {
-    margin: 1rem 0;
-    margin-right: 46.5rem;
-    font-size: 0.9rem;
-    color: #555;
-    align-items: start;
-    justify-content: start;
+  margin: 1rem 0;
+  margin-right: 46.5rem;
+  font-size: 0.9rem;
+  color: #555;
+  align-items: start;
+  justify-content: start;
 }
 
 .product-gallery {
-    display: grid;
-    /* align-items: center; */
-    grid-template-columns: repeat(4, 1fr);
-    gap: 1.5rem;
-    margin-top: 1.5rem;
+  display: grid;
+  /* align-items: center; */
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.5rem;
+  margin-top: 1.5rem;
 }
 
 .product-image {
-    width: 200px;
-    height: 200px;
-    border-radius: 10px;
-    object-fit: cover;
+  width: 200px;
+  height: 200px;
+  border-radius: 10px;
+  object-fit: cover;
 }
