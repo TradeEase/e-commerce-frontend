@@ -41,7 +41,7 @@ const Categories = () => {
   };
 
   return (
-    <div style={{ padding: '20px', textAlign: 'center' }}>
+    <div style={{ padding: '20px', textAlign: 'center', marginTop:'160px', marginBottom:'120px' }}>
       {/* Button to open popup */}
       <button
         style={{
