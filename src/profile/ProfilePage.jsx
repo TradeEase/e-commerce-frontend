@@ -29,7 +29,7 @@ function ProfilePage() {
   };
 
   return (
-    <div style={{ padding: '20px' }}>
+    <div style={{ padding: '20px' , marginTop:'130px', marginBottom:'130px'}}>
       <h1 style={{ textAlign: 'left', marginBottom: '20px' }}>My Profile</h1>
 
       <div style={{ display: 'flex', gap: '200px', width: '100%' }}>
