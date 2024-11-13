@@ -14,7 +14,8 @@ import ProfilePage from "./profile/ProfilePage";
 import ContactUs from "./contact/ContactUs";
 import Categories from "./adminPages/Categories";
 import AdminCreation from "./adminPages/AdminCreation";
-import ProductsPage from "./adminPages/ProductsPage";
+import AdminProductsPage from "./adminPages/ProductsPage";
+import ProductsPage from "./product/product";
 import AdminHomePage from "./adminPages/AdminHomePage";
 import Checkout from "./checkout/Checkout";
 import Cartpage from "./Cartpage/cartpage"; // Ensure case matches file name
