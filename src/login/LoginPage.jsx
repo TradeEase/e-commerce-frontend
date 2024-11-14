@@ -24,7 +24,7 @@ function Login() {
                         <button type="submit" className="submit-btn">Sign In</button>
                     </form>
                     <div className="links">
-                        <Link to="/forgot-password">Forgot Password?</Link> | <Link to="/signup">Register Now</Link>
+                        <Link to="/forgotpassword">Forgot Password?</Link> | <Link to="/signup">Register Now</Link>
                     </div>
                 </div>
             </div>

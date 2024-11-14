@@ -5,11 +5,11 @@ import {
   Outlet
 } from "react-router-dom";
 
-import adminview from "./admin/adminview";
+import Adminview from "./admin/adminview";
 import NavBar from "./components/NavBar";
 import Footer from "./components/Footer";
-import home from "./customer/home";
-import login from "./login/login";
+import Home from "./customer/home"
+import Login from "./login/LoginPage";
 import ProfilePage from "./profile/ProfilePage";
 import ContactUs from "./contact/ContactUs";
 import Categories from "./adminPages/Categories";
@@ -19,8 +19,16 @@ import ProductsPage from "./product/product";
 import AdminHomePage from "./adminPages/AdminHomePage";
 import Checkout from "./checkout/Checkout";
 import Cartpage from "./Cartpage/cartpage"; // Ensure case matches file name
+
+import Orders from "./Orders/Orders";
+import Forgotpassword from "./login/ForgotPassword";
+import Signup from "./login/Signup";
+import Testimonials from './product/Reviews';
+import CheckoutPage from './checkout/Checkout';
+
 import TestProducts from "./TestProducts/TestProducts"; // Ensure case matches file name
 import CustomersPage from './adminPages/CustomersPage';
+
 
 
 
@@ -43,11 +51,11 @@ const router = createBrowserRouter([
     children:[
       {
         path: "/",
-        element: <home />
+        element: <Home/>
       },
       {
         path: "/adminview",
-        element: <adminview />
+        element: <Adminview />
       },
       {
         path: "/profile", 
@@ -67,11 +75,11 @@ const router = createBrowserRouter([
         element: <AdminCreation/>
       },
       {
-        path: "products", 
+        path: "/products", 
         element: <ProductsPage/>
       },
       {
-        path: "adminhomepage", 
+        path: "/adminhomepage", 
         element: <AdminHomePage/>
       },
       
@@ -79,21 +87,41 @@ const router = createBrowserRouter([
         path: "/cartpage",
         element: <Cartpage /> // Cartpage route
       },
+      
       {
-        path: "/TestProducts", // New route for TestProduct
-        element: <TestProducts />
+        path: "/checkout",
+        element: <Checkout />
       },
       {
+
+        path: "/orders",
+        element: <Orders />
+      },
+      {
+        path: "/forgotpassword",
+        element: <Forgotpassword />
+      },
+      {
+        path: "/signup",
+        element: <Signup />
+      }
+      ,
+      {
+        path: "/checkoutpage",
+        element: <CheckoutPage />
+      }
+
         path: "testcustomer", 
         element: <CustomersPage/>
       },
+
      
 
     ]
   },
   {
     path: "/login",
-    element: <login/>,
+    element: <Login/>,
   }
   
 
