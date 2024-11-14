@@ -71,6 +71,10 @@ const router = createBrowserRouter([
         path: "adminhomepage", 
         element: <AdminHomePage/>
       },
+      {
+        path: "customerspage", 
+        element: <CustomersPage/>
+      },
         {
         path: "/cartpage",
         element: <Cartpage /> // Cartpage route
@@ -78,10 +82,6 @@ const router = createBrowserRouter([
       {
         path: "/TestProducts", // New route for TestProduct
         element: <TestProducts />
-      },
-      {
-        path: "customers",
-        element: <CustomersPage/>
       },
       
      
