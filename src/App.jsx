@@ -19,11 +19,18 @@ import ProductsPage from "./product/product";
 import AdminHomePage from "./adminPages/AdminHomePage";
 import Checkout from "./checkout/Checkout";
 import Cartpage from "./Cartpage/cartpage"; // Ensure case matches file name
+
 import Orders from "./Orders/Orders";
 import Forgotpassword from "./login/ForgotPassword";
 import Signup from "./login/Signup";
 import Testimonials from './product/Reviews';
 import CheckoutPage from './checkout/Checkout';
+
+import TestProducts from "./TestProducts/TestProducts"; // Ensure case matches file name
+import CustomersPage from './adminPages/CustomersPage';
+
+
+
 
 
 
@@ -75,6 +82,7 @@ const router = createBrowserRouter([
         path: "/adminhomepage", 
         element: <AdminHomePage/>
       },
+      
         {
         path: "/cartpage",
         element: <Cartpage /> // Cartpage route
@@ -85,6 +93,7 @@ const router = createBrowserRouter([
         element: <Checkout />
       },
       {
+
         path: "/orders",
         element: <Orders />
       },
@@ -101,6 +110,11 @@ const router = createBrowserRouter([
         path: "/checkoutpage",
         element: <CheckoutPage />
       }
+
+        path: "testcustomer", 
+        element: <CustomersPage/>
+      },
+
      
 
     ]
