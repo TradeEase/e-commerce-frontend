@@ -37,7 +37,7 @@ function NavBar() {
   <Link to="/profile">
     <FaUser className="icon" />
   </Link>
-  <Link to="/cart">
+  <Link to="/cartpage">
     <FaShoppingCart className="icon" />
   </Link>
   <FaBell className="icon notification-icon" onClick={toggleNotifications} />
