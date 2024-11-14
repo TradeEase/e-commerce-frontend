@@ -23,6 +23,8 @@ import CustomersPage from './adminPages/CustomersPage';
 
 
 
+
+
 const Layout =()=>{
   return(
     <div>
@@ -71,10 +73,7 @@ const router = createBrowserRouter([
         path: "adminhomepage", 
         element: <AdminHomePage/>
       },
-      {
-        path: "customerspage", 
-        element: <CustomersPage/>
-      },
+      
         {
         path: "/cartpage",
         element: <Cartpage /> // Cartpage route
@@ -83,7 +82,10 @@ const router = createBrowserRouter([
         path: "/TestProducts", // New route for TestProduct
         element: <TestProducts />
       },
-      
+      {
+        path: "testcustomer", 
+        element: <CustomersPage/>
+      },
      
 
     ]
