@@ -19,6 +19,7 @@ import AdminHomePage from "./adminPages/AdminHomePage";
 import Checkout from "./checkout/Checkout";
 import Cartpage from "./Cartpage/cartpage"; // Ensure case matches file name
 import TestProducts from "./TestProducts/TestProducts"; // Ensure case matches file name
+import CustomersPage from './adminPages/CustomersPage';
 
 
 
@@ -77,6 +78,10 @@ const router = createBrowserRouter([
       {
         path: "/TestProducts", // New route for TestProduct
         element: <TestProducts />
+      },
+      {
+        path: "customers",
+        element: <CustomersPage/>
       },
       
      
