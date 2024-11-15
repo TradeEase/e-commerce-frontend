@@ -25,8 +25,10 @@ import Forgotpassword from "./login/ForgotPassword";
 import Signup from "./login/Signup";
 import Testimonials from './product/Reviews';
 import CheckoutPage from './checkout/Checkout';
+import EnterConfirmationCode from "./login/EnterConfirmationCode";
 
-import TestProducts from "./TestProducts/TestProducts"; // Ensure case matches file name
+import ResetPassword from "./login/ResetPassword"; 
+
 import CustomersPage from './adminPages/CustomersPage';
 
 
@@ -102,6 +104,14 @@ const router = createBrowserRouter([
         element: <Forgotpassword />
       },
       {
+        path: "/enter-confirmation-code",
+        element: <EnterConfirmationCode />
+      },
+      {
+        path: "/reset-password", // Add the Reset Password route
+        element: <ResetPassword />
+      },
+      {
         path: "/signup",
         element: <Signup />
       }
@@ -109,7 +119,8 @@ const router = createBrowserRouter([
       {
         path: "/checkoutpage",
         element: <CheckoutPage />
-      }
+      },
+      {
 
         path: "testcustomer", 
         element: <CustomersPage/>

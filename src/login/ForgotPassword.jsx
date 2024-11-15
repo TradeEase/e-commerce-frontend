@@ -3,8 +3,12 @@ import { Link } from 'react-router-dom';
 import './Form.css';
 import signup from '../assets/SignIMG.jpg';
 
+
 function ForgotPassword() {
+
+
     return (
+        
         <div className="auth-container">
             <div className="auth-box">
                 <div className="auth-image">
