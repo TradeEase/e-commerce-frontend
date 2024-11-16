@@ -16,6 +16,8 @@ import AdminCreation from "./adminPages/AdminCreation";
 import ProductsPage from "./adminPages/ProductsPage";
 import AdminHomePage from "./adminPages/AdminHomePage";
 import Orders from "./Orders/Orders";
+import Payments1 from "./Payments/Payments1";
+import Payments2 from "./Payments/Payments2";
 
 // Layout component with Navbar, Outlet, and Footer
 const Layout = ({ element }) => (
@@ -39,6 +41,8 @@ const router = createBrowserRouter([
   { path: "/adminhomepage", element: <Layout element={<AdminHomePage />} /> },
   { path: "/orders", element: <Layout element={<Orders />} /> },
   { path: "/login", element: <Login /> },
+  { path: "/Payments1", element: <Payments1 /> },
+  { path: "/Payments2", element: <Payments2 /> },
 ]);
 
 // Main App component
