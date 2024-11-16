@@ -26,7 +26,7 @@ import Signup from "./login/Signup";
 import Testimonials from './product/Reviews';
 import CheckoutPage from './checkout/Checkout';
 
-import TestProducts from "./TestProducts/TestProducts"; // Ensure case matches file name
+// import TestProducts from "./TestProducts/TestProducts"; // Ensure case matches file name
 import CustomersPage from './adminPages/CustomersPage';
 
 
@@ -109,8 +109,8 @@ const router = createBrowserRouter([
       {
         path: "/checkoutpage",
         element: <CheckoutPage />
-      }
-
+      },
+      {
         path: "testcustomer", 
         element: <CustomersPage/>
       },
