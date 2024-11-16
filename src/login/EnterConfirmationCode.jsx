@@ -23,10 +23,12 @@ function EnterConfirmationCode() {
                     <h2>Enter The Confirmation Code</h2>
                     <form onSubmit={handleSubmit}>
                         <input type="text" placeholder="Confirmation Code" className="input-field" />
-                        <button type="submit" className="submit-btn">Recover Account</button>
+                        <button type="submit" className="submit-btn">
+                            <Link to="/reset-password">Recover Account</Link>
+                            </button>
                     </form>
                     <div className="links">
-                        <p>Didn't receive Confirmation Code? <Link to="/resend">Resend Now</Link></p>
+                        <p>Didn't receive Confirmation Code?<button>Resend Now</button></p>
                     </div>
                 </div>
             </div>
