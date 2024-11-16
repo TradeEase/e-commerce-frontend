@@ -84,9 +84,9 @@ function OrderSummary() {
           Your personal data will be used to support your experience throughout this website, to manage access to your account, and for other purposes described in our{" "}
           <span className="font-semibold">privacy policy</span>.
         </p>
-        <button data-layername="placeOrder" className="self-center px-16 py-4 mt-10 max-w-full text-xl rounded-2xl border-4 border-solid bg-slate-600 border-slate-500 text-white w-[318px] max-md:px-5">
+        {/* <button data-layername="placeOrder" className="self-center px-16 py-4 mt-10 max-w-full text-xl rounded-2xl border-4 border-solid bg-slate-600 border-slate-500 text-white w-[318px] max-md:px-5">
           Place order
-        </button>
+        </button> */}
       </div>
     </div>
   );

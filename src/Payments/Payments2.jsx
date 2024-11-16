@@ -1,12 +1,12 @@
 import React from 'react';
 import Header from './Header';
 import './Payments1.css';
-import BillingDetails from './BillingDetails';
 import OrderSummary from './OrderSummary';
 import Footer from './Footer';
 import FeatureSection from './FeatureSection';
+import PaymentMethod from "./PaymentMethod";
 
-function Payments1() {
+function Payments2() {
   return (
     <div data-layername="payment1" className="flex overflow-hidden flex-col bg-white">
       <Header />
@@ -35,15 +35,9 @@ function Payments1() {
         <section className="flex flex-col self-center w-full max-w-[1161px] max-md:max-w-full">
           <div className="max-md:max-w-full">
             <div className="flex gap-20 max-md:flex-col">
-              <BillingDetails />
+              <PaymentMethod />
               <div className="flex flex-col items-center justify-center mt-4">
                 <OrderSummary />
-                <button
-                  data-layername="placeOrder"
-                  className="px-16 py-4 mt-10 max-w-full text-xl rounded-2xl border-4 border-solid bg-slate-600 border-slate-500 text-white w-[318px] max-md:px-5"
-                >
-                  Place order
-                </button>
               </div>
             </div>
           </div>
@@ -55,4 +49,4 @@ function Payments1() {
   );
 }
 
-export default Payments1;
+export default Payments2;
