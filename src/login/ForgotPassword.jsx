@@ -98,7 +98,10 @@ function ForgotPassword() {
                             />
                             {errors.phoneNumber && <div className="error-msg">{errors.phoneNumber}</div>}
                         </div>
-                        <button type="submit" className="submit-btn">Send Confirmation Code</button>
+
+                        <button type="submit" className="submit-btn">
+                            <Link to="/enter-confirmation-code">Send Confirmation Code </Link>
+                            </button>
                     </form>
                     <div className="links">
                         <Link to="/">Already have an account? Login</Link>

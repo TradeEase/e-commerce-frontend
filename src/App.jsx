@@ -24,7 +24,6 @@ import Orders from "./Orders/Orders";
 import Forgotpassword from "./login/ForgotPassword";
 import Signup from "./login/Signup";
 import Testimonials from './product/Reviews';
-import CheckoutPage from './checkout/Checkout';
 import EnterConfirmationCode from "./login/EnterConfirmationCode";
 
 import ResetPassword from "./login/ResetPassword"; 
@@ -117,10 +116,10 @@ const router = createBrowserRouter([
         element: <Signup />
       }
       ,
-      {
-        path: "/checkoutpage",
-        element: <CheckoutPage />
-      },
+      // {
+      //   path: "/checkoutpage",
+      //   element: <CheckoutPage />
+      // },
       {
 
         path: "testcustomer", 
