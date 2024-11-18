@@ -1,7 +1,4 @@
-import {
-  createBrowserRouter,
-  RouterProvider,
-} from "react-router-dom";
+import { createBrowserRouter, RouterProvider, Outlet } from "react-router-dom";
 
 import Adminview from "./admin/Adminview";
 import NavBar from "./components/NavBar";
@@ -16,29 +13,36 @@ import AdminCreation from "./adminPages/AdminCreation";
 import ProductsPage from "./adminPages/ProductsPage";
 import AdminHomePage from "./adminPages/AdminHomePage";
 import Orders from "./Orders/Orders";
+import ReturnOrder from "./Orders/ReturnOrder";
 
-// Layout component with Navbar, Outlet, and Footer
-const Layout = ({ element }) => (
+const Layout = () => (
   <div>
     <NavBar />
-    {element}
+    <div className="content">
+      <Outlet /> 
+    </div>
     <Footer />
   </div>
 );
 
-// Router configuration without children structure
 const router = createBrowserRouter([
-  { path: "/", element: <Layout element={<Home />} /> },
-  { path: "/adminview", element: <Layout element={<Adminview />} /> },
-  { path: "/checkout", element: <Layout element={<Checkout />} /> },
-  { path: "/profile", element: <Layout element={<ProfilePage />} /> },
-  { path: "/contact", element: <Layout element={<ContactUs />} /> },
-  { path: "/categories", element: <Layout element={<Categories />} /> },
-  { path: "/admincreation", element: <Layout element={<AdminCreation />} /> },
-  { path: "/products", element: <Layout element={<ProductsPage />} /> },
-  { path: "/adminhomepage", element: <Layout element={<AdminHomePage />} /> },
-  { path: "/orders", element: <Layout element={<Orders />} /> },
-  { path: "/login", element: <Login /> },
+  {
+    element: <Layout />,
+    children: [
+      { path: "/", element: <Home /> },
+      { path: "/adminview", element: <Adminview /> },
+      { path: "/checkout", element: <Checkout /> },
+      { path: "/profile", element: <ProfilePage /> },
+      { path: "/contact", element: <ContactUs /> },
+      { path: "/categories", element: <Categories /> },
+      { path: "/admincreation", element: <AdminCreation /> },
+      { path: "/products", element: <ProductsPage /> },
+      { path: "/adminhomepage", element: <AdminHomePage /> },
+      { path: "/orders", element: <Orders /> },
+      { path: "/returnorder", element: <ReturnOrder /> },
+    ],
+  },
+  { path: "/login", element: <Login /> }, // Login page without Layout
 ]);
 
 // Main App component
@@ -53,3 +57,4 @@ function App() {
 }
 
 export default App;
+

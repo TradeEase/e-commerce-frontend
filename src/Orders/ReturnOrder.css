@@ -1,0 +1,87 @@
+.return-section {
+    font-family: Arial, sans-serif;
+    padding: 20px;
+    background-color: #f9f9f9;
+  }
+  
+  h1 {
+    color: #1c355e;
+    margin-bottom: 20px;
+  }
+  
+  .order-card {
+    background: #fff;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    padding: 15px;
+  }
+  
+  .order-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+  }
+  
+  .order-header .status {
+    font-weight: bold;
+    padding: 5px 10px;
+    border-radius: 5px;
+  }
+  
+  .status.return-processing {
+    background-color: #ffe4b2;
+    color: #ff9800;
+  }
+  
+  .status.successfully-return {
+    background-color: #b2dfdb;
+    color: #00796b;
+  }
+  
+  .order-date {
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 10px;
+  }
+  
+  .order-details {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 15px;
+    margin-bottom: 20px;
+  }
+  
+  .contact-person,
+  .shipping-address,
+  .payment {
+    font-size: 14px;
+  }
+  
+  strong {
+    color: #1c355e;
+  }
+  
+  .order-items {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+  }
+  
+  .item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  
+  .item img {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 4px;
+  }
+  
+  .item div {
+    font-size: 14px;
+  }
+  
