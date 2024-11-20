@@ -1,24 +1,33 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import './home.css';
 
-
-
 function home() {
-  const products = [
-    { id: 1, image: 'https://via.placeholder.com/100', alt: 'Product 1' },
-    { id: 2, image: 'https://via.placeholder.com/100', alt: 'Product 2' },
-    { id: 3, image: 'https://via.placeholder.com/100', alt: 'Product 3' },
-    { id: 4, image: 'https://via.placeholder.com/100', alt: 'Product 4' },
-    { id: 5, image: 'https://via.placeholder.com/100', alt: 'Product 5' },
-    { id: 6, image: 'https://via.placeholder.com/100', alt: 'Product 6' },
-    { id: 7, image: 'https://via.placeholder.com/100', alt: 'Product 7' },
-    { id: 8, image: 'https://via.placeholder.com/100', alt: 'Product 8' },
-  ];
+  const [categories, setCategory] = React.useState([]);
+  const [loading, setLoading] = React.useState(true);
+
+  useEffect(() => {
+    const fetchCategory = async () => {
+      try {
+        const response = await fetch('http://localhost:8083/api/product/categories');
+        if (!response.ok) {
+          throw new Error('Server Error');
+        }
+        const data = await response.json();
+        setCategory(data);
+      } catch (error) {
+        console.error('Error fetching data: ', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchCategory();
+  }, []);
+
   return (
     <section className="showcase">
-      
+
       <div className="showcase-card">
-     
+
         <div className="showcase-content">
           <h1>Style Haven</h1>
           <p>
@@ -38,17 +47,28 @@ function home() {
       <nav className="breadcrumb">
         Home / Category
       </nav>
-      <div className="product-gallery">
-        {products.map((product) => (
-          <img
-            key={product.id}
-            src={product.image}
-            alt={product.alt}
-            className="product-image"
-          />
-        ))}
+      <div className="category-gallery">
+        {loading ? (
+          <p>Loading categories...</p>
+        ) : categories.length > 0 ? (
+          categories.map((category) => (
+            // <img
+            //   key={category.id}
+            //   src={category.image}
+            //   alt={category.alt}
+            //   className="category-image"
+            // />
+            <div key={category.categoryId} className="category-card">
+              <h2>{category.name}</h2>
+              <p>
+                <strong>Description:</strong> {category.description || 'No description available'}
+              </p>
+            </div>
+          ))
+        ) : (
+          <p>No categories found</p>
+        )}
       </div>
-    
     </section>
   )
 }
