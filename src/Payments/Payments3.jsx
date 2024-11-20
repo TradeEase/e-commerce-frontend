@@ -80,7 +80,7 @@ function Payments3() {
               </p>
             </div>
 
-            {/* Place Order Button */}
+            {/* Place Order Button. */}
             <button
               data-layername="placeOrder"
               className="self-center px-16 py-4 text-xl rounded-xl bg-slate-600 text-white shadow-md hover:bg-slate-700 transition-all max-md:w-full"
