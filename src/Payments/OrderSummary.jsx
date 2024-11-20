@@ -55,38 +55,6 @@ function OrderSummary() {
           </div>
         </div>
         <hr className="shrink-0 mt-8 max-w-full h-px border border-solid border-zinc-300 w-[527px] max-md:mr-1" />
-        <form>
-          <div className="flex gap-4 self-start mt-6 text-base text-black max-md:ml-0.5">
-            <input type="radio" id="directBankTransfer" name="paymentMethod" className="shrink-0 my-auto w-3.5 h-3.5" />
-            <label htmlFor="directBankTransfer" data-layername="directBankTransfer" className="basis-auto">
-              Direct Bank Transfer
-            </label>
-          </div>
-          Continuing from where we left off:
-
-          <p data-layername="directBankTransferDescription" className="mt-3 text-base font-light text-neutral-400 max-md:mr-1 max-md:max-w-full">
-            Make your payment directly into our bank account. Please use your Order ID as the payment reference. Your order will not be shipped until the funds have cleared in our account.
-          </p>
-          <div className="flex gap-4 self-start mt-6 text-base font-medium text-neutral-400 max-md:ml-0.5">
-            <input type="radio" id="creditCard" name="paymentMethod" className="shrink-0 my-auto w-3.5 h-3.5" />
-            <label htmlFor="creditCard" data-layername="creditCard" className="basis-auto">
-              Credit Card
-            </label>
-          </div>
-          <div className="flex gap-4 self-start mt-3 text-base font-medium text-neutral-400 max-md:ml-0.5">
-            <input type="radio" id="cashOnDelivery" name="paymentMethod" className="shrink-0 my-auto w-3.5 h-3.5" />
-            <label htmlFor="cashOnDelivery" data-layername="cashOnDelivery" className="basis-auto">
-              Cash On Delivery
-            </label>
-          </div>
-        </form>
-        <p data-layername="privacyPolicy" className="mt-6 text-base font-light text-black max-md:mr-1 max-md:max-w-full">
-          Your personal data will be used to support your experience throughout this website, to manage access to your account, and for other purposes described in our{" "}
-          <span className="font-semibold">privacy policy</span>.
-        </p>
-        {/* <button data-layername="placeOrder" className="self-center px-16 py-4 mt-10 max-w-full text-xl rounded-2xl border-4 border-solid bg-slate-600 border-slate-500 text-white w-[318px] max-md:px-5">
-          Place order
-        </button> */}
       </div>
     </div>
   );

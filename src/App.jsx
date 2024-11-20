@@ -18,6 +18,7 @@ import AdminHomePage from "./adminPages/AdminHomePage";
 import Orders from "./Orders/Orders";
 import Payments1 from "./Payments/Payments1";
 import Payments2 from "./Payments/Payments2";
+import Payments3 from "./Payments/Payments3";
 
 // Layout component with Navbar, Outlet, and Footer
 const Layout = ({ element }) => (
@@ -43,6 +44,7 @@ const router = createBrowserRouter([
   { path: "/login", element: <Login /> },
   { path: "/Payments1", element: <Payments1 /> },
   { path: "/Payments2", element: <Payments2 /> },
+  { path: "/Payments3", element: <Payments3 /> },
 ]);
 
 // Main App component
