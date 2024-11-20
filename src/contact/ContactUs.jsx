@@ -81,14 +81,15 @@ function ContactUs() {
 const styles = {
   container: {
     padding: '20px',
-   
-    margin: '0 auto',
+    maxWidth: '1200px',
+    margin: '0 auto ' ,
     
   },
   title: {
     textAlign: 'center',
     fontSize: '2rem',
     marginBottom: '20px',
+    marginTop: '130px',
   },
   box: {
     border: '1px solid #ccc',

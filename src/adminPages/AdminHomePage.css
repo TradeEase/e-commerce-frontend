@@ -1,6 +1,8 @@
 .admin-homepage {
     display: flex;
     height: 100vh;
+    margin-top: 85px;
+
   }
   
   /* Sidebar styles */
@@ -11,6 +13,7 @@
     color: #fff;
     display: flex;
     flex-direction: column;
+    
   }
   
   .sidebar h2 {

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import "./Orders.css";
+ import "./Orders.css";
 
 const Orders = () => {
   const dummyOrders = [

@@ -1,36 +1,32 @@
-html,
-body {
-  width: 100%;
-  height: 100%;
-  margin: 0;
-  padding: 0;
-}
+/* Target only the orders page by wrapping everything in .orders-wrapper */
 
-body {
+.orders-wrapper {
   background-color: #4a4c6c;
   font-family: Arial, sans-serif;
   color: #fff;
   display: flex;
   justify-content: center;
   align-items: center;
+  min-height: 100vh;
+  padding: 20px;
 }
 
 .orders-container {
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 100vw; /* Use viewport width */
-  height: 100vh; /* Full height */
+  width: 100vw;
+  max-width: 1200px; /* Restrict max-width to avoid full viewport width */
 }
 
 .header-bar {
   width: 100%;
-  height: 50px; /* Adjust height as needed */
+  height: 50px;
   background-color: #011740;
 }
 
 .my-orders {
-  width: 100%; /* Full width */
+  width: 100%;
   padding: 20px;
   box-sizing: border-box;
 }
@@ -47,7 +43,7 @@ h2 {
   align-items: center;
   margin-bottom: 20px;
   color: #aaa;
-  width: 100%; /* Full width */
+  width: 100%;
 }
 
 .order-status-links > div:first-child {
@@ -70,7 +66,6 @@ h2 {
   color: #fff;
 }
 
-/* Updated to make order-filters full width */
 .order-filters {
   display: flex;
   align-items: center;
@@ -79,9 +74,7 @@ h2 {
   padding: 10px;
   border-radius: 5px;
   color: #333;
-  width: 100vw; /* Full viewport width */
-  position: relative; /* For alignment */
-  left: calc(-50vw + 50%); /* Center the div on larger screens */
+  width: 100%;
 }
 
 .order-filters label {
@@ -103,9 +96,9 @@ h2 {
   padding: 20px;
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  width: 100%; /* Maintain full width */
-  max-width: 900px; /* Restrict max width for the order card */
-  margin: 10px auto; /* Center the order card */
+  width: 100%;
+  max-width: 900px;
+  margin: 10px auto;
 }
 
 .order-header {
