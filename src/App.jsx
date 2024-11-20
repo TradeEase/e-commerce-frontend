@@ -14,6 +14,9 @@ import ProductsPage from "./adminPages/ProductsPage";
 import AdminHomePage from "./adminPages/AdminHomePage";
 import Orders from "./Orders/Orders";
 import ReturnOrder from "./Orders/ReturnOrder";
+import Payments1 from "./Payments/Payments1";
+import Payments2 from "./Payments/Payments2";
+import Payments3 from "./Payments/Payments3";
 
 const Layout = () => (
   <div>
@@ -40,6 +43,9 @@ const router = createBrowserRouter([
       { path: "/adminhomepage", element: <AdminHomePage /> },
       { path: "/orders", element: <Orders /> },
       { path: "/returnorder", element: <ReturnOrder /> },
+      { path: "/Payments1", element: <Payments1 /> },
+      { path: "/Payments2", element: <Payments2 /> },
+      { path: "/Payments3", element: <Payments3 /> },
     ],
   },
   { path: "/login", element: <Login /> }, // Login page without Layout
