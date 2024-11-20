@@ -1,8 +1,6 @@
-import React from 'react';
 import {
   createBrowserRouter,
   RouterProvider,
-  Outlet
 } from "react-router-dom";
 
 import Adminview from "./admin/adminview";
@@ -21,121 +19,28 @@ import Checkout from "./checkout/Checkout";
 import Cartpage from "./Cartpage/cartpage"; // Ensure case matches file name
 
 import Orders from "./Orders/Orders";
-import Forgotpassword from "./login/ForgotPassword";
-import Signup from "./login/Signup";
-import Testimonials from './product/Reviews';
-import EnterConfirmationCode from "./login/EnterConfirmationCode";
 
-import ResetPassword from "./login/ResetPassword"; 
-
-
-import CustomersPage from './adminPages/CustomersPage';
-
-
-
-
-
-
-const Layout =()=>{
-  return(
-    <div>
-      <NavBar/>
-      <Outlet/>
-      <Footer/>
-    </div>
-  )
-}
+// Layout component with Navbar, Outlet, and Footer
+const Layout = ({ element }) => (
+  <div>
+    <NavBar />
+    {element}
+    <Footer />
+  </div>
+);
 
 const router = createBrowserRouter([
-  {
-    path: "/",
-    element:<Layout/>, 
-    children:[
-      {
-        path: "/",
-        element: <Home/>
-      },
-      {
-        path: "/adminview",
-        element: <Adminview />
-      },
-      {
-        path: "/profile", 
-        element: <ProfilePage />
-      },
-      {
-        path: "/contact", 
-        element: <ContactUs/>
-      },
-      
-      {
-        path: "/categories", 
-        element: <Categories/>
-      },
-      {
-        path: "/admincreation", 
-        element: <AdminCreation/>
-      },
-      {
-        path: "/products", 
-        element: <ProductsPage/>
-      },
-      {
-        path: "/adminhomepage", 
-        element: <AdminHomePage/>
-      },
-      
-        {
-        path: "/cartpage",
-        element: <Cartpage /> // Cartpage route
-      },
-      
-      {
-        path: "/checkout",
-        element: <Checkout />
-      },
-      {
-
-        path: "/orders",
-        element: <Orders />
-      },
-      {
-        path: "/forgotpassword",
-        element: <Forgotpassword />
-      },
-      {
-        path: "/enter-confirmation-code",
-        element: <EnterConfirmationCode />
-      },
-      {
-        path: "/reset-password", // Add the Reset Password route
-        element: <ResetPassword />
-      },
-      {
-        path: "/signup",
-        element: <Signup />
-      }
-      ,
-      // {
-      //   path: "/checkoutpage",
-      //   element: <CheckoutPage />
-      // },
-      {
-
-        path: "testcustomer", 
-        element: <CustomersPage/>
-      },
-
-     
-
-    ]
-  },
-  {
-    path: "/login",
-    element: <Login/>,
-  }
-  
-
+  { path: "/", element: <Layout element={<Home />} /> },
+  { path: "/adminview", element: <Layout element={<Adminview />} /> },
+  { path: "/checkout", element: <Layout element={<Checkout />} /> },
+  { path: "/profile", element: <Layout element={<ProfilePage />} /> },
+  { path: "/contact", element: <Layout element={<ContactUs />} /> },
+  { path: "/categories", element: <Layout element={<Categories />} /> },
+  { path: "/admincreation", element: <Layout element={<AdminCreation />} /> },
+  { path: "/products", element: <Layout element={<ProductsPage />} /> },
+  { path: "/adminhomepage", element: <Layout element={<AdminHomePage />} /> },
+  { path: "/orders", element: <Layout element={<Orders />} /> },
+  { path: "/login", element: <Login /> },
 ]);
 
 function App(){

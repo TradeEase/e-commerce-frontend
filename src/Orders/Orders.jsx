@@ -65,7 +65,14 @@ const Orders = () => {
     },
   ];
 
-  const [orders] = useState(dummyOrders);
+  const [orders, setOrders] = useState(dummyOrders);
+
+  const cancelOrder = (orderId) => {
+    if(window.confirm('Are you sure you want to cancel this order?')) {
+      const updatedOrders = orders.filter((order) => order.id !== orderId);
+      setOrders(updatedOrders);
+    }
+  }
 
   return (
     <div className="orders-container">
@@ -73,8 +80,7 @@ const Orders = () => {
         <div className="order-status-links">
           <div>
             <span>My Orders</span>
-          </div>
-          
+          </div>         
         </div>
 
         <div className="order-filters">
@@ -97,7 +103,7 @@ const Orders = () => {
                 <span className="order-status">{order.status}</span>
               </div>
               <div className="order-buttons">
-                <button className="cancel-order">Cancel Order</button>
+                <button className="cancel-order" onClick={() => cancelOrder(order.id)}>Cancel Order</button>
                 <button className="track-order">Track Order</button>
               </div>
             </div>

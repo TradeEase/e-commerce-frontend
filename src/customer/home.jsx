@@ -1,30 +1,43 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom'; // Import the useNavigate hook
 import './home.css';
 
+function Home() {
+  const [categories, setCategory] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const navigate = useNavigate(); // Initialize the navigate hook
 
+  useEffect(() => {
+    const fetchCategory = async () => {
+      try {
+        const response = await fetch('http://localhost:8083/api/product/categories');
+        if (!response.ok) {
+          throw new Error('Server Error');
+        }
+        const data = await response.json();
+        setCategory(data);
+      } catch (error) {
+        console.error('Error fetching data: ', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchCategory();
+  }, []);
 
-function home() {
-  const products = [
-    { id: 1, image: 'https://via.placeholder.com/100', alt: 'Product 1' },
-    { id: 2, image: 'https://via.placeholder.com/100', alt: 'Product 2' },
-    { id: 3, image: 'https://via.placeholder.com/100', alt: 'Product 3' },
-    { id: 4, image: 'https://via.placeholder.com/100', alt: 'Product 4' },
-    { id: 5, image: 'https://via.placeholder.com/100', alt: 'Product 5' },
-    { id: 6, image: 'https://via.placeholder.com/100', alt: 'Product 6' },
-    { id: 7, image: 'https://via.placeholder.com/100', alt: 'Product 7' },
-    { id: 8, image: 'https://via.placeholder.com/100', alt: 'Product 8' },
-  ];
+  const handleCategoryClick = (categoryId) => {
+    navigate(`/category/${categoryId}`); // Navigate to the category page with categoryId as a URL parameter
+  };
+
   return (
     <section className="showcase">
-      
       <div className="showcase-card">
-     
         <div className="showcase-content">
           <h1>Style Haven</h1>
           <p>
-            A clothing shop is a fashion-forward store offering a wide range of
-            apparel, accessories, and footwear for men, women, and children, all
-            organized into distinct collections and styles.
+            A clothing shop is a fashion-forward store offering a wide range
+            of apparel, accessories, and footwear for men, women, and children,
+            all organized into distinct collections and styles.
           </p>
           <div className="buttons">
             <button className="primary-button">25% Off Festival</button>
@@ -35,22 +48,33 @@ function home() {
           <img src="https://via.placeholder.com/200" alt="Main Model" />
         </div>
       </div>
+
       <nav className="breadcrumb">
         Home / Category
       </nav>
-      <div className="product-gallery">
-        {products.map((product) => (
-          <img
-            key={product.id}
-            src={product.image}
-            alt={product.alt}
-            className="product-image"
-          />
-        ))}
+
+      <div className="category-gallery">
+        {loading ? (
+          <p>Loading categories...</p>
+        ) : categories.length > 0 ? (
+          categories.map((category) => (
+            <div
+              key={category.categoryId}
+              className={`category-card`}
+              onClick={() => handleCategoryClick(category.categoryId)}
+            >
+              <h2>{category.name}</h2>
+              <p>
+                <strong>Description:</strong> {category.description || 'No description available'}
+              </p>
+            </div>
+          ))
+        ) : (
+          <p>No categories found</p>
+        )}
       </div>
-    
     </section>
-  )
+  );
 }
 
-export default home
+export default Home;
