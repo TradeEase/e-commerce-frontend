@@ -14,6 +14,7 @@ import ProductsPage from "./adminPages/ProductsPage";
 import AdminHomePage from "./adminPages/AdminHomePage";
 import Orders from "./Orders/Orders";
 import ReturnOrder from "./Orders/ReturnOrder";
+import CategoryPage from "./customer/CategoryPage";
 
 const Layout = () => (
   <div>
@@ -21,7 +22,7 @@ const Layout = () => (
     <div className="content">
       <Outlet /> 
     </div>
-    <Footer />
+    {/* <Footer /> */}
   </div>
 );
 
@@ -40,6 +41,7 @@ const router = createBrowserRouter([
       { path: "/adminhomepage", element: <AdminHomePage /> },
       { path: "/orders", element: <Orders /> },
       { path: "/returnorder", element: <ReturnOrder /> },
+      { path: "/category/:categoryId", element: <CategoryPage /> },
     ],
   },
   { path: "/login", element: <Login /> }, // Login page without Layout
