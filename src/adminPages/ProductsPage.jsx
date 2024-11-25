@@ -36,7 +36,7 @@ const ProductsPage = () => {
 
   return (
     <div>
-      <h2 style={{marginTop:'30px'}}>Products</h2>
+      <h2 style={{marginTop:'140px'}}>Products</h2>
       <table style={{ border: '1px solid black',  width: '100%', marginTop:'30px', marginBottom: '20px' }}>
         <thead>
           <tr >

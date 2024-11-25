@@ -22,7 +22,7 @@ const AdminCreationPage = () => {
   };
 
   return (
-    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '100vh' , marginLeft:'200px'}}>
+    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '100vh' , marginLeft:'200px', marginTop:'50px'}}>
       <div style={{ width: '800px', padding: '20px', border: '1px solid #ccc', borderRadius: '8px', boxShadow: '0 0 10px rgba(0,0,0,0.1)' }}>
         <h2 style={{ textAlign: 'center', marginBottom: '30px' }}>Create Admin</h2>
         <form onSubmit={handleSubmit}>

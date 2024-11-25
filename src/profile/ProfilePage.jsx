@@ -1,9 +1,70 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import '@fortawesome/fontawesome-free/css/all.min.css';
 import defaultProfileImage from '../profile/ProfileImage.jpg'; // Import the default profile image
 
 function ProfilePage() {
   const [profileImage, setProfileImage] = useState(defaultProfileImage);
+  const [userData, setUserData] = useState(null);
+  const [formData, setFormData] = useState({
+    fname: '',
+    lname: '',
+    email: '',
+    state: '',
+    city: '',
+    street: '',
+    postalCode: '',
+    username: '',
+  });
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      setIsLoading(true);
+
+      try {
+        const response = await fetch('http://localhost:8081/api/user/users/1');
+        if (!response.ok) {
+          throw new Error('Server Error');
+        }
+        const data = await response.json();
+        setUserData(data);
+        setFormData(data); // Initialize formData with fetched data
+      } catch (error) {
+        console.error('Error fetching data: ', error);
+        setError('Error fetching user data. Please try again later.');
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    fetchUserData();
+  }, []);
+
+  const handleFormSubmit = async (event) => {
+    event.preventDefault();
+    setIsLoading(true);
+    try {
+      const updatedUserData = formData;
+      const response = await fetch('http://localhost:8081/api/user/users/1', {
+        method: 'PUT',
+        body: JSON.stringify(updatedUserData),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+      if (!response.ok) {
+        throw new Error('Server Error');
+      }
+      alert('User data updated successfully');
+      setUserData(updatedUserData);
+      setFormData(updatedUserData);
+    } catch (error) {
+      console.error('Error updating user data: ', error);
+      setError('Error updating user data. Please try again later.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   // Function to handle image upload
   const handleEditClick = () => {
@@ -29,7 +90,7 @@ function ProfilePage() {
   };
 
   return (
-    <div style={{ padding: '20px' }}>
+    <div style={{ padding: '20px' , marginTop:'130px', marginBottom:'130px'}}>
       <h1 style={{ textAlign: 'left', marginBottom: '20px' }}>My Profile</h1>
 
       <div style={{ display: 'flex', gap: '200px', width: '100%' }}>
@@ -59,48 +120,110 @@ function ProfilePage() {
         </div>
 
         {/* Right side with Profile Information Form */}
-        <div style={{ flex: '3' }}>
-          <h2 style={{ fontSize: '24px', marginBottom: '20px' }}>Personal Information</h2>
-          <form style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
-            <div>
-              <label style={{ fontSize: '18px', fontWeight: 'bold' }}>Full Name</label> <br/>
-              <input type="text" placeholder="Enter full name" style={{ width: '500px', padding: '12px', fontSize: '16px' }} />
-            </div>
+        {isLoading ? (
+          <div>Loading...</div>
+        ) : error ? (
+          <div>{error}</div>
+        ) : (
+          <div style={{ flex: '3' }}>
+            <h2 style={{ fontSize: '24px', marginBottom: '20px' }}>Personal Information</h2>
+            <form style={{ display: 'flex', flexDirection: 'column', gap: '20px' }} onSubmit={handleFormSubmit}>
+              <div>
+                <label style={{ fontSize: '18px', fontWeight: 'bold' }}>First Name</label> <br />
+                <input
+                  type="text"
+                  value={formData.fname}
+                  onChange={(e) => setFormData({ ...formData, fname: e.target.value })}
+                  placeholder="Enter full name"
+                  style={{ width: '500px', padding: '12px', fontSize: '16px' }}
+                />
+              </div>
 
-            <div>
-              <label style={{ fontSize: '18px', fontWeight: 'bold' }}>Last Name</label> <br/>
-              <input type="text" placeholder="Enter last name" style={{ width: '500px', padding: '12px', fontSize: '16px' }} />
-            </div>
+              <div>
+                <label style={{ fontSize: '18px', fontWeight: 'bold' }}>Last Name</label> <br />
+                <input
+                  type="text"
+                  value={formData.lname}
+                  onChange={(e) => setFormData({ ...formData, lname: e.target.value })}
+                  placeholder="Enter full name"
+                  style={{ width: '500px', padding: '12px', fontSize: '16px' }}
+                />
+              </div>
 
-            <div>
-              <label style={{ fontSize: '18px', fontWeight: 'bold' }}>Email</label> <br/>
-              <input type="email" placeholder="Enter email" style={{ width: '500px', padding: '12px', fontSize: '16px' }} />
-            </div>
+              <div>
+                <label style={{ fontSize: '18px', fontWeight: 'bold' }}>Email</label> <br />
+                <input
+                  type="email"
+                  value={formData.email}
+                  onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                  placeholder="Enter email address"
+                  style={{ width: '500px', padding: '12px', fontSize: '16px' }}
+                />
+              </div>
 
-            <div>
-              <label style={{ fontSize: '18px', fontWeight: 'bold' }}>About</label> <br/>
-              <textarea placeholder="Tell something about yourself" style={{ width: '500px', padding: '12px', fontSize: '16px', height: '100px' }} />
-            </div>
+              <div>
+                <label style={{ fontSize: '18px', fontWeight: 'bold' }}>State</label> <br />
+                <input
+                  type="text"
+                  value={formData.state}
+                  onChange={(e) => setFormData({ ...formData, state: e.target.value })}
+                  placeholder="Enter state"
+                  style={{ width: '500px', padding: '12px', fontSize: '16px' }}
+                />
+              </div>
 
-            <div>
-              <label style={{ fontSize: '18px', fontWeight: 'bold' }}>City/Town</label> <br/>
-              <input type="text" placeholder="Enter city or town" style={{ width: '500px', padding: '12px', fontSize: '16px' }} />
-            </div>
+              <div>
+                <label style={{ fontSize: '18px', fontWeight: 'bold' }}>City</label> <br />
+                <input
+                  type="text"
+                  value={formData.city}
+                  onChange={(e) => setFormData({ ...formData, city: e.target.value })}
+                  placeholder="Enter city"
+                  style={{ width: '500px', padding: '12px', fontSize: '16px' }}
+                />
+              </div>
 
-            <div>
-              <label style={{ fontSize: '18px', fontWeight: 'bold' }}>Country</label> <br/>
-              <select style={{ width: '500px', padding: '12px', fontSize: '16px' }}>
-                <option value="Sri Lanka">Sri Lanka</option>
-                <option value="USA">USA</option>
-                <option value="India">India</option>
-                <option value="UK">UK</option>
-                <option value="Australia">Australia</option>
-              </select>
-            </div>
-          </form>
-        </div>
+              <div>
+                <label style={{ fontSize: '18px', fontWeight: 'bold' }}>Street</label> <br />
+                <input
+                  type="text"
+                  value={formData.street}
+                  onChange={(e) => setFormData({ ...formData, street: e.target.value })}
+                  placeholder="Enter street"
+                  style={{ width: '500px', padding: '12px', fontSize: '16px' }}
+                />
+              </div>
+
+              <div>
+                <label style={{ fontSize: '18px', fontWeight: 'bold' }}>Postal Code</label> <br />
+                <input
+                  type="text"
+                  value={formData.postalCode}
+                  onChange={(e) => setFormData({ ...formData, postalCode: e.target.value })}
+                  placeholder="Enter postal code"
+                  style={{ width: '500px', padding: '12px', fontSize: '16px' }}
+                />
+              </div>
+
+              <div>
+                <label style={{ fontSize: '18px', fontWeight: 'bold' }}>Username</label> <br />
+                <input
+                  type="text"
+                  value={formData.username}
+                  onChange={(e) => setFormData({ ...formData, username: e.target.value })}
+                  placeholder="Enter username"
+                  style={{ width: '500px', padding: '12px', fontSize: '16px' }}
+                />
+              </div>
+
+              <button type="submit" style={{ width: '150px', backgroundColor: 'blue', color: 'white', padding: '10px', fontSize: '16px', border: 'none', cursor: 'pointer' }}>
+                Update
+              </button>
+            </form>
+          </div>
+        )}
       </div>
-    </div>
+    </div >
   );
 }
 
