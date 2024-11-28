@@ -1,8 +1,8 @@
 import React from 'react';
-import Header from './Header';
+
 import './Payments1.css';
 import OrderSummary from './OrderSummary';
-import Footer from './Footer';
+
 import FeatureSection from './FeatureSection';
 
 function Payments3() {
@@ -11,7 +11,7 @@ function Payments3() {
       data-layername="payment1"
       className="flex overflow-hidden flex-col bg-white"
     >
-      <Header />
+  
       <main>
         {/* Checkout Section */}
         <section className="flex flex-col justify-center items-center px-20 py-12 mt-2 w-full text-white bg-slate-900 max-md:px-5 max-md:max-w-full">
@@ -93,7 +93,7 @@ function Payments3() {
 
       {/* Additional Sections */}
       <FeatureSection />
-      <Footer />
+     
     </div>
   );
 }

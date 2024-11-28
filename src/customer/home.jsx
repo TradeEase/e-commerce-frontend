@@ -1,23 +1,25 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom'; // Import the useNavigate hook
+import { useNavigate } from 'react-router-dom';
 import './home.css';
 
 function Home() {
   const [categories, setCategory] = useState([]);
   const [loading, setLoading] = useState(true);
-  const navigate = useNavigate(); // Initialize the navigate hook
+  const [error, setError] = useState(null); // Added error state
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchCategory = async () => {
       try {
         const response = await fetch('http://localhost:8083/api/product/categories');
         if (!response.ok) {
-          throw new Error('Server Error');
+          throw new Error('Failed to fetch categories');
         }
         const data = await response.json();
         setCategory(data);
       } catch (error) {
         console.error('Error fetching data: ', error);
+        setError('Unable to load categories. Please try again later.');
       } finally {
         setLoading(false);
       }
@@ -26,7 +28,7 @@ function Home() {
   }, []);
 
   const handleCategoryClick = (categoryId) => {
-    navigate(`/category/${categoryId}`); // Navigate to the category page with categoryId as a URL parameter
+    navigate(`/category/${categoryId}`);
   };
 
   return (
@@ -41,7 +43,12 @@ function Home() {
           </p>
           <div className="buttons">
             <button className="primary-button">25% Off Festival</button>
-            <button className="secondary-button">Discover</button>
+            <button
+              className="secondary-button"
+              onClick={() => navigate('/discover')} // Navigate to a discover route
+            >
+              Discover
+            </button>
           </div>
         </div>
         <div className="showcase-image">
@@ -49,23 +56,26 @@ function Home() {
         </div>
       </div>
 
-      <nav className="breadcrumb">
-        Home / Category
-      </nav>
+      <nav className="breadcrumb">Home / Category</nav>
 
       <div className="category-gallery">
         {loading ? (
           <p>Loading categories...</p>
+        ) : error ? (
+          <p>{error}</p>
         ) : categories.length > 0 ? (
           categories.map((category) => (
             <div
               key={category.categoryId}
-              className={`category-card`}
+              className="category-card"
+              role="button" // Accessibility enhancement
+              tabIndex={0} // Make it focusable
               onClick={() => handleCategoryClick(category.categoryId)}
             >
               <h2>{category.name}</h2>
               <p>
-                <strong>Description:</strong> {category.description || 'No description available'}
+                <strong>Description:</strong>{' '}
+                {category.description || 'No description available'}
               </p>
             </div>
           ))

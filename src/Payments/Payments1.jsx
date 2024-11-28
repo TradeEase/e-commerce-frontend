@@ -1,45 +1,73 @@
-import React from 'react';
-import Header from './Header';
-import './Payments1.css'; 
-import BillingDetails from './BillingDetails';
-import OrderSummary from './OrderSummary';
-import Footer from './Footer';
-import FeatureSection from './FeatureSection';
+import React, { useState } from 'react';
+import PaymentForm from './components/PaymentForm';
+import { ShoppingBag, CheckCircle, XCircle } from 'lucide-react';
 
 function Payments1() {
+  const [paymentStatus, setPaymentStatus] = useState('idle'); // Removed TypeScript type annotations
+  const [errorMessage, setErrorMessage] = useState('');
+
+  const handleSuccess = () => {
+    setPaymentStatus('success');
+    // You might want to redirect to an order confirmation page here
+  };
+
+  const handleError = (error) => {
+    setPaymentStatus('error');
+    setErrorMessage(error);
+  };
+
   return (
-    <div data-layername="payment1" className="flex overflow-hidden flex-col bg-white">
-      <Header />
-      <main>
-        <section className="flex flex-col justify-center items-center px-20 py-12 mt-2 w-full text-white whitespace-nowrap bg-slate-900 max-md:px-5 max-md:max-w-full">
-          <div className="flex flex-col max-w-full w-[233px]">
-            <h1 data-layername="checkout" className="text-5xl font-medium max-md:text-4xl">
-              Checkout
-            </h1>
-            <div className="flex gap-1.5 self-center max-w-full text-base w-[157px]">
-              <div data-layername="home" className="grow font-medium">
-                Home
-              </div>
-              <img loading="lazy" src="https://cdn.builder.io/api/v1/image/assets/97ad27ef41eb41c881f5f55b1d2863ce/17356b23804ad799663b7f68cc581ad281559e951b231e78b7cdcab44ad361b0?apiKey=97ad27ef41eb41c881f5f55b1d2863ce&" alt="" className="object-contain shrink-0 my-auto w-5 aspect-square" />
-              <div data-layername="checkout" className="font-light">
-                Checkout
-              </div>
-            </div>
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
+      <div className="max-w-7xl mx-auto px-4 py-12">
+        <div className="text-center mb-12">
+          <div className="flex justify-center mb-4">
+            <ShoppingBag className="h-12 w-12 text-blue-600" />
           </div>
-        </section>
-        <section className="flex flex-col self-center w-full max-w-[1161px] max-md:max-w-full">
-          <div className="max-md:max-w-full">
-            <div className="flex gap-20 max-md:flex-col">
-              <BillingDetails />
-              <OrderSummary />
-            </div>
+          <h1 className="text-4xl font-bold text-gray-900 mb-4">Complete Your Purchase</h1>
+          <p className="text-lg text-gray-600">Secure payment powered by Stripe</p>
+        </div>
+
+        {paymentStatus === 'idle' && (
+          <PaymentForm
+            amount={9999} // $99.99
+            onSuccess={handleSuccess}
+            onError={handleError}
+          />
+        )}
+
+        {paymentStatus === 'success' && (
+          <div className="max-w-md mx-auto bg-white rounded-lg shadow-xl p-8 text-center">
+            <CheckCircle className="h-16 w-16 text-green-500 mx-auto mb-4" />
+            <h2 className="text-2xl font-bold text-gray-900 mb-2">Payment Successful!</h2>
+            <p className="text-gray-600 mb-6">Thank you for your purchase. You will receive a confirmation email shortly.</p>
+            <button
+              onClick={() => setPaymentStatus('idle')}
+              className="bg-blue-600 text-white py-2 px-6 rounded-lg font-semibold hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors"
+            >
+              Make Another Payment
+            </button>
           </div>
-        </section>
-      </main>
-      <FeatureSection />
-      <Footer />
+        )}
+
+        {paymentStatus === 'error' && (
+          <div className="max-w-md mx-auto bg-white rounded-lg shadow-xl p-8 text-center">
+            <XCircle className="h-16 w-16 text-red-500 mx-auto mb-4" />
+            <h2 className="text-2xl font-bold text-gray-900 mb-2">Payment Failed</h2>
+            <p className="text-red-600 mb-6">{errorMessage}</p>
+            <button
+              onClick={() => setPaymentStatus('idle')}
+              className="bg-blue-600 text-white py-2 px-6 rounded-lg font-semibold hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors"
+            >
+              Try Again
+            </button>
+          </div>
+        )}
+
+        <div className="mt-12 text-center text-sm text-gray-500">
+          <p>This is a secure SSL encrypted payment</p>
+        </div>
+      </div>
     </div>
   );
 }
-
 export default Payments1;
