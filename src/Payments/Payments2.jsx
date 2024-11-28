@@ -1,15 +1,15 @@
 import React from 'react';
-import Header from './Header';
+
 import './Payments1.css';
 import OrderSummary from './OrderSummary';
-import Footer from './Footer';
+
 import FeatureSection from './FeatureSection';
 import PaymentMethod from "./PaymentMethod";
 
 function Payments2() {
   return (
     <div data-layername="payment1" className="flex overflow-hidden flex-col bg-white">
-      <Header />
+     
       <main>
         <section className="flex flex-col justify-center items-center px-20 py-12 mt-2 w-full text-white whitespace-nowrap bg-slate-900 max-md:px-5 max-md:max-w-full">
           <div className="flex flex-col max-w-full w-[233px]">
@@ -79,7 +79,7 @@ function Payments2() {
         </section>
       </main>
       <FeatureSection />
-      <Footer />
+  
     </div>
   );
 }
