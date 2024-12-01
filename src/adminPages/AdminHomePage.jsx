@@ -1,64 +1,100 @@
 import React from 'react';
-import './AdminHomePage.css';
+import Navbar from './components/Navbar';
 
 const AdminHomePage = () => {
+  const styles = {
+    adminHomepage: {
+      display: 'flex',
+      height: '100vh',
+      marginTop: '85px',
+    },
+    mainContent: {
+      flex: 1,
+      padding: '20px',
+    },
+    topBoxes: {
+      display: 'flex',
+      gap: '20px',
+      marginTop: '30px',
+      marginBottom: '30px',
+      height: '140px',
+    },
+    box: {
+      flex: 1,
+      padding: '20px',
+      color: '#fff',
+      textAlign: 'center',
+      borderRadius: '5px',
+    },
+    box1: { backgroundColor: '#f39c12' },
+    box2: { backgroundColor: '#e74c3c' },
+    box3: { backgroundColor: '#2ecc71' },
+    tableContainer: {
+      width: '100%',
+    },
+    table: {
+      width: '100%',
+      borderCollapse: 'collapse',
+    },
+    tableCell: {
+      padding: '12px',
+      border: '1px solid #ddd',
+      textAlign: 'left',
+    },
+    tableHeader: {
+      backgroundColor: '#f4f4f4',
+    },
+  };
+
   return (
-    <div className="admin-homepage">
-      {/* Left Navigation Bar */}
-      <div className="sidebar">
-        <h2>Dashboard</h2>
-        <nav>
-          <a href="#customers">Customers</a>
-          <a href="#products">Products</a>
-          <a href="#admin-creation">Admin Creation</a>
-          <a href="#categories">Categories</a>
-        </nav>
-      </div>
+    <div style={styles.adminHomepage}>
+      {/* Sidebar Component */}
+      <Navbar />
 
       {/* Main Content Area */}
-      <div className="main-content">
+      <div style={styles.mainContent}>
         {/* Top Boxes */}
-        <div className="top-boxes">
-          <div className="box box1">
+        <div style={styles.topBoxes}>
+          <div style={{ ...styles.box, ...styles.box1 }}>
             <h3>Order Pending</h3>
           </div>
-          <div className="box box2">
+          <div style={{ ...styles.box, ...styles.box2 }}>
             <h3>Order Cancel</h3>
           </div>
-          <div className="box box3">
+          <div style={{ ...styles.box, ...styles.box3 }}>
             <h3>Today Income</h3>
           </div>
         </div>
 
         {/* Table */}
-        <div className="table-container">
-          <table>
+        <div style={styles.tableContainer}>
+          <table style={styles.table}>
             <thead>
               <tr>
-                <th>Order ID</th>
-                <th>Payment Method</th>
-                <th>Order Date</th>
-                <th>Status</th>
+                <th style={{ ...styles.tableCell, ...styles.tableHeader }}>Order ID</th>
+                <th style={{ ...styles.tableCell, ...styles.tableHeader }}>Payment Method</th>
+                <th style={{ ...styles.tableCell, ...styles.tableHeader }}>Order Date</th>
+                <th style={{ ...styles.tableCell, ...styles.tableHeader }}>Status</th>
               </tr>
             </thead>
             <tbody>
               <tr>
-                <td>12345</td>
-                <td>Credit Card</td>
-                <td>2024-11-10</td>
-                <td>Pending</td>
+                <td style={styles.tableCell}>12345</td>
+                <td style={styles.tableCell}>Credit Card</td>
+                <td style={styles.tableCell}>2024-11-10</td>
+                <td style={styles.tableCell}>Pending</td>
               </tr>
               <tr>
-                <td>67890</td>
-                <td>PayPal</td>
-                <td>2024-11-11</td>
-                <td>Cancelled</td>
+                <td style={styles.tableCell}>67890</td>
+                <td style={styles.tableCell}>PayPal</td>
+                <td style={styles.tableCell}>2024-11-11</td>
+                <td style={styles.tableCell}>Cancelled</td>
               </tr>
               <tr>
-                <td>11223</td>
-                <td>Bank Transfer</td>
-                <td>2024-11-12</td>
-                <td>Completed</td>
+                <td style={styles.tableCell}>11223</td>
+                <td style={styles.tableCell}>Bank Transfer</td>
+                <td style={styles.tableCell}>2024-11-12</td>
+                <td style={styles.tableCell}>Completed</td>
               </tr>
             </tbody>
           </table>
