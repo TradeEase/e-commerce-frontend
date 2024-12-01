@@ -20,6 +20,7 @@ import CustomerPage from "./adminPages/CustomersPage";
 import Checkout from "./checkout/Checkout";
 import Cartpage from "./Cartpage/cartpage";
 import Orders from "./Orders/Orders";
+import CategoryPage from "./customer/CategoryPage";
 import ReturnOrder from "./Orders/ReturnOrder";
 import Payments1 from "./Payments/Payments1";
 import Payments2 from "./Payments/Payments2";
