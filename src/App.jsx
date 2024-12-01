@@ -19,11 +19,12 @@ import Checkout from "./checkout/Checkout";
 import Cartpage from "./Cartpage/cartpage"; // Ensure case matches file name
 
 import Orders from "./Orders/Orders";
+import CategoryPage from "./customer/CategoryPage";
 
 // Layout component with Navbar, Outlet, and Footer
 const Layout = ({ element }) => (
   <div>
-    <NavBar />
+    {/* <NavBar /> */}
     {element}
     <Footer />
   </div>
@@ -41,6 +42,7 @@ const router = createBrowserRouter([
   { path: "/adminhomepage", element: <Layout element={<AdminHomePage />} /> },
   { path: "/orders", element: <Layout element={<Orders />} /> },
   { path: "/login", element: <Login /> },
+  { path: "/category/:categoryId", element: <Layout element={<CategoryPage />} /> },
 ]);
 
 function App(){
