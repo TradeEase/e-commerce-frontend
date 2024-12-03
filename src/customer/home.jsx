@@ -1,13 +1,37 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import jwtDecode from 'jwt-decode'; // Import jwt-decode library
 import './home.css';
-import { jwtDecode } from 'jwt-decode';
 
 function Home() {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [userId, setUserId] = useState(null); // State to store decoded user ID
   const navigate = useNavigate();
+
+  // Function to decode the user ID from JWT
+  const getUserIdFromToken = (jwt) => {
+    try {
+      const decodedToken = jwtDecode(jwt);
+      return decodedToken.userId; // Adjust this based on the payload structure
+    } catch (error) {
+      console.error('Invalid token', error);
+      return null;
+    }
+  };
+
+  // Example token stored in localStorage after login
+  const jwt = localStorage.getItem('jwt'); // Replace with how you store the token
+  console.log('JWT Token:', jwt); 
+
+  useEffect(() => {
+    if (jwt) {
+      const id = getUserIdFromToken(jwt);
+      setUserId(id);
+      console.log('Decoded User ID:', id); // Log or use the user ID as needed
+    }
+  }, [jwt]);
 
   // Fetch products from the backend
   useEffect(() => {

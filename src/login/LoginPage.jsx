@@ -1,11 +1,9 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
-import { useNavigate } from 'react-router-dom'; // Import for navigation
+import { Link, useNavigate } from 'react-router-dom';
 import './Form.css';
 import loginimg from '../assets/LoginIMG.jpg';
-import axios from 'axios'; // Ensure axios is installed for making HTTP requests
-//import jwtDecode from 'jwt-decode';
-
+import axios from 'axios'; 
+import jwtDecode from 'jwt-decode'; 
 function Login() {
     const [formData, setFormData] = useState({
         email: '',
@@ -15,7 +13,6 @@ function Login() {
     const [errors, setErrors] = useState({});
     const [errorMsg, setErrorMsg] = useState(''); // For displaying backend validation errors
     const navigate = useNavigate(); // Hook for navigation
-
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -45,24 +42,53 @@ function Login() {
         e.preventDefault();
         if (validate()) {
             try {
+                // Step 1: Login request
                 const response = await axios.post('http://localhost:8088/auth/signin', formData, {
                     headers: {
                         'Content-Type': 'application/json'
                     }
                 });
-
+    
                 if (response.data && response.data.jwt) {
-                    navigate('/');
+                    // Store JWT in localStorage
                     localStorage.setItem('token', response.data.jwt);
+    
+                    // Step 3: Decode JWT to get user info
+                    const decodedToken = jwtDecode(response.data.jwt);
+                    //console.log('Decoded Token:', decodedToken);
+    
+                    if (decodedToken.userId) {
+                        console.log('User ID:', decodedToken.userId);
+    
+                        // Step 4: Send userId in POST request to carts API
+                        const cartResponse = await axios.post(
+                            'http://localhost:8082/api/order/carts',
+                            { userId: decodedToken.userId }, // Send userId in request body
+                            {
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                    Authorization: `Bearer ${response.data.jwt}` // Pass the JWT for authentication
+                                }
+                            }
+                        );
+    
+                        console.log('Cart API Response:', cartResponse.data);
+    
+                        // Navigate to home page after both requests are successful
+                        navigate('/');
+                    } else {
+                        console.log('User ID not found in token');
+                    }
+    
                     console.log('Login successful', response.data);
-                    // Redirect user to a different page or show a success message
                 }
             } catch (error) {
-                console.error('Login failed:', error);
-                setErrorMsg('Invalid email or password'); // Display generic error message for failed login
+                console.error('Login or Cart API request failed:', error);
+                setErrorMsg('Invalid email or password'); // Display generic error message
             }
         }
     };
+    
 
     return (
         <div className="auth-container">
