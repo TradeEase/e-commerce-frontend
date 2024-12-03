@@ -227,3 +227,9 @@
     font-size: 0.875rem;
   }
 }
+
+.stars-container {
+  display: flex;
+  gap: 4px; /* Adjust spacing between stars if needed */
+  align-items: center;
+}

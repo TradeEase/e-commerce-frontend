@@ -1,18 +1,30 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import Axios from 'axios';
 import Navbar from './components/Navbar';
 
 const AdminCreationPage = () => {
   const [formData, setFormData] = useState({
     fullName: '',
     email: '',
-    contactNumber: '',
+    mobile: '',
     address: '',
   });
 
   const [admins, setAdmins] = useState([]);
   const [isEditing, setIsEditing] = useState(false);
   const [editIndex, setEditIndex] = useState(null);
-  const [showForm, setShowForm] = useState(false); // State to toggle form visibility
+  const [showForm, setShowForm] = useState(false);
+
+  useEffect(() => {
+    // Fetch existing admins from the backend
+    Axios.get('http://localhost:8088/auth/getAllusersonly')
+      .then((response) => {
+        setAdmins(response.data);
+      })
+      .catch((error) => {
+        console.error('Error fetching admin data:', error);
+      });
+  }, []);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -24,25 +36,48 @@ const AdminCreationPage = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    
     if (isEditing) {
+      // Update existing admin
       const updatedAdmins = admins.map((admin, index) =>
         index === editIndex ? formData : admin
       );
       setAdmins(updatedAdmins);
-      setIsEditing(false);
-      setEditIndex(null);
+  
+      // Make a PUT request to update the admin on the backend
+      Axios.post(`http://localhost:8088/auth/update`, formData)
+        .then((response) => {
+          alert(response.data.message);
+          setIsEditing(false);
+          setEditIndex(null);
+        })
+        .catch((error) => {
+          console.error('Error updating admin:', error);
+        });
     } else {
-      setAdmins([...admins, formData]);
+      // Add a new admin with role set to 'USER'
+      const newAdmin = { ...formData, role: 'USER' };
+      setAdmins([...admins, newAdmin]);
+  
+      // Make a POST request to create a new admin on the backend
+      Axios.post('http://localhost:8088/auth/update', newAdmin)
+        .then((response) => {
+          alert(response.data.message);
+        })
+        .catch((error) => {
+          console.error('Error creating admin:', error);
+        });
     }
+  
+    // Reset form data and hide form after submission
     setFormData({
       fullName: '',
       email: '',
-      contactNumber: '',
+      mobile: '',
       address: '',
     });
-    setShowForm(false); // Hide the form after submission
+    setShowForm(false);
   };
-
   const handleEdit = (index) => {
     setFormData(admins[index]);
     setIsEditing(true);
@@ -50,9 +85,18 @@ const AdminCreationPage = () => {
     setShowForm(true); // Show the form when editing
   };
 
+
+
   const handleDelete = (index) => {
-    const updatedAdmins = admins.filter((_, i) => i !== index);
-    setAdmins(updatedAdmins);
+    // Make a DELETE request to delete the admin
+    Axios.delete(`http://localhost:8088/auth/delete/${admins[index].id}`)
+      .then(() => {
+        alert('Admin deleted successfully');
+        setAdmins(admins.filter((_, i) => i !== index));
+      })
+      .catch((error) => {
+        console.error('Error deleting admin:', error);
+      });
   };
 
   // Styles
@@ -60,20 +104,45 @@ const AdminCreationPage = () => {
     container: {
       display: 'flex',
       minHeight: '100vh',
+      position: 'relative',
     },
     content: {
       flex: 1,
       marginLeft: '200px',
       padding: '20px',
     },
+    buttonContainer: {
+      position: 'absolute',
+      top: '60px',
+      right: '20px',
+      zIndex: 1000,
+    },
+    button: {
+      width: '150px',
+      padding: '10px',
+      backgroundColor: 'blue',
+      color: 'white',
+      border: 'none',
+      borderRadius: '4px',
+      cursor: 'pointer',
+    },
+    formOverlay: {
+      position: 'fixed',
+      top: 0,
+      left: 0,
+      width: '100%',
+      height: '100%',
+      backgroundColor: 'rgba(0, 0, 0, 0.5)',
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
     formContainer: {
       maxWidth: '600px',
-      margin: '0 auto',
       padding: '20px',
-      border: '1px solid #ccc',
+      backgroundColor: '#fff',
       borderRadius: '8px',
       boxShadow: '0 0 10px rgba(0,0,0,0.1)',
-      backgroundColor: '#fff',
     },
     formHeader: {
       textAlign: 'center',
@@ -95,22 +164,14 @@ const AdminCreationPage = () => {
       borderRadius: '4px',
       border: '1px solid #ddd',
     },
-    buttonContainer: {
+    buttonContainerForm: {
       textAlign: 'center',
       marginTop: '30px',
     },
-    button: {
-      width: '150px',
-      padding: '10px',
-      backgroundColor: 'blue',
-      color: 'white',
-      border: 'none',
-      borderRadius: '4px',
-      cursor: 'pointer',
-    },
     table: {
       width: '100%',
-      marginTop: '30px',
+      marginTop: '100px',
+      marginRight: '100px',
       borderCollapse: 'collapse',
     },
     tableHeader: {
@@ -133,23 +194,64 @@ const AdminCreationPage = () => {
 
   return (
     <div style={styles.container}>
-      {/* Navbar */}
       <Navbar />
-
-      {/* Main Content */}
+      <div style={styles.buttonContainer}>
+        <button
+          style={styles.button}
+          onClick={() => setShowForm(true)}
+        >
+          Add Admin
+        </button>
+      </div>
       <div style={styles.content}>
-        {/* Toggle Form Button */}
-        <div style={styles.buttonContainer}>
-          <button
-            style={styles.button}
-            onClick={() => setShowForm(!showForm)}
-          >
-            {showForm ? 'Hide Form' : 'Add Admin'}
-          </button>
-        </div>
-
-        {/* Admin Form */}
-        {showForm && (
+        {admins.length > 0 && (
+          <table style={styles.table}>
+            <thead style={styles.tableHeader}>
+              <tr>
+                <th style={styles.tableCell}>Full Name</th>
+                <th style={styles.tableCell}>Email</th>
+                <th style={styles.tableCell}>Contact Number</th>
+                <th style={styles.tableCell}>Address</th>
+                <th style={styles.tableCell}>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {admins.map((admin, index) => (
+                <tr key={index}>
+                  <td style={styles.tableCell}>{admin.fullName}</td>
+                  <td style={styles.tableCell}>{admin.email}</td>
+                  <td style={styles.tableCell}>{admin.mobile}</td>
+                  <td style={styles.tableCell}>{admin.address}</td>
+                  <td style={styles.tableCell}>
+                    <button
+                      onClick={() => handleEdit(index)}
+                      style={{
+                        ...styles.actionButton,
+                        backgroundColor: 'green',
+                        color: 'white',
+                      }}
+                    >
+                      Edit
+                    </button>
+                    <button
+                      onClick={() => handleDelete(index)}
+                      style={{
+                        ...styles.actionButton,
+                        backgroundColor: 'red',
+                        color: 'white',
+                      }}
+                    >
+                      Delete
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
+      </div>
+      {showForm && (
+        <div style={styles.formOverlay}>
           <div style={styles.formContainer}>
             <h2 style={styles.formHeader}>
               {isEditing ? 'Edit Admin' : 'Create Admin'}
@@ -181,8 +283,8 @@ const AdminCreationPage = () => {
                 <label style={styles.label}>Contact Number:</label>
                 <input
                   type="text"
-                  name="contactNumber"
-                  value={formData.contactNumber}
+                  name="mobile"
+                  value={formData.mobile}
                   onChange={handleChange}
                   required
                   style={styles.input}
@@ -199,62 +301,23 @@ const AdminCreationPage = () => {
                   style={styles.input}
                 />
               </div>
-              <div style={styles.buttonContainer}>
+              <div style={styles.buttonContainerForm}>
                 <button type="submit" style={styles.button}>
                   {isEditing ? 'Update' : 'Create'}
                 </button>
               </div>
             </form>
+            <div style={styles.buttonContainerForm}>
+              <button
+                style={styles.button}
+                onClick={() => setShowForm(false)}
+              >
+                Close
+              </button>
+            </div>
           </div>
-        )}
-
-        {/* Admins Table */}
-        {admins.length > 0 && (
-          <table style={styles.table}>
-            <thead style={styles.tableHeader}>
-              <tr>
-                <th style={styles.tableCell}>Full Name</th>
-                <th style={styles.tableCell}>Email</th>
-                <th style={styles.tableCell}>Contact Number</th>
-                <th style={styles.tableCell}>Address</th>
-                <th style={styles.tableCell}>Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {admins.map((admin, index) => (
-                <tr key={index}>
-                  <td style={styles.tableCell}>{admin.fullName}</td>
-                  <td style={styles.tableCell}>{admin.email}</td>
-                  <td style={styles.tableCell}>{admin.contactNumber}</td>
-                  <td style={styles.tableCell}>{admin.address}</td>
-                  <td style={styles.tableCell}>
-                    <button
-                      onClick={() => handleEdit(index)}
-                      style={{
-                        ...styles.actionButton,
-                        backgroundColor: 'green',
-                        color: 'white',
-                      }}
-                    >
-                      Edit
-                    </button>
-                    <button
-                      onClick={() => handleDelete(index)}
-                      style={{
-                        ...styles.actionButton,
-                        backgroundColor: 'red',
-                        color: 'white',
-                      }}
-                    >
-                      Delete
-                    </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        )}
-      </div>
+        </div>
+      )}
     </div>
   );
 };

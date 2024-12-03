@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import axios from 'axios';
 import './Form.css';
 import loginimg from '../assets/LoginIMG.jpg';
-
 
 function Signup() {
     const [formData, setFormData] = useState({
@@ -53,10 +53,27 @@ function Signup() {
         return Object.keys(newErrors).length === 0;
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
         if (validateForm()) {
-            alert('Account created successfully!');
+            try {
+                // Sending the user data to the backend
+                const response = await axios.post('http://localhost:8088/auth/signup', {
+                    email: formData.email,
+                    password: formData.password,
+                    fullName: `${formData.firstName} ${formData.lastName}`,
+                    mobile: formData.phone,
+                    role: 'ROLE_CUSTOMER' // Or 'CUSTOMER', based on your app's requirement
+                });
+                
+                // Handle success response
+                if (response.data.status) {
+                    alert(response.data.message);
+                }
+            } catch (error) {
+                console.error("Error during signup:", error);
+                alert('An error occurred while creating your account.');
+            }
         }
     };
 
@@ -64,7 +81,7 @@ function Signup() {
         <div className="auth-container">
             <div className="auth-box">
                 <div className="auth-image">
-                <img src={loginimg} alt="Login visual" />
+                    <img src={loginimg} alt="Login visual" />
                 </div>
                 <div className="auth-form">
                     <h1>FASCO</h1>
