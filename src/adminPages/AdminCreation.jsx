@@ -8,6 +8,8 @@ const AdminCreationPage = () => {
     address: '',
   });
 
+  const [statusMessage, setStatusMessage] = useState('');
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({
@@ -16,13 +18,32 @@ const AdminCreationPage = () => {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log('Admin Data:', formData);
+
+    try {
+      const response = await fetch('http://localhost:8088/api/admins', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
+
+      if (response.ok) {
+        setStatusMessage('Admin created successfully!');
+        setFormData({ fullName: '', email: '', contactNumber: '', address: '' });
+      } else {
+        setStatusMessage('Failed to create admin. Please try again.');
+      }
+    } catch (error) {
+      console.error('Error:', error);
+      setStatusMessage('An error occurred. Please try again later.');
+    }
   };
 
   return (
-    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '100vh' , marginLeft:'200px'}}>
+    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '100vh', marginLeft: '200px', marginTop: '50px' }}>
       <div style={{ width: '800px', padding: '20px', border: '1px solid #ccc', borderRadius: '8px', boxShadow: '0 0 10px rgba(0,0,0,0.1)' }}>
         <h2 style={{ textAlign: 'center', marginBottom: '30px' }}>Create Admin</h2>
         <form onSubmit={handleSubmit}>
@@ -76,6 +97,7 @@ const AdminCreationPage = () => {
             </button>
           </div>
         </form>
+        {statusMessage && <p style={{ textAlign: 'center', marginTop: '20px', color: statusMessage.includes('success') ? 'green' : 'red' }}>{statusMessage}</p>}
       </div>
     </div>
   );
