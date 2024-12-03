@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './home.css';
+import { jwtDecode } from 'jwt-decode';
 
 function Home() {
   const [categories, setCategory] = useState([]);
