@@ -4,32 +4,33 @@ import './home.css';
 import { jwtDecode } from 'jwt-decode';
 
 function Home() {
-  const [categories, setCategory] = useState([]);
+  const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null); // Added error state
+  const [error, setError] = useState(null);
   const navigate = useNavigate();
 
+  // Fetch products from the backend
   useEffect(() => {
-    const fetchCategory = async () => {
-      try {
-        const response = await fetch('http://localhost:8083/api/product/categories');
+    fetch('http://localhost:8083/api/product/products')
+      .then((response) => {
         if (!response.ok) {
-          throw new Error('Failed to fetch categories');
+          throw new Error('Network response was not ok');
         }
-        const data = await response.json();
-        setCategory(data);
-      } catch (error) {
-        console.error('Error fetching data: ', error);
-        setError('Unable to load categories. Please try again later.');
-      } finally {
+        return response.json();
+      })
+      .then((data) => {
+        setProducts(data);
         setLoading(false);
-      }
-    };
-    fetchCategory();
+      })
+      .catch((error) => {
+        setError(error.message);
+        setLoading(false);
+      });
   }, []);
 
-  const handleCategoryClick = (categoryId) => {
-    navigate(`/category/${categoryId}`);
+  // Navigate to product details page
+  const handleCategoryClick = (productId) => {
+    navigate(`/product/${productId}`);
   };
 
   return (
@@ -46,7 +47,7 @@ function Home() {
             <button className="primary-button">25% Off Festival</button>
             <button
               className="secondary-button"
-              onClick={() => navigate('/discover')} // Navigate to a discover route
+              onClick={() => navigate('/discover')}
             >
               Discover
             </button>
@@ -61,27 +62,26 @@ function Home() {
 
       <div className="category-gallery">
         {loading ? (
-          <p>Loading categories...</p>
+          <p>Loading products...</p>
         ) : error ? (
           <p>{error}</p>
-        ) : categories.length > 0 ? (
-          categories.map((category) => (
-            <div
-              key={category.categoryId}
-              className="category-card"
-              role="button" // Accessibility enhancement
-              tabIndex={0} // Make it focusable
-              onClick={() => handleCategoryClick(category.categoryId)}
-            >
-              <h2>{category.name}</h2>
-              <p>
-                <strong>Description:</strong>{' '}
-                {category.description || 'No description available'}
-              </p>
+        ) : products.length > 0 ? (
+          products.map((product) => (
+            <div key={product.productId} className="category-card">
+              <h2>{product.name}</h2>
+              <p><strong>Price:</strong> ${product.price}</p>
+              <p><strong>Description:</strong> {product.description}</p>
+              <p><strong>Quantity:</strong> {product.quantity}</p>
+              {product.image && (
+                <img src={product.image} alt={product.name} className="category-image" />
+              )}
+              <button onClick={() => handleCategoryClick(product.productId)}>
+                View Details
+              </button>
             </div>
           ))
         ) : (
-          <p>No categories found</p>
+          <p>No products found</p>
         )}
       </div>
     </section>
