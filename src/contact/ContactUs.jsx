@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import emailjs from "@emailjs/browser";
+
 
 function ContactUs() {
   const [formData, setFormData] = useState({
@@ -14,8 +16,26 @@ function ContactUs() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log("Form data submitted: ", formData);
-    setFormData({ name: '', email: '', message: '' });
+
+    // Replace these with your EmailJS keys
+    const serviceID = 'service_uf0kgsk';
+    const templateID = 'template_2vmh71j';
+    const userID = 'l5gbmN0vsmuax92O6';
+
+    emailjs.send(serviceID, templateID, formData, userID)
+      .then((response) => {
+        console.log('Email sent successfully:', response);
+        alert('Message sent successfully!');
+        setFormData({ name: '', email: '', message: '' }); // Clear the form after submission
+      })
+      .catch((error) => {
+       
+          console.error('Error details:', error);
+          console.error('Error message:', error.text);
+          alert('Failed to send the message. Please try again later.');
+     
+        
+      });
   };
 
   return (
@@ -78,12 +98,12 @@ function ContactUs() {
   );
 }
 
+// Styling (unchanged)
 const styles = {
   container: {
     padding: '20px',
     maxWidth: '1200px',
-    margin: '0 auto ' ,
-    
+    margin: '0 auto',
   },
   title: {
     textAlign: 'center',
@@ -96,17 +116,16 @@ const styles = {
     borderRadius: '8px',
     padding: '20px',
     boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)',
-    
   },
   content: {
     display: 'flex',
     justifyContent: 'space-between',
-    gap: '100px', 
+    gap: '100px',
   },
   leftSection: {
     flex: '1',
     marginRight: '20px',
-    marginTop:'50px'
+    marginTop: '50px',
   },
   subTitle: {
     fontSize: '1.5rem',
@@ -115,11 +134,11 @@ const styles = {
   paragraph: {
     fontSize: '1rem',
     color: '#555',
-    marginTop:'10px'
+    marginTop: '10px',
   },
   rightSection: {
     flex: '1',
-    marginRight:'20px',
+    marginRight: '20px',
   },
   form: {
     display: 'flex',

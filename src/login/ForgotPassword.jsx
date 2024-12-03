@@ -104,7 +104,7 @@ function ForgotPassword() {
                             </button>
                     </form>
                     <div className="links">
-                        <Link to="/">Already have an account? Login</Link>
+                        <Link to="/login">Already have an account? Login</Link>
                     </div>
                 </div>
             </div>

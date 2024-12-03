@@ -1,159 +1,324 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+import Navbar from './components/Navbar';
 
 const CustomersPage = () => {
-  const [customers, setCustomers] = useState([]);
-  const [showPopup, setShowPopup] = useState(false);
-  const [newCustomer, setNewCustomer] = useState({
-    name: "",
-    customerId: "",
+  const [formData, setFormData] = useState({
+    fullName: '',
+    email: '',
+    mobile: '',
+    address: '',
   });
-  const [editingCustomerId, setEditingCustomerId] = useState(null);
 
-  const handleAddCustomerClick = () => setShowPopup(true);
+  const [customers, setCustomers] = useState([]);
+  const [isEditing, setIsEditing] = useState(false);
+  const [editIndex, setEditIndex] = useState(null);
+  const [showForm, setShowForm] = useState(false); // State to toggle form visibility
 
-  const handleConfirmAddCustomer = () => {
-    setCustomers([...customers, { ...newCustomer, id: customers.length + 1 }]);
-    setNewCustomer({ name: "", customerId: "", description: "", image: null });
-    setShowPopup(false);
+  useEffect(() => {
+    fetchCustomers();
+  }, []);
+
+  // Fetch customers from the backend
+  const fetchCustomers = async () => {
+    try {
+      const response = await axios.get('http://localhost:8088/auth/getAllcustomersonly');
+      setCustomers(response.data);
+    } catch (error) {
+      console.error('Error fetching customers:', error);
+    }
   };
 
-  const handleCancelAddCustomer = () => {
-    setShowPopup(false);
-    setNewCustomer({ name: "", customerId: "", description: "", image: null });
+  // Handle form data change
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({
+      ...formData,
+      [name]: value,
+    });
   };
 
-  const handleEdit = (id) => setEditingCustomerId(id);
+  // Handle form submission for creating or updating a customer
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      if (isEditing) {
+        // Update existing customer
+        const updatedCustomer = customers[editIndex];
+        updatedCustomer.fullName = formData.fullName;
+        updatedCustomer.email = formData.email;
+        updatedCustomer.mobile = formData.mobile;
+        updatedCustomer.address = formData.address;
 
-  const handleSave = (id) => {
-    setEditingCustomerId(null);
+        const response = await axios.post(`http://localhost:8088/auth/update`, updatedCustomer);
+        if (response.status === 200) {
+          const updatedCustomers = [...customers];
+          updatedCustomers[editIndex] = updatedCustomer;
+          setCustomers(updatedCustomers);
+        }
+      } else {
+        // Create new customer
+        const response = await axios.post('http://localhost:8088/auth/update', formData);
+        if (response.status === 201) {
+          setCustomers([...customers, response.data]);
+        }
+      }
+    } catch (error) {
+      console.error('Error submitting form:', error);
+    }
+
+    // Reset form and close modal
+    setFormData({
+      fullName: '',
+      email: '',
+      mobile: '',
+      address: '',
+    });
+    setShowForm(false);
+    setIsEditing(false);
+    setEditIndex(null);
   };
 
-  const handleDelete = (id) => {
-    setCustomers(customers.filter((customer) => customer.id !== id));
+  const handleEdit = (index) => {
+    setFormData(customers[index]);
+    setIsEditing(true);
+    setEditIndex(index);
+    setShowForm(true);
   };
 
- 
+  const handleDelete = async (index) => {
+    try {
+      const response = await axios.delete(`http://localhost:8080/deleteCustomer/${customers[index].id}`);
+      if (response.status === 200) {
+        const updatedCustomers = customers.filter((_, i) => i !== index);
+        setCustomers(updatedCustomers);
+      }
+    } catch (error) {
+      console.error('Error deleting customer:', error);
+    }
+  };
+
+  // Styles
+  const styles = {
+    container: {
+      display: 'flex',
+      minHeight: '100vh',
+      position: 'relative',
+    },
+    content: {
+      flex: 1,
+      marginLeft: '200px',
+      padding: '20px',
+    },
+    buttonContainer: {
+      position: 'absolute',
+      top: '60px',
+      right: '20px',
+      zIndex: 1000,
+    },
+    button: {
+      width: '150px',
+      padding: '10px',
+      backgroundColor: 'blue',
+      color: 'white',
+      border: 'none',
+      borderRadius: '4px',
+      cursor: 'pointer',
+    },
+    formOverlay: {
+      position: 'fixed',
+      top: 0,
+      left: 0,
+      width: '100%',
+      height: '100%',
+      backgroundColor: 'rgba(0, 0, 0, 0.5)',
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
+    formContainer: {
+      maxWidth: '600px',
+      padding: '20px',
+      backgroundColor: '#fff',
+      borderRadius: '8px',
+      boxShadow: '0 0 10px rgba(0,0,0,0.1)',
+    },
+    formHeader: {
+      textAlign: 'center',
+      marginBottom: '30px',
+    },
+    formGroup: {
+      display: 'flex',
+      alignItems: 'center',
+      marginBottom: '15px',
+    },
+    label: {
+      width: '150px',
+      marginRight: '20px',
+      fontWeight: 'bold',
+    },
+    input: {
+      width: '100%',
+      padding: '8px',
+      borderRadius: '4px',
+      border: '1px solid #ddd',
+    },
+    buttonContainerForm: {
+      textAlign: 'center',
+      marginTop: '30px',
+    },
+    table: {
+      width: '100%',
+      marginTop: '100px',
+      marginRight: '100px',
+      borderCollapse: 'collapse',
+    },
+    tableHeader: {
+      backgroundColor: '#f4f4f4',
+      fontWeight: 'bold',
+    },
+    tableCell: {
+      border: '1px solid #ddd',
+      padding: '8px',
+      textAlign: 'center',
+    },
+    actionButton: {
+      margin: '0 5px',
+      padding: '5px 10px',
+      border: 'none',
+      borderRadius: '4px',
+      cursor: 'pointer',
+    },
+  };
 
   return (
-    <div>
-      <h2 style={{ marginTop: "140px", marginBottom: "20px" }}>Customers</h2>
-      <table border="1" style={{ width: "100%", marginBottom: "20px" }}>
-        <thead>
-          <tr>
-            <th>Customer Name</th>
-            <th>Customer ID</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          {customers.map((customer) => (
-            <tr key={customer.id} style={{ height: "auto" }}>
-              <td>
-                {editingCustomerId === customer.id ? (
-                  <input
-                    type="text"
-                    value={customer.name}
-                    onChange={(e) =>
-                      setCustomers(
-                        customers.map((c) =>
-                          c.id === customer.id
-                            ? { ...c, name: e.target.value }
-                            : c
-                        )
-                      )
-                    }
-                  />
-                ) : (
-                  customer.name
-                )}
-              </td>
-              <td>
-                {editingCustomerId === customer.id ? (
-                  <input
-                    type="text"
-                    value={customer.customerId}
-                    onChange={(e) =>
-                      setCustomers(
-                        customers.map((c) =>
-                          c.id === customer.id
-                            ? { ...c, customerId: e.target.value }
-                            : c
-                        )
-                      )
-                    }
-                  />
-                ) : (
-                  customer.customerId
-                )}
-              </td>
-             
-              <td>
-                {editingCustomerId === customer.id ? (
-                  <button onClick={() => handleSave(customer.id)}>Save</button>
-                ) : (
-                  <button onClick={() => handleEdit(customer.id)}>Edit</button>
-                )}
-                <button onClick={() => handleDelete(customer.id)}>
-                  Delete
-                </button>
-              </td>
-              
-            </tr>
-          ))}
-        </tbody>
-      </table>
-      <button
-        style={{
-          marginBottom: "130px",
-          marginTop: "50px",
-          backgroundColor: "purple",
-          color: "white",
-        }}
-        onClick={handleAddCustomerClick}
-      >
-        Add New Customer
-      </button>
+    <div style={styles.container}>
+      {/* Navbar */}
+      <Navbar />
 
-      {/* Popup for adding a new customer */}
-      {showPopup && (
-        <div style={popupStyles}>
-          <h2>Add New Customer</h2>
-          <input
-            type="text"
-            placeholder="Customer Name"
-            value={newCustomer.name}
-            onChange={(e) =>
-              setNewCustomer({ ...newCustomer, name: e.target.value })
-            }
-          />
-          <input
-            type="text"
-            placeholder="Customer ID"
-            value={newCustomer.customerId}
-            onChange={(e) =>
-              setNewCustomer({ ...newCustomer, customerId: e.target.value })
-            }
-          />
-          <button onClick={handleConfirmAddCustomer}>Confirm</button>
-          <button onClick={handleCancelAddCustomer}>Cancel</button>
+      {/* Add Customer Button */}
+      <div style={styles.buttonContainer}>
+        <button
+          style={styles.button}
+          onClick={() => setShowForm(true)}
+        >
+          Add Customer
+        </button>
+      </div>
+
+      {/* Main Content */}
+      <div style={styles.content}>
+        {/* Customers Table */}
+        {customers.length > 0 && (
+          <table style={styles.table}>
+            <thead style={styles.tableHeader}>
+              <tr>
+                <th style={styles.tableCell}>Full Name</th>
+                <th style={styles.tableCell}>Email</th>
+                <th style={styles.tableCell}>Contact Number</th>
+                <th style={styles.tableCell}>Address</th>
+                <th style={styles.tableCell}>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {customers.map((customer, index) => (
+                <tr key={index}>
+                  <td style={styles.tableCell}>{customer.fullName}</td>
+                  <td style={styles.tableCell}>{customer.email}</td>
+                  <td style={styles.tableCell}>{customer.mobile}</td>
+                  <td style={styles.tableCell}>{customer.address}</td>
+                  <td style={styles.tableCell}>
+                    <button
+                      onClick={() => handleEdit(index)}
+                      style={{
+                        ...styles.actionButton,
+                        backgroundColor: 'green',
+                        color: 'white',
+                      }}
+                    >
+                      Edit
+                    </button>
+                    <button
+                      onClick={() => handleDelete(index)}
+                      style={{
+                        ...styles.actionButton,
+                        backgroundColor: 'red',
+                        color: 'white',
+                      }}
+                    >
+                      Delete
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
+      </div>
+
+      {/* Form Modal */}
+      {showForm && (
+        <div style={styles.formOverlay}>
+          <div style={styles.formContainer}>
+            <h2 style={styles.formHeader}>
+              {isEditing ? 'Edit Customer' : 'Create Customer'}
+            </h2>
+            <form onSubmit={handleSubmit}>
+              <div style={styles.formGroup}>
+                <label style={styles.label}>Full Name:</label>
+                <input
+                  type="text"
+                  name="fullName"
+                  value={formData.fullName}
+                  onChange={handleChange}
+                  required
+                  style={styles.input}
+                />
+              </div>
+              <div style={styles.formGroup}>
+                <label style={styles.label}>Email:</label>
+                <input
+                  type="email"
+                  name="email"
+                  value={formData.email}
+                  onChange={handleChange}
+                  required
+                  style={styles.input}
+                />
+              </div>
+              <div style={styles.formGroup}>
+                <label style={styles.label}>Contact Number:</label>
+                <input
+                  type="text"
+                  name="mobile"
+                  value={formData.mobile}
+                  onChange={handleChange}
+                  required
+                  style={styles.input}
+                />
+              </div>
+              <div style={styles.formGroup}>
+                <label style={styles.label}>Address:</label>
+                <input
+                  type="text"
+                  name="address"
+                  value={formData.address}
+                  onChange={handleChange}
+                  required
+                  style={styles.input}
+                />
+              </div>
+              <div style={styles.buttonContainerForm}>
+                <button type="submit" style={styles.button}>
+                  {isEditing ? 'Update' : 'Create'}
+                </button>
+              </div>
+            </form>
+          </div>
         </div>
       )}
     </div>
   );
-};
-
-// Basic styling for the popup
-const popupStyles = {
-  position: "fixed",
-  top: "50%",
-  left: "50%",
-  transform: "translate(-50%, -50%)",
-  backgroundColor: "white",
-  padding: "20px",
-  boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
-  display: "flex",
-  flexDirection: "column",
-  gap: "10px",
 };
 
 export default CustomersPage;

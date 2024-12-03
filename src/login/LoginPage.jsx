@@ -1,7 +1,10 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom'; // Import for navigation
 import './Form.css';
 import loginimg from '../assets/LoginIMG.jpg';
+import axios from 'axios'; // Ensure axios is installed for making HTTP requests
+//import jwtDecode from 'jwt-decode';
 
 function Login() {
     const [formData, setFormData] = useState({
@@ -10,6 +13,9 @@ function Login() {
     });
 
     const [errors, setErrors] = useState({});
+    const [errorMsg, setErrorMsg] = useState(''); // For displaying backend validation errors
+    const navigate = useNavigate(); // Hook for navigation
+
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -35,11 +41,26 @@ function Login() {
         return Object.keys(validationErrors).length === 0;
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
         if (validate()) {
-            console.log('Login successful', formData);
-            // Add login logic here
+            try {
+                const response = await axios.post('http://localhost:8088/auth/signin', formData, {
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                if (response.data && response.data.jwt) {
+                    navigate('/');
+                    localStorage.setItem('token', response.data.jwt);
+                    console.log('Login successful', response.data);
+                    // Redirect user to a different page or show a success message
+                }
+            } catch (error) {
+                console.error('Login failed:', error);
+                setErrorMsg('Invalid email or password'); // Display generic error message for failed login
+            }
         }
     };
 
@@ -80,6 +101,7 @@ function Login() {
                             />
                             {errors.password && <div className="error-msg">{errors.password}</div>}
                         </div>
+                        {errorMsg && <div className="error-msg">{errorMsg}</div>}
                         <button type="submit" className="submit-btn">Sign In</button>
                     </form>
                     <div className="links">
