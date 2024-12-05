@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import './Form.css';
 import loginimg from '../assets/LoginIMG.jpg';
-import axios from 'axios'; 
-import jwtDecode from 'jwt-decode'; 
+import axios from 'axios';
+import jwtDecode from 'jwt-decode';
 function Login() {
     const [formData, setFormData] = useState({
         email: '',
@@ -48,18 +48,18 @@ function Login() {
                         'Content-Type': 'application/json'
                     }
                 });
-    
+
                 if (response.data && response.data.jwt) {
                     // Store JWT in localStorage
                     localStorage.setItem('token', response.data.jwt);
-    
+
                     // Step 3: Decode JWT to get user info
                     const decodedToken = jwtDecode(response.data.jwt);
                     //console.log('Decoded Token:', decodedToken);
-    
+
                     if (decodedToken.userId) {
                         console.log('User ID:', decodedToken.userId);
-    
+
                         // Step 4: Send userId in POST request to carts API
                         const cartResponse = await axios.post(
                             'http://localhost:8082/api/order/carts',
@@ -71,15 +71,15 @@ function Login() {
                                 }
                             }
                         );
-    
+
                         console.log('Cart API Response:', cartResponse.data);
-    
+
                         // Navigate to home page after both requests are successful
                         navigate('/');
                     } else {
                         console.log('User ID not found in token');
                     }
-    
+
                     console.log('Login successful', response.data);
                 }
             } catch (error) {
@@ -88,7 +88,7 @@ function Login() {
             }
         }
     };
-    
+
 
     return (
         <div className="auth-container">
@@ -97,13 +97,9 @@ function Login() {
                     <img src={loginimg} alt="Login visual" />
                 </div>
                 <div className="auth-form">
-                    <h1>FASCO</h1>
-                    <h2>Sign In To FASCO</h2>
-                    <div className="social-buttons">
-                        <button className="social-button google">Sign up with Google</button>
-                        <button className="social-button email">Sign up with Email</button>
-                    </div>
-                    <div className="divider">— OR —</div>
+                    <h1>BuySwift</h1>
+                    <h2>Sign In To Buyswift</h2>
+
                     <form onSubmit={handleSubmit}>
                         <div>
                             <input

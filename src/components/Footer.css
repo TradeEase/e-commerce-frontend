@@ -1,51 +1,59 @@
-/* Ensure the body and html take full height */
-html,
-body {
-  margin: 0;
-  padding: 0;
-  height: 100%;
+/* Apply universal box-sizing */
+* {
+  box-sizing: border-box;
 }
 
-/* A wrapper to structure the content and footer */
-.wrapper {
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
-}
-
-/* Content area grows to push the footer down */
-.content {
-  flex: 1;
-}
-
-/* Footer styling */
+/* Footer styles */
 .footer {
   background-color: #082550;
   color: #ffffff;
   text-align: center;
   padding: 2rem 1rem;
   width: 100%;
+  max-width: 100%; /* Prevents overflow */
+  overflow-x: hidden; /* Ensures no scrollbars appear */
+  box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
 }
 
 .quote {
-  font-size: 1.2rem;
+  font-size: 1.4rem;
+  font-weight: 500;
   margin-bottom: 1.5rem;
-  line-height: 1.5;
+  line-height: 1.8;
+  color: #d1d5db;
+  font-style: italic;
 }
 
 .social-icons {
   display: flex;
   justify-content: center;
   gap: 1.5rem;
+  max-width: 100%; /* Prevents overflow */
 }
 
 .icon {
   color: #ffffff;
-  font-size: 1.5rem;
+  font-size: 2rem;
   cursor: pointer;
-  transition: color 0.3s ease;
+  transition: transform 0.3s ease, color 0.3s ease;
 }
 
 .icon:hover {
   color: #adb5bd;
+  transform: scale(1.2);
+}
+
+/* Mobile responsiveness */
+@media (max-width: 768px) {
+  .footer {
+    padding: 1.5rem 1rem;
+  }
+
+  .quote {
+    font-size: 1.2rem;
+  }
+
+  .icon {
+    font-size: 1.5rem;
+  }
 }

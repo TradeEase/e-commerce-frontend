@@ -6,7 +6,7 @@ function Footer() {
   return (
     <div className="wrapper">
       <div className="content">
-        {/* Other page content goes here */}
+        {/* Add main page content here */}
       </div>
       <footer className="footer">
         <p className="quote">
@@ -14,10 +14,18 @@ function Footer() {
           because those who mind don't matter, and those who matter don't mind.”
         </p>
         <div className="social-icons">
-          <FaFacebook className="icon" />
-          <FaInstagram className="icon" />
-          <FaWhatsapp className="icon" />
-          <FaTwitter className="icon" />
+          <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" aria-label="Facebook">
+            <FaFacebook className="icon" />
+          </a>
+          <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
+            <FaInstagram className="icon" />
+          </a>
+          <a href="https://whatsapp.com" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp">
+            <FaWhatsapp className="icon" />
+          </a>
+          <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" aria-label="Twitter">
+            <FaTwitter className="icon" />
+          </a>
         </div>
       </footer>
     </div>

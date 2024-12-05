@@ -1,22 +1,23 @@
-* {
+/* Global Styles * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-}
+} */
 
+/* Navbar Styles */
 .navbar {
   display: flex;
+  flex-wrap: wrap;
   width: 100%;
   position: fixed;
-  top: 0; 
-  left: 0; 
-  right: 0; 
-  padding: 1rem; 
-  align-items: center; 
-  justify-content: space-between; 
+  top: 0;
+  left: 0;
+  padding: 1rem;
+  align-items: center;
+  justify-content: space-between;
   background-color: #082550;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  z-index: 1000; 
+  z-index: 1000;
   font-size: 0.9rem;
 }
 
@@ -26,29 +27,24 @@
   font-weight: bold;
 }
 
+/* Default navbar links layout */
 .navbar-links {
   display: flex;
   gap: 1.5rem;
   align-items: center;
 }
 
+/* Links style */
 .navbar-links a {
   color: #ffffff;
   text-decoration: none;
   font-size: 1rem;
 }
 
+/* Dropdown Menu */
 .navbar-dropdown {
   position: relative;
 }
-
-/* .dropdown-btn {
-  background: none;
-  border: none;
-  color: #ffffff;
-  cursor: pointer;
-  font-size: 1rem;
-} */
 
 .dropdown-content {
   display: none;
@@ -74,6 +70,7 @@
   background-color: #082550;
 }
 
+/* Navbar Icons */
 .navbar-icons {
   display: flex;
   gap: 1rem;
@@ -85,69 +82,40 @@
   cursor: pointer;
 }
 
-.notification-icon {
-  cursor: pointer;
-}
+/* Responsive Navbar */
+@media (max-width: 768px) {
+  /* Adjust Navbar Layout */
+  .navbar {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 1rem;
+  }
 
-/* Notification Dropdown */
-.notification-container {
-  position: absolute;
-  top: 60px; /* Adjust this to position the dropdown below the navbar */
-  right: 1rem; /* Aligns the dropdown with the notification icon */
-  width: 300px;
-  background-color: #ffffff;
-  border-radius: 10px;
-  box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
-  z-index: 10;
-}
+  /* Navbar Logo */
+  .navbar-logo h1 {
+    font-size: 1.2rem;
+    margin-bottom: 1rem;
+  }
 
-.notification-container .notification-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 1rem;
-  font-weight: bold;
-  border-bottom: 1px solid #e0e0e0;
-  color: #082550;
-}
+  /* Toggle Menu Button */
+  .navbar-links {
+    display: none;
+    flex-direction: column;
+    width: 100%;
+  }
 
-.notification-container .notification-item {
-  display: flex;
-  align-items: center;
-  padding: 0.75rem 1rem;
-  border-bottom: 1px solid #e0e0e0;
-  color: #333;
-}
+  /* Show Links When Active */
+  .navbar-links.active {
+    display: flex;
+  }
 
-.notification-container .notification-item:last-child {
-  border-bottom: none;
-}
-
-.notification-container .notification-item img {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  margin-right: 1rem;
-}
-
-.notification-container .notification-item .notification-text {
-  flex-grow: 1;
-}
-
-.notification-container .notification-item .notification-time {
-  font-size: 0.8rem;
-  color: #888;
-}
-
-.notification-container .notification-footer {
-  padding: 0.5rem 1rem;
-  text-align: center;
-  background-color: #f9f9f9;
-  font-size: 0.9rem;
-  color: #333;
-  cursor: pointer;
-}
-
-.notification-container .notification-footer:hover {
-  background-color: #e0e0e0;
+  /* Hamburger Menu Button */
+  .menu-toggle {
+    display: block;
+    background: none;
+    border: none;
+    color: #ffffff;
+    font-size: 1.5rem;
+    cursor: pointer;
+  }
 }
