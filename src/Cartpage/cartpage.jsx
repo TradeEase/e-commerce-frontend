@@ -16,12 +16,16 @@ const ShoppingCart = () => {
           throw new Error('No token found');
         }
         const decodedToken = jwtDecode(token);
-        const userId = decodedToken?.userId || '674d737b5352c529107297d8';
+        const userId = decodedToken?.userId;
 
         const cartResponse = await axios.get(`http://localhost:8082/api/carts/user/${userId}`);
+        console.log('Cart Response:', cartResponse.data); // Debug log to check if cartId is present
+
         const cartId = cartResponse.data.cartId;
 
         const cartItemsResponse = await axios.get(`http://localhost:8082/api/cartItems/cart/${cartId}`);
+        console.log('Cart Items Response:', cartItemsResponse.data); // Debug log to check structure of cart items
+
         const cartItems = cartItemsResponse.data;
 
         const productDetailsPromises = cartItems.map(item =>
@@ -33,7 +37,10 @@ const ShoppingCart = () => {
           ...item,
           ...productDetailsResponses[index].data,
           quantity: item.quantity, // Ensure quantity is retained as a number
+          cartId: cartId, // Add cartId to each item
         }));
+
+        console.log('Updated Cart:', updatedCart); // Debug log to check the updated cart
 
         setCart(updatedCart);
       } catch (error) {
@@ -46,21 +53,54 @@ const ShoppingCart = () => {
     fetchCartData();
   }, []);
 
-  const handleQuantityChange = (id, amount) => {
-    setCart(prevCart =>
-      prevCart.map(product =>
-        product.productId === id
-          ? { ...product, quantity: Math.max(1, product.quantity + amount) }
-          : product
-      )
+  const handleQuantityChange = async (id, amount) => {
+    const updatedCart = cart.map(product =>
+      product.productId === id
+        ? { ...product, quantity: Math.max(1, product.quantity + amount) }
+        : product
     );
+
+    const updatedProduct = updatedCart.find(product => product.productId === id);
+    if (updatedProduct) {
+      try {
+        console.log('Data being sent to backend:', {
+          cartItemId: updatedProduct.cartItemId,
+          productId: updatedProduct.productId,
+          quantity: updatedProduct.quantity,
+          cart: updatedProduct.cartId, // Ensure cartId is passed
+        });
+
+        if (amount !== 0) {
+          await axios.put(`http://localhost:8082/api/cartItems/${updatedProduct.cartItemId}`, {
+            cartItemId: updatedProduct.cartItemId,
+            productId: updatedProduct.productId,
+            quantity: updatedProduct.quantity,
+            cart: updatedProduct.cartId, // Ensure cartId is passed
+          });
+        }
+      } catch (error) {
+        console.error('Error updating quantity:', error);
+      }
+    }
+
+    setCart(updatedCart);
   };
 
-  const handleRemove = id => {
+  const handleRemove = async (id) => {
+    const productToRemove = cart.find(product => product.productId === id);
+    if (productToRemove) {
+      try {
+        // Call the DELETE endpoint to remove the product
+        await axios.delete(`http://localhost:8082/api/cartItems/${productToRemove.cartItemId}`);
+      } catch (error) {
+        console.error('Error removing item:', error);
+      }
+    }
+
     setCart(prevCart => prevCart.filter(product => product.productId !== id));
   };
 
-  const handleCheckout = () => {
+  const handleCheckout = async () => {
     const totalPrice = cart.reduce((sum, product) => sum + product.price * product.quantity, 0);
     navigate('/payments1', {
       state: {
@@ -68,6 +108,15 @@ const ShoppingCart = () => {
         totalPrice,
       },
     });
+
+    // Call DELETE for all items in the cart during checkout
+    for (const product of cart) {
+      try {
+        await axios.delete(`http://localhost:8082/api/cartItems/${product.cartItemId}`);
+      } catch (error) {
+        console.error('Error removing item during checkout:', error);
+      }
+    }
   };
 
   const getTotalPrice = () => {

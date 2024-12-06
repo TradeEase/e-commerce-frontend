@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Axios from 'axios';
+import bcrypt from 'bcryptjs'; // Import bcrypt for hashing
 import Navbar from './components/Navbar';
 
 const AdminCreationPage = () => {
@@ -8,6 +9,7 @@ const AdminCreationPage = () => {
     email: '',
     mobile: '',
     address: '',
+    password: '', // Added password field
   });
 
   const [admins, setAdmins] = useState([]);
@@ -36,14 +38,15 @@ const AdminCreationPage = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    
+
     if (isEditing) {
-      // Update existing admin
+      // Update existing admin (without password)
       const updatedAdmins = admins.map((admin, index) =>
-        index === editIndex ? formData : admin
+        index === editIndex ? { ...formData, password: admin.password } : admin
       );
+
       setAdmins(updatedAdmins);
-  
+
       // Make a PUT request to update the admin on the backend
       Axios.post(`http://localhost:8088/auth/update`, formData)
         .then((response) => {
@@ -55,10 +58,11 @@ const AdminCreationPage = () => {
           console.error('Error updating admin:', error);
         });
     } else {
-      // Add a new admin with role set to 'USER'
-      const newAdmin = { ...formData, role: 'USER' };
+      // Hash the password before submission
+      const hashedPassword = bcrypt.hashSync(formData.password, 10);
+      const newAdmin = { ...formData, role: 'USER', password: hashedPassword };
       setAdmins([...admins, newAdmin]);
-  
+
       // Make a POST request to create a new admin on the backend
       Axios.post('http://localhost:8088/auth/update', newAdmin)
         .then((response) => {
@@ -68,24 +72,24 @@ const AdminCreationPage = () => {
           console.error('Error creating admin:', error);
         });
     }
-  
+
     // Reset form data and hide form after submission
     setFormData({
       fullName: '',
       email: '',
       mobile: '',
       address: '',
+      password: '', // Reset password field
     });
     setShowForm(false);
   };
+
   const handleEdit = (index) => {
     setFormData(admins[index]);
     setIsEditing(true);
     setEditIndex(index);
     setShowForm(true); // Show the form when editing
   };
-
-
 
   const handleDelete = (index) => {
     // Make a DELETE request to delete the admin
@@ -301,20 +305,32 @@ const AdminCreationPage = () => {
                   style={styles.input}
                 />
               </div>
+              {!isEditing && (
+                <div style={styles.formGroup}>
+                  <label style={styles.label}>Password:</label>
+                  <input
+                    type="password"
+                    name="password"
+                    value={formData.password}
+                    onChange={handleChange}
+                    required
+                    style={styles.input}
+                  />
+                </div>
+              )}
               <div style={styles.buttonContainerForm}>
                 <button type="submit" style={styles.button}>
                   {isEditing ? 'Update' : 'Create'}
                 </button>
+                <button
+                  type="button"
+                  style={{ ...styles.button, marginLeft: '10px' }}
+                  onClick={() => setShowForm(false)}
+                >
+                  Cancel
+                </button>
               </div>
             </form>
-            <div style={styles.buttonContainerForm}>
-              <button
-                style={styles.button}
-                onClick={() => setShowForm(false)}
-              >
-                Close
-              </button>
-            </div>
           </div>
         </div>
       )}

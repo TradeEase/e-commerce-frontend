@@ -4,6 +4,7 @@ import './Form.css';
 import loginimg from '../assets/LoginIMG.jpg';
 import axios from 'axios';
 import jwtDecode from 'jwt-decode';
+
 function Login() {
     const [formData, setFormData] = useState({
         email: '',
@@ -45,50 +46,64 @@ function Login() {
                 // Step 1: Login request
                 const response = await axios.post('http://localhost:8088/auth/signin', formData, {
                     headers: {
-                        'Content-Type': 'application/json'
-                    }
+                        'Content-Type': 'application/json',
+                    },
                 });
 
                 if (response.data && response.data.jwt) {
                     // Store JWT in localStorage
                     localStorage.setItem('token', response.data.jwt);
 
-                    // Step 3: Decode JWT to get user info
+                    // Decode JWT to get user info
                     const decodedToken = jwtDecode(response.data.jwt);
-                    //console.log('Decoded Token:', decodedToken);
 
                     if (decodedToken.userId) {
                         console.log('User ID:', decodedToken.userId);
 
-                        // Step 4: Send userId in POST request to carts API
-                        const cartResponse = await axios.post(
-                            'http://localhost:8082/api/order/carts',
-                            { userId: decodedToken.userId }, // Send userId in request body
-                            {
-                                headers: {
-                                    'Content-Type': 'application/json',
-                                    Authorization: `Bearer ${response.data.jwt}` // Pass the JWT for authentication
+                        // Step 2: Fetch user details
+                        const userDetailsResponse = await axios.get(`http://localhost:8088/auth/get/${decodedToken.userId}`, {
+                            headers: {
+                                Authorization: `Bearer ${response.data.jwt}`,
+                            },
+                        });
+
+                        const user = userDetailsResponse.data;
+
+                        if (user.role === 'ROLE_CUSTOMER') {
+                            navigate('/'); // Navigate to home page for customers
+                        } else if (user.role === 'USER') {
+                            navigate('/admincreation'); // Navigate to admin panel for admin users
+                        } else {
+                            alert('Invalid role assigned to the user.');
+                        }
+
+                        // Optional: Cart creation logic
+                        try {
+                            const cartResponse = await axios.post(
+                                'http://localhost:8082/api/carts',
+                                { userId: decodedToken.userId },
+                                {
+                                    headers: {
+                                        'Content-Type': 'application/json',
+                                        Authorization: `Bearer ${response.data.jwt}`,
+                                    },
                                 }
-                            }
-                        );
-
-                        console.log('Cart API Response:', cartResponse.data);
-
-                        // Navigate to home page after both requests are successful
-                        navigate('/');
+                            );
+                            console.log('Cart created:', cartResponse.data);
+                        } catch (cartError) {
+                            console.error('Cart API request failed:', cartError);
+                            alert('Logged in successfully, but cart creation failed. You can still proceed.');
+                        }
                     } else {
-                        console.log('User ID not found in token');
+                        console.error('User ID not found in token');
                     }
-
-                    console.log('Login successful', response.data);
                 }
             } catch (error) {
-                console.error('Login or Cart API request failed:', error);
+                console.error('Login request failed:', error);
                 setErrorMsg('Invalid email or password'); // Display generic error message
             }
         }
     };
-
 
     return (
         <div className="auth-container">
@@ -98,7 +113,7 @@ function Login() {
                 </div>
                 <div className="auth-form">
                     <h1>BuySwift</h1>
-                    <h2>Sign In To Buyswift</h2>
+                    <h2>Sign In To BuySwift</h2>
 
                     <form onSubmit={handleSubmit}>
                         <div>
