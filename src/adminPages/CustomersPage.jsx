@@ -42,26 +42,20 @@ const CustomersPage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      if (isEditing) {
-        // Update existing customer
-        const updatedCustomer = customers[editIndex];
-        updatedCustomer.fullName = formData.fullName;
-        updatedCustomer.email = formData.email;
-        updatedCustomer.mobile = formData.mobile;
-        updatedCustomer.address = formData.address;
 
-        const response = await axios.post(`http://localhost:8088/auth/update`, updatedCustomer);
-        if (response.status === 200) {
-          const updatedCustomers = [...customers];
-          updatedCustomers[editIndex] = updatedCustomer;
-          setCustomers(updatedCustomers);
-        }
-      } else {
-        // Create new customer
-        const response = await axios.post('http://localhost:8088/auth/update', formData);
-        if (response.status === 201) {
-          setCustomers([...customers, response.data]);
-        }
+      // Update existing customer
+      const updatedCustomer = customers[editIndex];
+      updatedCustomer.fullName = formData.fullName;
+      updatedCustomer.email = formData.email;
+      updatedCustomer.mobile = formData.mobile;
+      updatedCustomer.address = formData.address;
+
+      const response = await axios.post(`http://localhost:8088/auth/update`, updatedCustomer);
+      if (response.status === 200) {
+        const updatedCustomers = [...customers];
+        updatedCustomers[editIndex] = updatedCustomer;
+        setCustomers(updatedCustomers);
+
       }
     } catch (error) {
       console.error('Error submitting form:', error);
@@ -107,24 +101,11 @@ const CustomersPage = () => {
     },
     content: {
       flex: 1,
-      marginLeft: '200px',
+      marginLeft: '100px',
       padding: '20px',
     },
-    buttonContainer: {
-      position: 'absolute',
-      top: '60px',
-      right: '20px',
-      zIndex: 1000,
-    },
-    button: {
-      width: '150px',
-      padding: '10px',
-      backgroundColor: 'blue',
-      color: 'white',
-      border: 'none',
-      borderRadius: '4px',
-      cursor: 'pointer',
-    },
+
+
     formOverlay: {
       position: 'fixed',
       top: 0,
@@ -169,8 +150,8 @@ const CustomersPage = () => {
     },
     table: {
       width: '100%',
-      marginTop: '100px',
-      marginRight: '100px',
+      marginTop: '150px',
+
       borderCollapse: 'collapse',
     },
     tableHeader: {
@@ -196,15 +177,7 @@ const CustomersPage = () => {
       {/* Navbar */}
       <Navbar />
 
-      {/* Add Customer Button */}
-      <div style={styles.buttonContainer}>
-        <button
-          style={styles.button}
-          onClick={() => setShowForm(true)}
-        >
-          Add Customer
-        </button>
-      </div>
+
 
       {/* Main Content */}
       <div style={styles.content}>

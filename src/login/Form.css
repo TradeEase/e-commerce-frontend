@@ -4,27 +4,31 @@
     justify-content: center;
     align-items: center;
     height: 100vh;
-   
+
     background-color: #f3f4f6;
 }
 
 /* Auth box with image and form sections */
 .auth-box {
     display: flex;
-    width: 80%; /* Adjust width as needed */
-    height: 550px; /* Set a specific height */
+    width: 80%;
+    /* Adjust width as needed */
+    height: 600px;
+    /* Set a specific height */
     border-radius: 10px;
     overflow: hidden;
-    border: 10px solid #ddd; /* Add a 10px border */
     background-color: #fff;
 }
 
 /* Image section styling */
 .auth-image {
-    flex: 1; /* Takes up the left half */
+    flex: 1;
+    /* Takes up the left half */
     background-color: #e8e8e8;
-    border-top-left-radius: 10px; /* Rounded top left corner */
-    border-bottom-left-radius: 10px; /* Rounded bottom left corner */
+    border-top-left-radius: 10px;
+    /* Rounded top left corner */
+    border-bottom-left-radius: 10px;
+    /* Rounded bottom left corner */
     overflow: hidden;
 }
 
@@ -36,15 +40,20 @@
 
 /* Form section styling */
 .auth-form {
-    flex: 1; /* Takes up the right half */
+    flex: 1;
+    /* Takes up the right half */
     padding: 2rem;
     color: #333;
     display: flex;
     flex-direction: column;
-    justify-content: center; /* Center content vertically */
-    gap: 1.5rem; /* Add spacing between form elements */
-    border-top-right-radius: 10px; /* Rounded top right corner */
-    border-bottom-right-radius: 10px; /* Rounded bottom right corner */
+    justify-content: center;
+    /* Center content vertically */
+    gap: 1.5rem;
+    /* Add spacing between form elements */
+    border-top-right-radius: 10px;
+    /* Rounded top right corner */
+    border-bottom-right-radius: 10px;
+    /* Rounded bottom right corner */
 }
 
 /* Header styles */
@@ -85,7 +94,6 @@
     border-radius: 8px;
     cursor: pointer;
     font-size: 1.1rem;
-    
     transition: background-color 0.3s, transform 0.3s;
     box-sizing: border-box;
 }
@@ -93,7 +101,8 @@
 /* Hover effect for buttons */
 .submit-btn:hover {
     background-color: #555;
-    transform: translateY(-2px); /* Subtle lift effect */
+    transform: translateY(-2px);
+    /* Subtle lift effect */
 }
 
 /* Styling for the social buttons */
@@ -117,12 +126,7 @@
 
 
 
-/* Divider styling */
-.divider {
-    text-align: center;
-    color: #999;
-    margin: 1rem 0;
-}
+
 
 /* Adjust the error message styling */
 .error-msg {
@@ -136,17 +140,21 @@
 @media (max-width: 768px) {
     .auth-box {
         flex-direction: column;
-        width: 95%; /* Adjust width for smaller screens */
+        width: 95%;
+        /* Adjust width for smaller screens */
     }
 
     .auth-image,
     .auth-form {
-        flex: 1 0 100%; /* Stack vertically */
-        border-radius: 0; /* Remove rounded corners when stacked */
+        flex: 1 0 100%;
+        /* Stack vertically */
+        border-radius: 0;
+        /* Remove rounded corners when stacked */
     }
 
     .auth-image img {
-        height: 300px; /* Adjust image size */
+        height: 300px;
+        /* Adjust image size */
     }
 }
 

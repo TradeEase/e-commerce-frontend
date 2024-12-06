@@ -34,9 +34,9 @@ function ContactUs() {
   };
 
   return (
-    <div style={styles.container}>
-      <h1 style={styles.title}>Contact Us</h1>
-      <div style={styles.box}>
+    <div style={styles.container1}>
+      <p style={styles.titleC}>Contact Us</p>
+      <div style={styles.box} className="box-animation">
         <div style={styles.content}>
           <div style={styles.leftSection}>
             <h2 style={styles.subTitle}>Get in Touch</h2>
@@ -49,7 +49,7 @@ function ContactUs() {
               <p><strong>Address:</strong> No 11/40, Kaubedda, Moratuwa.</p>
             </div>
           </div>
-          <div style={styles.rightSection}>
+          <div style={styles.rightSection} className="form-animation">
             <form onSubmit={handleSubmit} style={styles.form}>
               <div style={styles.formGroup}>
                 <label style={styles.label}>Name:</label>
@@ -86,7 +86,7 @@ function ContactUs() {
                   required
                 />
               </div>
-              <button type="submit" style={styles.button}>Send</button>
+              <button type="submit" style={styles.button} className="button-animation">Send</button>
             </form>
           </div>
         </div>
@@ -96,26 +96,28 @@ function ContactUs() {
 }
 
 const styles = {
-  container: {
+  container1: {
     padding: '40px 20px',
     maxWidth: '1000px',
-    marginTop: '50px',
+
     margin: '0 auto',
     fontFamily: 'Arial, sans-serif',
-    backgroundColor: '#f9f9f9',
+    backgroundColor: '#f0f8ff',
   },
-  title: {
+  titleC: {
     textAlign: 'center',
     fontSize: '2.5rem',
     fontWeight: 'bold',
+    marginTop: '100px',
     marginBottom: '30px',
-    color: '#333',
+    color: '#004e89',
   },
   box: {
     backgroundColor: '#fff',
     borderRadius: '10px',
-    boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
+    boxShadow: '0 4px 8px rgba(0, 78, 137, 0.2)',
     padding: '20px',
+    transition: 'transform 0.3s',
   },
   content: {
     display: 'flex',
@@ -125,12 +127,12 @@ const styles = {
   },
   leftSection: {
     flex: '1',
-    color: '#555',
+    color: '#333',
   },
   subTitle: {
     fontSize: '1.8rem',
     marginBottom: '15px',
-    color: '#007bff',
+    color: '#004e89',
   },
   paragraph: {
     fontSize: '1rem',
@@ -142,7 +144,7 @@ const styles = {
     lineHeight: '1.6',
   },
   link: {
-    color: '#007bff',
+    color: '#004e89',
     textDecoration: 'none',
   },
   rightSection: {
@@ -165,32 +167,52 @@ const styles = {
     padding: '10px',
     fontSize: '1rem',
     borderRadius: '5px',
-    border: '1px solid #ddd',
+    border: '1px solid #ccc',
     width: '100%',
     boxSizing: 'border-box',
+    transition: 'border-color 0.3s',
   },
   textarea: {
     padding: '10px',
     fontSize: '1rem',
     borderRadius: '5px',
-    border: '1px solid #ddd',
+    border: '1px solid #ccc',
     width: '100%',
     minHeight: '120px',
     boxSizing: 'border-box',
+    transition: 'border-color 0.3s',
   },
   button: {
     padding: '10px 20px',
     fontSize: '1rem',
     color: '#fff',
-    backgroundColor: '#007bff',
+    backgroundColor: '#004e89',
     border: 'none',
     borderRadius: '5px',
     cursor: 'pointer',
-    transition: 'background-color 0.3s',
-  },
-  buttonHover: {
-    backgroundColor: '#0056b3',
+    transition: 'background-color 0.3s, transform 0.2s',
   },
 };
+
+// CSS animations
+const stylesGlobal = `
+  .box-animation:hover {
+    transform: scale(1.05);
+  }
+  .button-animation:active {
+    transform: scale(0.95);
+  }
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+  .form-animation {
+    animation: fadeIn 0.8s ease-in-out;
+  }
+`;
 
 export default ContactUs;
