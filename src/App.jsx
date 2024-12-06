@@ -4,12 +4,11 @@ import {
   Outlet,
 } from "react-router-dom";
 
-
 import NavBar from "./components/NavBar";
 import Footer from "./components/Footer";
 import Home from "./customer/home";
 import Login from "./login/LoginPage";
-import Forgotpassword from "./login/Forgotpassword";
+import Forgotpassword from "./login/ForgotPassword";
 import Signup from "./login/Signup";
 import ProfilePage from "./profile/ProfilePage";
 import ContactUs from "./contact/ContactUs";
@@ -41,8 +40,6 @@ const router = createBrowserRouter([
     element: <Layout />,
     children: [
       { path: "/", element: <Home /> },
-      { path: "/signup", element: <Signup /> },
-      { path: "/forgotpassword", element: <Forgotpassword /> },
       { path: "/checkout", element: <Checkout /> },
       { path: "/profile", element: <ProfilePage /> },
       { path: "/contact", element: <ContactUs /> },
@@ -54,13 +51,16 @@ const router = createBrowserRouter([
       { path: "/customers", element: <CustomerPage /> },
       { path: "/orders", element: <Orders /> },
       { path: "/returnorder", element: <ReturnOrder /> },
-      { path: "/Payments1", element: <Payments1 /> },
+      { path: "/payments1", element: <Payments1 /> },
       { path: "/Payments2", element: <Payments2 /> },
       { path: "/Payments3", element: <Payments3 /> },
       { path: "/Cartpage", element: <Cartpage /> },
     ],
   },
   { path: "/login", element: <Login /> }, // Login page without Layout
+  { path: "/forgotpassword", element: <Forgotpassword /> },
+  { path: "/signup", element: <Signup /> },
+
 ]);
 
 function App() {
