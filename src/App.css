@@ -10,7 +10,8 @@
 
 /* Container for the main content that grows to fill space */
 .container {
-  flex: 1; /* Allows this div to take up available space */
+  flex: 1;
+  /* Allows this div to take up available space */
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -19,7 +20,8 @@
 
 /* Footer is automatically pushed to the bottom by flex */
 footer {
-  margin-top: auto; /* Pushes footer to the bottom when content is short */
+  margin-top: auto;
+  /* Pushes footer to the bottom when content is short */
   padding: 1rem;
   background-color: #f8f9fa;
   text-align: center;
@@ -45,6 +47,7 @@ footer {
   from {
     transform: rotate(0deg);
   }
+
   to {
     transform: rotate(360deg);
   }
