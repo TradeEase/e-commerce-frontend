@@ -1,65 +1,133 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import jwtDecode from 'jwt-decode';
+import axios from 'axios';
 
 const ShoppingCart = () => {
-  const [quantity, setQuantity] = useState(1);
-  const [isGiftWrapped, setIsGiftWrapped] = useState(false);
-  
-  const price = 14.90;
-  const wrapPrice = 10.00;
-  const total = price * quantity + (isGiftWrapped ? wrapPrice : 0);
-  
-  const handleQuantityChange = (amount) => {
-    setQuantity(prev => Math.max(1, prev + amount));
+  const [cart, setCart] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const fetchCartData = async () => {
+      try {
+        const token = localStorage.getItem('token');
+        if (!token) {
+          throw new Error('No token found');
+        }
+        const decodedToken = jwtDecode(token);
+        const userId = decodedToken?.userId || '674d737b5352c529107297d8';
+
+        const cartResponse = await axios.get(`http://localhost:8082/api/carts/user/${userId}`);
+        const cartId = cartResponse.data.cartId;
+
+        const cartItemsResponse = await axios.get(`http://localhost:8082/api/cartItems/cart/${cartId}`);
+        const cartItems = cartItemsResponse.data;
+
+        const productDetailsPromises = cartItems.map(item =>
+          axios.get(`http://localhost:8083/api/product/products/${item.productId}`)
+        );
+        const productDetailsResponses = await Promise.all(productDetailsPromises);
+
+        const updatedCart = cartItems.map((item, index) => ({
+          ...item,
+          ...productDetailsResponses[index].data,
+          quantity: item.quantity, // Ensure quantity is retained as a number
+        }));
+
+        setCart(updatedCart);
+      } catch (error) {
+        console.error('Error fetching cart data:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchCartData();
+  }, []);
+
+  const handleQuantityChange = (id, amount) => {
+    setCart(prevCart =>
+      prevCart.map(product =>
+        product.productId === id
+          ? { ...product, quantity: Math.max(1, product.quantity + amount) }
+          : product
+      )
+    );
   };
-  
+
+  const handleRemove = id => {
+    setCart(prevCart => prevCart.filter(product => product.productId !== id));
+  };
+
+  const handleCheckout = () => {
+    const totalPrice = cart.reduce((sum, product) => sum + product.price * product.quantity, 0);
+    navigate('/payments1', {
+      state: {
+        cart,
+        totalPrice,
+      },
+    });
+  };
+
+  const getTotalPrice = () => {
+    return cart.reduce((sum, product) => sum + product.price * product.quantity, 0).toFixed(2);
+  };
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
   return (
     <div style={styles.container}>
       <h1 style={styles.header}>Shopping Cart</h1>
       <p>Home &gt; Your Shopping Cart</p>
-      
-      <div style={styles.cartItem}>
-        <img
-          src="https://via.placeholder.com/80"
-          alt="Mini Dress With Ruffled Straps"
-          style={styles.image}
-        />
-        <div style={styles.details}>
-          <h2>Mini Dress With Ruffled Straps</h2>
-          <p>Color: Red</p>
-          <button style={styles.removeButton}>Remove</button>
+
+      {cart.map(product => (
+        <div key={product.productId} style={styles.cartItem}>
+          <img src={product.imageUrl} alt={product.name} style={styles.image} />
+          <div style={styles.details}>
+            <h2>{product.name}</h2>
+            <p>Price: ${product.price.toFixed(2)}</p>
+            <button style={styles.removeButton} onClick={() => handleRemove(product.productId)}>
+              Remove
+            </button>
+          </div>
+          <div style={styles.quantityControl}>
+            <button
+              onClick={() => handleQuantityChange(product.productId, -1)}
+              style={styles.quantityButton}
+            >
+              -
+            </button>
+            <span style={styles.quantityText}>{product.quantity}</span>
+            <button
+              onClick={() => handleQuantityChange(product.productId, 1)}
+              style={styles.quantityButton}
+            >
+              +
+            </button>
+          </div>
+          <div style={styles.totalPrice}>${(product.price * product.quantity).toFixed(2)}</div>
         </div>
-        <div style={styles.price}>${price.toFixed(2)}</div>
-        <div style={styles.quantityControl}>
-          <button onClick={() => handleQuantityChange(-1)} style={styles.quantityButton}>-</button>
-          <span style={styles.quantityText}>{String(quantity).padStart(2, '0')}</span>
-          <button onClick={() => handleQuantityChange(1)} style={styles.quantityButton}>+</button>
-        </div>
-        <div style={styles.totalPrice}>${(price * quantity).toFixed(2)}</div>
-      </div>
-      
-      <div style={styles.wrapOption}>
-        <input
-          type="checkbox"
-          checked={isGiftWrapped}
-          onChange={() => setIsGiftWrapped(!isGiftWrapped)}
-        />
-        <span>For ${wrapPrice.toFixed(2)} Please Wrap The Product</span>
-      </div>
-      
+      ))}
+
       <div style={styles.subtotal}>
-        <p>Subtotal</p>
-        <p>${total.toFixed(2)}</p>
+        <p>Total Price</p>
+        <p>${getTotalPrice()}</p>
       </div>
-      
-      <button style={styles.checkoutButton}>Checkout</button>
-      <button style={styles.viewCartButton}>View Cart</button>
+
+      <button style={styles.checkoutButton} onClick={handleCheckout}>
+        Proceed to Checkout
+      </button>
     </div>
   );
 };
 
+// Styling
 const styles = {
   container: {
-    maxWidth: '600px',
+    maxWidth: '800px',
     margin: '0 auto',
     padding: '20px',
     fontFamily: 'Arial, sans-serif',
@@ -67,6 +135,7 @@ const styles = {
   header: {
     fontSize: '24px',
     textAlign: 'center',
+    marginBottom: '20px',
   },
   cartItem: {
     display: 'flex',
@@ -89,10 +158,7 @@ const styles = {
     border: 'none',
     background: 'none',
     cursor: 'pointer',
-  },
-  price: {
-    width: '80px',
-    textAlign: 'right',
+    marginTop: '10px',
   },
   quantityControl: {
     display: 'flex',
@@ -111,11 +177,6 @@ const styles = {
     width: '80px',
     textAlign: 'right',
   },
-  wrapOption: {
-    display: 'flex',
-    alignItems: 'center',
-    marginBottom: '20px',
-  },
   subtotal: {
     display: 'flex',
     justifyContent: 'space-between',
@@ -131,17 +192,7 @@ const styles = {
     border: 'none',
     fontSize: '16px',
     cursor: 'pointer',
-    marginBottom: '10px',
-  },
-  viewCartButton: {
-    display: 'block',
-    width: '100%',
-    padding: '10px',
-    backgroundColor: 'white',
-    color: 'black',
-    border: '1px solid black',
-    fontSize: '16px',
-    cursor: 'pointer',
+    marginTop: '20px',
   },
 };
 

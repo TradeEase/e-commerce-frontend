@@ -1,46 +1,63 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
-import './Form.css';
-import signup from '../assets/SignIMG.jpg';
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import "./Form.css";
+import signup from "../assets/SignIMG.jpg";
 
 function ForgotPassword() {
-    const [formData, setFormData] = useState({
-        firstName: '',
-        lastName: '',
-        email: '',
-        phoneNumber: '',
-    });
+    const [email, setEmail] = useState("");
+    const [newPassword, setNewPassword] = useState("");
+    const [confirmPassword, setConfirmPassword] = useState("");
+    const [error, setError] = useState("");
+    const navigate = useNavigate();
 
-    const [errors, setErrors] = useState({});
-
-    const handleChange = (e) => {
-        const { name, value } = e.target;
-        setFormData({ ...formData, [name]: value });
+    const validateForm = () => {
+        if (!email.trim()) {
+            return "Email is required.";
+        } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+            return "Invalid email format.";
+        } else if (!newPassword.trim()) {
+            return "New password is required.";
+        } else if (newPassword.length < 6) {
+            return "Password must be at least 6 characters long.";
+        } else if (newPassword !== confirmPassword) {
+            return "Passwords do not match.";
+        }
+        return "";
     };
 
-    const validate = () => {
-        let newErrors = {};
-        if (!formData.firstName.trim()) newErrors.firstName = 'First Name is required';
-        if (!formData.lastName.trim()) newErrors.lastName = 'Last Name is required';
-        if (!formData.email.trim()) {
-            newErrors.email = 'Email is required';
-        } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-            newErrors.email = 'Invalid email format';
+    const handleChangePassword = async () => {
+        const validationError = validateForm();
+        if (validationError) {
+            setError(validationError);
+            return;
         }
-        if (!formData.phoneNumber.trim()) {
-            newErrors.phoneNumber = 'Phone Number is required';
-        } else if (!/^\d{10}$/.test(formData.phoneNumber)) {
-            newErrors.phoneNumber = 'Invalid phone number';
-        }
-        setErrors(newErrors);
-        return Object.keys(newErrors).length === 0;
-    };
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        if (validate()) {
-            // Proceed with form submission (e.g., send confirmation code)
-            console.log('Form submitted:', formData);
+        setError("");
+
+        try {
+            // Construct the full URL with the email passed in the path
+            const url = `http://localhost:8088/auth/updatePasswordByEmail/${encodeURIComponent(email)}`;
+
+            // Make a POST request to the endpoint
+            const response = await fetch(url, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    password: newPassword, // Send the new password in the request body
+                }),
+            });
+
+            if (!response.ok) {
+                throw new Error("Failed to change password. Please try again.");
+            }
+
+            const responseData = await response.text(); // Read the response as text
+            alert(responseData); // Display the response from the backend
+            navigate("/login"); // Redirect to the login page after successful password change
+        } catch (error) {
+            setError(error.message);
         }
     };
 
@@ -52,59 +69,45 @@ function ForgotPassword() {
                 </div>
                 <div className="auth-form">
                     <h1>FASCO</h1>
-                    <h2>Forget Password</h2>
-                    <form onSubmit={handleSubmit}>
-                        <div>
-                            <input
-                                type="text"
-                                name="firstName"
-                                placeholder="First Name"
-                                className="input-field"
-                                value={formData.firstName}
-                                onChange={handleChange}
-                            />
-                            {errors.firstName && <div className="error-msg">{errors.firstName}</div>}
-                        </div>
-                        <div>
-                            <input
-                                type="text"
-                                name="lastName"
-                                placeholder="Last Name"
-                                className="input-field"
-                                value={formData.lastName}
-                                onChange={handleChange}
-                            />
-                            {errors.lastName && <div className="error-msg">{errors.lastName}</div>}
-                        </div>
-                        <div>
-                            <input
-                                type="email"
-                                name="email"
-                                placeholder="Email Address"
-                                className="input-field"
-                                value={formData.email}
-                                onChange={handleChange}
-                            />
-                            {errors.email && <div className="error-msg">{errors.email}</div>}
-                        </div>
-                        <div>
-                            <input
-                                type="text"
-                                name="phoneNumber"
-                                placeholder="Phone Number"
-                                className="input-field"
-                                value={formData.phoneNumber}
-                                onChange={handleChange}
-                            />
-                            {errors.phoneNumber && <div className="error-msg">{errors.phoneNumber}</div>}
-                        </div>
+                    <h2>Forgot Password</h2>
 
-                        <button type="submit" className="submit-btn">
-                            <Link to="/enter-confirmation-code">Send Confirmation Code </Link>
-                            </button>
-                    </form>
+                    <div>
+                        <input
+                            type="email"
+                            name="email"
+                            placeholder="Enter Email"
+                            className="input-field"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                        />
+                    </div>
+                    <div>
+                        <input
+                            type="password"
+                            name="newPassword"
+                            placeholder="Enter New Password"
+                            className="input-field"
+                            value={newPassword}
+                            onChange={(e) => setNewPassword(e.target.value)}
+                        />
+                    </div>
+                    <div>
+                        <input
+                            type="password"
+                            name="confirmPassword"
+                            placeholder="Confirm New Password"
+                            className="input-field"
+                            value={confirmPassword}
+                            onChange={(e) => setConfirmPassword(e.target.value)}
+                        />
+                    </div>
+                    {error && <div className="error-msg">{error}</div>}
+                    <button type="button" className="submit-btn" onClick={handleChangePassword}>
+                        Change Password
+                    </button>
+
                     <div className="links">
-                        <Link to="/login">Already have an account? Login</Link>
+                        <a href="/login">Back to Login</a>
                     </div>
                 </div>
             </div>

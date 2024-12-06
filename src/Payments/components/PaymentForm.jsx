@@ -8,6 +8,8 @@ const CheckoutForm = ({ amount, onSuccess, onError }) => {
     const stripe = useStripe();
     const elements = useElements();
     const [loading, setLoading] = useState(false);
+    const [description, setDescription] = useState('Payment for services'); // Example description
+    const [currency, setCurrency] = useState('usd'); // Example currency
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -18,15 +20,23 @@ const CheckoutForm = ({ amount, onSuccess, onError }) => {
                 throw new Error('Stripe.js has not loaded yet');
             }
 
-            // Step 1: Create a PaymentIntent on the backend
+            // Prepare the payment data
+            const paymentRequest = {
+                amount, // already in cents (e.g., $10.00 = 1000)
+                currency,
+                description,
+            };
+
+            // Send the data to the backend
             const response = await fetch('http://localhost:8080/api/payments/create-payment', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ amount }),
+                body: JSON.stringify(paymentRequest),
             });
+
             const { clientSecret } = await response.json();
 
-            // Step 2: Confirm the PaymentIntent using CardElement
+            // Confirm the PaymentIntent using CardElement
             const { error } = await stripe.confirmCardPayment(clientSecret, {
                 payment_method: {
                     card: elements.getElement(CardElement),
@@ -39,7 +49,7 @@ const CheckoutForm = ({ amount, onSuccess, onError }) => {
                 onSuccess();
             }
         } catch (err) {
-            onError('Payment processing failed');
+            onError(err.message || 'Payment processing failed');
         } finally {
             setLoading(false);
         }
@@ -49,6 +59,8 @@ const CheckoutForm = ({ amount, onSuccess, onError }) => {
         <form onSubmit={handleSubmit} className="w-full max-w-md mx-auto">
             <div className="p-8 bg-white rounded-lg shadow-xl">
                 <h2 className="mb-4 text-2xl font-bold text-gray-800">Payment Details</h2>
+
+                {/* Card input field */}
                 <CardElement
                     options={{
                         style: {
@@ -58,6 +70,7 @@ const CheckoutForm = ({ amount, onSuccess, onError }) => {
                     }}
                     className="mb-6"
                 />
+
                 <button
                     type="submit"
                     disabled={!stripe || loading}
