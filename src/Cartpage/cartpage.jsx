@@ -110,13 +110,13 @@ const ShoppingCart = () => {
     });
 
     // Call DELETE for all items in the cart during checkout
-    for (const product of cart) {
-      try {
-        await axios.delete(`http://localhost:8082/api/cartItems/${product.cartItemId}`);
-      } catch (error) {
-        console.error('Error removing item during checkout:', error);
-      }
-    }
+    // for (const product of cart) {
+    //   try {
+    //     await axios.delete(`http://localhost:8082/api/cartItems/${product.cartItemId}`);
+    //   } catch (error) {
+    //     console.error('Error removing item during checkout:', error);
+    //   }
+    // }
   };
 
   const getTotalPrice = () => {
