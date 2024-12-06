@@ -11,34 +11,28 @@ const ShoppingCart = () => {
   useEffect(() => {
     const fetchCartData = async () => {
       try {
-        // Decode JWT token to get userId
-        const token = localStorage.getItem('token'); // Assume the JWT is stored in localStorage
+        const token = localStorage.getItem('token');
         if (!token) {
           throw new Error('No token found');
         }
         const decodedToken = jwtDecode(token);
-        // const userId = decodedToken?.userId;
-        const userId = '674f00a9211d16763efb3536';
+        const userId = decodedToken?.userId || '674d737b5352c529107297d8';
 
-        // Fetch cartId using userId
-        const cartResponse = await axios.get(`http://localhost:8082/api/order/carts/${userId}`);
+        const cartResponse = await axios.get(`http://localhost:8082/api/carts/user/${userId}`);
         const cartId = cartResponse.data.cartId;
 
-        // Fetch cart items using cartId
-        const cartItemsResponse = await axios.get(`http://localhost:8082/api/order/cartItems/cart/${cartId}`);
+        const cartItemsResponse = await axios.get(`http://localhost:8082/api/cartItems/cart/${cartId}`);
         const cartItems = cartItemsResponse.data;
 
-        // Fetch product details for each product in the cart
         const productDetailsPromises = cartItems.map(item =>
-          // axios.get(`http://localhost:8083/api/product/products/${item.productId}`)
-          axios.get(`http://localhost:8083/api/product/products/3`)
+          axios.get(`http://localhost:8083/api/product/products/${item.productId}`)
         );
         const productDetailsResponses = await Promise.all(productDetailsPromises);
 
-        // Merge product details with cart items
         const updatedCart = cartItems.map((item, index) => ({
           ...item,
           ...productDetailsResponses[index].data,
+          quantity: item.quantity, // Ensure quantity is retained as a number
         }));
 
         setCart(updatedCart);
@@ -55,7 +49,7 @@ const ShoppingCart = () => {
   const handleQuantityChange = (id, amount) => {
     setCart(prevCart =>
       prevCart.map(product =>
-        product.id === id
+        product.productId === id
           ? { ...product, quantity: Math.max(1, product.quantity + amount) }
           : product
       )
@@ -63,7 +57,7 @@ const ShoppingCart = () => {
   };
 
   const handleRemove = id => {
-    setCart(prevCart => prevCart.filter(product => product.id !== id));
+    setCart(prevCart => prevCart.filter(product => product.productId !== id));
   };
 
   const handleCheckout = () => {
@@ -90,21 +84,27 @@ const ShoppingCart = () => {
       <p>Home &gt; Your Shopping Cart</p>
 
       {cart.map(product => (
-        <div key={product.id} style={styles.cartItem}>
+        <div key={product.productId} style={styles.cartItem}>
           <img src={product.imageUrl} alt={product.name} style={styles.image} />
           <div style={styles.details}>
             <h2>{product.name}</h2>
             <p>Price: ${product.price.toFixed(2)}</p>
-            <button style={styles.removeButton} onClick={() => handleRemove(product.id)}>
+            <button style={styles.removeButton} onClick={() => handleRemove(product.productId)}>
               Remove
             </button>
           </div>
           <div style={styles.quantityControl}>
-            <button onClick={() => handleQuantityChange(product.id, -1)} style={styles.quantityButton}>
+            <button
+              onClick={() => handleQuantityChange(product.productId, -1)}
+              style={styles.quantityButton}
+            >
               -
             </button>
-            <span style={styles.quantityText}>{String(product.quantity).padStart(2, '0')}</span>
-            <button onClick={() => handleQuantityChange(product.id, 1)} style={styles.quantityButton}>
+            <span style={styles.quantityText}>{product.quantity}</span>
+            <button
+              onClick={() => handleQuantityChange(product.productId, 1)}
+              style={styles.quantityButton}
+            >
               +
             </button>
           </div>
