@@ -1,0 +1,183 @@
+/* General Page Styling */
+.profile-page-container {
+  position: relative;
+  padding: 30px;
+  margin: auto;
+  margin-top: 150px;
+  margin-bottom: 50px;
+  max-width: 800px;
+  background: linear-gradient(to bottom right, #1da1f2, #e1e8ed);
+  border-radius: 15px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  text-align: center;
+  animation: fadeIn 1s ease-in-out;
+}
+
+/* Animation for Fade In */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Profile Icon Styling */
+.profile-icon-container {
+  position: absolute;
+  top: -40px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: white;
+  border-radius: 50%;
+  width: 80px;
+  height: 80px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  animation: bounceIn 1s ease-in-out;
+}
+
+/* Animation for Icon Bounce */
+@keyframes bounceIn {
+  0% {
+    transform: scale(0.8) translateX(-50%);
+    opacity: 0.5;
+  }
+  50% {
+    transform: scale(1.1) translateX(-50%);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1) translateX(-50%);
+    opacity: 1;
+  }
+}
+
+.profile-icon {
+  font-size: 40px;
+  color: #1da1f2;
+}
+
+/* Header */
+.profile-header {
+  font-size: 32px;
+  font-weight: bold;
+  color: #14171a;
+  margin-top: 30px;
+  margin-bottom: 20px;
+  animation: slideIn 1.2s ease-out;
+}
+
+/* Animation for Header Slide In */
+@keyframes slideIn {
+  from {
+    transform: translateY(-20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* Form Container */
+.profile-form-container {
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  text-align: left;
+  animation: fadeInUp 1.5s ease-in-out;
+}
+
+/* Animation for Form Container Fade In */
+@keyframes fadeInUp {
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* Form Styling */
+.profile-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-label {
+  font-size: 18px;
+  font-weight: bold;
+  color: #657786;
+  margin-bottom: 8px;
+  text-align: left;
+  animation: fadeIn 1.5s ease;
+}
+
+.form-input {
+  padding: 10px;
+  font-size: 16px;
+  border: 1px solid #aab8c2;
+  border-radius: 5px;
+  width: 100%;
+  animation: fadeIn 1.6s ease;
+}
+
+.form-input:focus {
+  outline: none;
+  border-color: #1da1f2;
+  box-shadow: 0 0 5px #1da1f2;
+}
+
+/* Button Styling */
+.form-submit-button {
+  padding: 10px 20px;
+  font-size: 18px;
+  font-weight: bold;
+  color: white;
+  background-color: #1da1f2;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.3s;
+  align-self: flex-start;
+  animation: zoomIn 2s ease-in;
+}
+
+.form-submit-button:hover {
+  background-color: #657786;
+  transform: scale(1.1);
+}
+
+/* Adjustments for better alignment */
+.profile-form-container .form-group {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+/* Animation for Button Zoom In */
+@keyframes zoomIn {
+  from {
+    transform: scale(0.8);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
