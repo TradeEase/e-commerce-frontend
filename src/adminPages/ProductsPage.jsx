@@ -8,7 +8,7 @@ const ProductCreationPage = () => {
     name: '',
     description: '',
     image: null, // Store the uploaded file
-    price: '', 
+    price: '',
     quantity: '',
     categories: '',
     review_id: '',
@@ -20,7 +20,7 @@ const ProductCreationPage = () => {
   const [editIndex, setEditIndex] = useState(null);
   const [showForm, setShowForm] = useState(false);
 
-  const API_URL = 'http://localhost:8083/api/product/products'; 
+  const API_URL = 'http://localhost:8083/api/product/products';
 
   // Fetch all products
   const fetchProducts = async () => {
@@ -52,13 +52,13 @@ const ProductCreationPage = () => {
       console.error('No product ID found.');
       return;
     }
-  
+
     const productToUpdate = products.find((product) => product.productId === id);
     if (!productToUpdate) {
       console.error('Product not found.');
       return;
     }
-  
+
     try {
       await axios.put(`${API_URL}/${id}`, productToUpdate);
       fetchProducts(); // Refresh the list
@@ -66,12 +66,12 @@ const ProductCreationPage = () => {
       console.error('Error updating product:', error);
     }
   };
-  
+
 
 
 
   const handleChange = (e) => {
-    
+
     const { name, value } = e.target;
     setFormData({
       ...formData,
@@ -89,7 +89,7 @@ const ProductCreationPage = () => {
       setImagePreview(URL.createObjectURL(file)); // Generate preview URL
     }
   };
-  
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -128,8 +128,8 @@ const ProductCreationPage = () => {
     setIsEditing(false);
     setShowForm(false);
   };
-  
-  
+
+
 
   const handleEdit = (index) => {
     const product = products[index];
@@ -139,23 +139,23 @@ const ProductCreationPage = () => {
     setEditIndex(index);
     setShowForm(true);
   };
-  
-  
-  
+
+
+
 
   const handleDelete = async (index) => {
     // Get the product ID from the product at the given index
     const productId = products[index]?.productId;
-  
+
     if (!productId) {
       console.error('Product ID not found');
       return;
     }
-  
+
     // Remove the product from the local state
     const updatedProducts = products.filter((_, i) => i !== index);
     setProducts(updatedProducts);
-  
+
     try {
       // Make the delete request using the product ID
       await axios.delete(`${API_URL}/${productId}`);
@@ -163,7 +163,8 @@ const ProductCreationPage = () => {
       console.error('Error deleting product:', error);
     }
   };
-  
+
+  // Styles
   const styles = {
     container: {
       display: 'flex',
@@ -172,12 +173,12 @@ const ProductCreationPage = () => {
     },
     content: {
       flex: 1,
-      marginLeft: '200px',
+      marginLeft: '100px',
       padding: '20px',
     },
     buttonContainer: {
       position: 'absolute',
-      top: '60px',
+      top: '100px',
       right: '20px',
       zIndex: 1000,
     },
@@ -234,8 +235,8 @@ const ProductCreationPage = () => {
     },
     table: {
       width: '100%',
-      marginTop: '100px',
-      marginRight: '100px',
+      marginTop: '150px',
+
       borderCollapse: 'collapse',
     },
     tableHeader: {
@@ -255,6 +256,7 @@ const ProductCreationPage = () => {
       cursor: 'pointer',
     },
   };
+
 
   return (
     <div style={styles.container}>
@@ -293,7 +295,7 @@ const ProductCreationPage = () => {
                         alt="Product"
                         style={{ maxWidth: '100px', height: 'auto' }}
                       />
-                    
+
                     ) : (
                       "No Image"
                     )}
@@ -323,11 +325,11 @@ const ProductCreationPage = () => {
         )}
         {showForm && (
           <div style={styles.formOverlay}>
-          <div style={styles.formContainer}>
-            <h2 style={styles.formHeader}>
-              {isEditing ? "Edit Product" : "Add New Product"}
-            </h2>
-            <form onSubmit={handleSubmit}>
+            <div style={styles.formContainer}>
+              <h2 style={styles.formHeader}>
+                {isEditing ? "Edit Product" : "Add New Product"}
+              </h2>
+              <form onSubmit={handleSubmit}>
                 <div style={styles.formGroup}>
                   <label style={styles.label}>Product Name:</label>
                   <input
@@ -410,32 +412,32 @@ const ProductCreationPage = () => {
                   />
                 </div>
                 <div style={styles.buttonContainerForm}>
-          <button
-            type="submit"
-            style={{ ...styles.actionButton, backgroundColor: 'blue', color: 'white' }}
-            onClick={(e) => {
-              e.preventDefault(); // Prevent the default form submit behavior
-              if (isEditing) {
-                handleSave(products[editIndex].productId); // Pass productId when editing
-              } else {
-                handleConfirmAddProduct(); // Add product when not editing
-              }
-            }}
-          >
-            {isEditing ? "Save Changes" : "Add Product"}
-          </button>
-          <button
-            type="button"
-            style={{ ...styles.actionButton, backgroundColor: 'grey', color: 'white' }}
-            onClick={() => setShowForm(false)}
-          >
-            Cancel
-          </button>
-        </div>
-      </form>
-    </div>
-  </div>
-)}
+                  <button
+                    type="submit"
+                    style={{ ...styles.actionButton, backgroundColor: 'blue', color: 'white' }}
+                    onClick={(e) => {
+                      e.preventDefault(); // Prevent the default form submit behavior
+                      if (isEditing) {
+                        handleSave(products[editIndex].productId); // Pass productId when editing
+                      } else {
+                        handleConfirmAddProduct(); // Add product when not editing
+                      }
+                    }}
+                  >
+                    {isEditing ? "Save Changes" : "Add Product"}
+                  </button>
+                  <button
+                    type="button"
+                    style={{ ...styles.actionButton, backgroundColor: 'grey', color: 'white' }}
+                    onClick={() => setShowForm(false)}
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

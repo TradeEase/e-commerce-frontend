@@ -65,7 +65,7 @@ function Signup() {
                     mobile: formData.phone,
                     role: 'ROLE_CUSTOMER' // Or 'CUSTOMER', based on your app's requirement
                 });
-                
+
                 // Handle success response
                 if (response.data.status) {
                     alert(response.data.message);
@@ -84,13 +84,8 @@ function Signup() {
                     <img src={loginimg} alt="Login visual" />
                 </div>
                 <div className="auth-form">
-                    <h1>FASCO</h1>
+                    <h1>BuySwift</h1>
                     <h2>Create Account</h2>
-                    <div className="social-buttons">
-                        <button className="social-button google">Sign up with Google</button>
-                        <button className="social-button email">Sign up with Email</button>
-                    </div>
-                    <div className="divider">— OR —</div>
                     <form onSubmit={handleSubmit}>
                         <div className="two-column">
                             <div>
