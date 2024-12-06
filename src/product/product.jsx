@@ -1,17 +1,18 @@
 import React, { useState, useEffect } from "react";
 import { AiFillStar, AiOutlineStar } from "react-icons/ai";
-import jwtDecode from "jwt-decode";
 import "./product.css";
+import jwtDecode from "jwt-decode";
 
 const ProductDetails = () => {
   const [productData, setProductData] = useState(null);
   const [reviews, setReviews] = useState([]);
   const [selectedSize, setSelectedSize] = useState("");
   const [quantity, setQuantity] = useState(0); // Show 0 initially
+  const [errorMessage, setErrorMessage] = useState("");
   const [showAddToCartModal, setShowAddToCartModal] = useState(false);
   const [showReviewModal, setShowReviewModal] = useState(false);
-  const [comment, setComment] = useState(""); // New state to store the comment
   const [rating, setRating] = useState(0);
+  const [reviewComment, setReviewComment] = useState("");
   const [error, setError] = useState(null);
   const [userId, setUserId] = useState(null);
 
@@ -33,6 +34,8 @@ const ProductDetails = () => {
     }
   }, []);
 
+  console.log(userId)
+
   useEffect(() => {
     fetch(`http://localhost:8083/api/product/products/${productId}`)
       .then((response) => {
@@ -50,90 +53,130 @@ const ProductDetails = () => {
         return response.json();
       })
       .then((data) => {
-        const filteredReviews = data.filter((review) => review.productId === parseInt(productId));
-     // Fetch user names for each review
-     const fetchUserNames = filteredReviews.map((review) =>
-      fetch(`http://localhost:8088/auth/get/${review.userId}`)
-        .then((response) => {
-          if (!response.ok) {
-            console.log(`Error fetching user data for userId ${review.userId}:`, response.status);
-            return { name: "Unknown User" }; // Fallback in case of error
-          }
-          console.log(`Fetched user data for userId ${review.userId}:`, response);
-          return response.json();
-        })
-        .then((userData) => {
-          console.log(`Fetched user data for userId ${review.userId}:`, userData);
-          return {
-            ...review,
-            userName: userData.name || "Unknown User", // Assuming the API returns { name: "User's Name" }
-          };
-        })
-        .catch((error) => {
-          console.log(`Error fetching user data for userId ${review.userId}:`, error);
-          return {
-            ...review,
-            userName: "Unknown User", // Fallback in case of error
-          };
-        })
-    );
+        const filteredReviews = data.filter(
+          (review) => review.productId === parseInt(productId)
+        );
+        setReviews(filteredReviews);
+      })
+      .catch((error) => setError(error.message));
+  }, [productId]);
 
-    // Wait for all user names to be fetched
-    Promise.all(fetchUserNames)
-      .then((reviewsWithUserNames) => setReviews(reviewsWithUserNames))
-      .catch((error) => {
-        console.error("Error fetching all user names:", error);
-        setError("Failed to fetch user names.");
-      });
-  })
-  .catch((error) => {
-    console.error("Error fetching reviews:", error);
-    setError(error.message);
-  });
-}, [productId]);
-
-  const handleAddToCart = () => setShowAddToCartModal(true);
   const handleWriteReview = () => setShowReviewModal(true);
   const handleRatingClick = (value) => setRating(value);
-  const handleSizeChange = (e) => setSelectedSize(e.target.value);
 
   const handleReviewSubmit = () => {
-    const reviewData = {
-      
-      productId: parseInt(productId, 10), // Ensure productId is an integer
-      userId: parseInt(userId, 10),
-      rating: rating,
-      comment: comment,
-    };
+    if (rating === 0 || reviewComment.trim() === "") {
+      alert("Please provide a rating and a comment.");
+      return;
+    }
 
-    console.log("Review Data:", reviewData);
+    const reviewData = {
+      reviewId: 0, // Backend will auto-generate this
+      productId: parseInt(productId),
+      userId: userId, // Replace with the actual user ID in your app
+      rating,
+      comment: reviewComment,
+    };
 
     fetch("http://localhost:8083/api/product/reviews", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Accept: "application/json",
       },
       body: JSON.stringify(reviewData),
     })
       .then((response) => {
-        if (!response.ok) throw new Error("Failed to submit review.");
+        if (!response.ok) throw new Error("Failed to submit the review.");
         return response.json();
       })
-      .then((data) => {
-        setReviews((prevReviews) => [...prevReviews, data]);
+      .then(() => {
+        alert("Review submitted successfully!");
         setShowReviewModal(false);
-        console.log("Review submitted:", data);
-        window.location.reload();
+        setRating(0);
+        setReviewComment("");
+
+        // Optionally fetch updated reviews
+        fetch(`http://localhost:8083/api/product/reviews`)
+          .then((response) => response.json())
+          .then((data) => {
+            const filteredReviews = data.filter(
+              (review) => review.productId === parseInt(productId)
+            );
+            setReviews(filteredReviews);
+          });
       })
-      .catch((error) => setError(error.message));
+      .catch((error) => {
+        alert(`Error: ${error.message}`);
+      });
+  };
+
+  const handleSizeChange = (event) => {
+    setSelectedSize(event.target.value);
+    setErrorMessage(""); // Clear error message when size is selected
+  };
+
+  const handleAddToCart = async () => {
+    if (!selectedSize) {
+      setErrorMessage("Please select a size.");
+      return;
+    }
+
+    if (!quantity || quantity <= 0) {
+      setErrorMessage("Please enter a valid quantity.");
+      return;
+    }
+
+    try {
+      // Step 1: Get the cart ID for the user
+      const cartResponse = await fetch(
+        `http://localhost:8082/api/carts/user/${userId}`
+      );
+
+      if (!cartResponse.ok) {
+        throw new Error("Failed to fetch cart details.");
+      }
+
+      const cartData = await cartResponse.json();
+      const cartId = cartData.cartId;
+
+      // Step 2: Post the cart item data
+      const cartItemData = {
+        cartItemId: 0,
+        productId: parseInt(productId), // Ensure productId is an integer
+        quantity: parseInt(quantity), // Ensure quantity is an integer
+        cart: cartId,
+      };
+
+      const addCartItemResponse = await fetch(
+        "http://localhost:8082/api/cartItems",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(cartItemData),
+        }
+      );
+
+      if (!addCartItemResponse.ok) {
+        throw new Error("Failed to add item to cart.");
+      }
+
+      // Step 3: Show success modal if item is added successfully
+      setShowAddToCartModal(true);
+      setErrorMessage(""); // Clear any previous error messages
+    } catch (error) {
+      console.error("Error adding to cart:", error);
+      setErrorMessage(`Error: ${error.message}`);
+    }
   };
 
 
   // Calculate the average rating
-  const averageRating = reviews.length > 0 
-    ? reviews.reduce((sum, review) => sum + review.rating, 0) / reviews.length 
-    : 0;
+  const averageRating =
+    reviews.length > 0
+      ? reviews.reduce((sum, review) => sum + review.rating, 0) / reviews.length
+      : 0;
 
   if (error) return <p className="error-message">{error}</p>;
   if (!productData) return <p>Loading product details...</p>;
@@ -155,53 +198,82 @@ const ProductDetails = () => {
             <p className="product-price">${productData.price}</p>
             <p className="product-description">{productData.description}</p>
 
-           {/* Average Rating as Stars */}
-<div className="average-rating">
-  <p>Average Rating:</p>
-  <div className="stars-container">
-    {[...Array(5)].map((_, index) => (
-      index < Math.round(averageRating) ? (
-        <AiFillStar key={index} style={{ color: "#ffd700" }} />
-      ) : (
-        <AiOutlineStar key={index} style={{ color: "#ccc" }} />
-      )
-    ))}
-  </div>
-  <p>({averageRating.toFixed(1)} / 5)</p>
-</div>
+            {/* Average Rating as Stars */}
+            <div className="average-rating">
+              <p>Average Rating:</p>
+              <div className="stars-container">
+                {[...Array(5)].map((_, index) =>
+                  index < Math.round(averageRating) ? (
+                    <AiFillStar key={index} style={{ color: "#ffd700" }} />
+                  ) : (
+                    <AiOutlineStar key={index} style={{ color: "#ccc" }} />
+                  )
+                )}
+              </div>
+              <p>({averageRating.toFixed(1)} / 5)</p>
+            </div>
 
-
-            <div className="size-selector">
-              <label htmlFor="size">Select Size:</label>
-              <select id="size" value={selectedSize} onChange={handleSizeChange}>
-                <option value="" disabled>
-                  Choose a size
-                </option>
-                {["XS", "S", "M", "L", "XL", "XXL"].map((size, index) => (
-                  <option key={index} value={size}>
-                    {size}
+            {/* Separated Product Actions */}
+            <div className="product-actions">
+              <div className="size-selector">
+                <label htmlFor="size">Select Size:</label>
+                <select
+                  id="size"
+                  value={selectedSize}
+                  onChange={handleSizeChange}
+                >
+                  <option value="" disabled>
+                    Choose a size
                   </option>
-                ))}
-              </select>
-            </div>
+                  {["XS", "S", "M", "L", "XL", "XXL"].map((size, index) => (
+                    <option key={index} value={size}>
+                      {size}
+                    </option>
+                  ))}
+                </select>
+              </div>
 
-            <div className="quantity-selector">
-              <label htmlFor="quantity">Quantity:</label>
-              <input
-                type="number"
-                id="quantity"
-                value={quantity}
-                min="0"
-                onChange={(e) => setQuantity(e.target.value)}
-              />
-            </div>
+              <div className="quantity-selector">
+                <label htmlFor="quantity">Quantity:</label>
+                <input
+                  type="number"
+                  id="quantity"
+                  value={quantity}
+                  min="0"
+                  onChange={(e) => {
+                    setQuantity(e.target.value);
+                    setErrorMessage(""); // Clear error message when quantity is entered
+                  }}
+                />
+              </div>
 
-            <button className="add-to-cart-btn" onClick={handleAddToCart}>
-              Add to Cart
-            </button>
-            <button className="write-review-btn" onClick={handleWriteReview}>
-              Write Review
-            </button>
+              {errorMessage && (
+                <div className="error-message">{errorMessage}</div>
+              )}
+
+              <div className="action-buttons">
+                <button
+                  className="add-to-cart-btn"
+                  onClick={handleAddToCart}
+                  disabled={productData.quantity === 0} // Disable if out of stock
+                  style={{
+                    backgroundColor:
+                      productData.quantity === 0 ? "#ccc" : "#28a745",
+                    cursor:
+                      productData.quantity === 0 ? "not-allowed" : "pointer",
+                  }}
+                >
+                  {productData.quantity === 0 ? "Out of Stock" : "Add to Cart"}
+                </button>
+                <button
+                  className="write-review-btn"
+                  onClick={handleWriteReview}
+                >
+                  Write Review
+                </button>
+              </div>
+            </div>
+            {/* **End of Separated Product Actions** */}
           </div>
         </div>
 
@@ -211,7 +283,7 @@ const ProductDetails = () => {
           {reviews.length > 0 ? (
             reviews.map((review) => (
               <div key={review.reviewId} className="review">
-                <p className="review-name">User: {review.userName || "Unknown User"}</p>
+                <p className="review-name">User ID: {review.userId}</p>
                 <div className="review-rating">
                   {[...Array(5)].map((_, index) =>
                     index < review.rating ? (
@@ -230,8 +302,8 @@ const ProductDetails = () => {
         </div>
       </div>
 
-  {/* Modals */}
-  {showAddToCartModal && (
+      {/* Modals */}
+      {showAddToCartModal && (
         <div className="modal">
           <div className="modal-content">
             <h4>Added to Cart</h4>
@@ -243,29 +315,39 @@ const ProductDetails = () => {
         </div>
       )}
 
-{showReviewModal && (
+      {/* Review Modal */}
+      {showReviewModal && (
         <div className="modal">
           <div className="modal-content">
             <h4>Write a Review</h4>
             <textarea
-              placeholder="Write your review here..."
-              rows="4"
-              value={comment}
-              onChange={(e) => setComment(e.target.value)} // Update comment state
+              placeholder="Write your review..."
+              value={reviewComment}
+              onChange={(e) => setReviewComment(e.target.value)}
             />
             <div className="rating-input">
-              <p>Rate the Product:</p>
               {[...Array(5)].map((_, index) => (
                 <AiFillStar
                   key={index}
                   onClick={() => handleRatingClick(index + 1)}
-                  className={index < rating ? "filled-star" : ""}
-                  style={{ cursor: "pointer", color: index < rating ? "#ffd700" : "#ccc" }}
+                  style={{
+                    color: index < rating ? "#ffd700" : "#ccc",
+                    cursor: "pointer",
+                    marginRight: "5px", // space between stars
+                    fontSize: "2rem", // Increased size of stars
+                  }}
                 />
               ))}
             </div>
-            <button onClick={handleReviewSubmit}>Submit Review</button>
-            <button onClick={() => setShowReviewModal(false)}>Close</button>
+            <div className="buttons">
+              <button onClick={handleReviewSubmit}>Submit Review</button>
+              <button
+                className="close-button"
+                onClick={() => setShowReviewModal(false)}
+              >
+                Close
+              </button>
+            </div>
           </div>
         </div>
       )}
