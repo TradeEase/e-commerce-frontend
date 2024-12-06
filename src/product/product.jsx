@@ -47,18 +47,43 @@ const ProductDetails = () => {
   }, [productId]);
 
   useEffect(() => {
-    fetch(`http://localhost:8083/api/product/reviews`)
-      .then((response) => {
+    const fetchReviewsWithUserDetails = async () => {
+      try {
+        const response = await fetch(
+          `http://localhost:8083/api/product/reviews`
+        );
         if (!response.ok) throw new Error("Failed to fetch reviews.");
-        return response.json();
-      })
-      .then((data) => {
+
+        const data = await response.json();
         const filteredReviews = data.filter(
           (review) => review.productId === parseInt(productId)
         );
-        setReviews(filteredReviews);
-      })
-      .catch((error) => setError(error.message));
+
+        // Fetch user details for each review
+        const reviewsWithFullName = await Promise.all(
+          filteredReviews.map(async (review) => {
+            try {
+              const userResponse = await fetch(
+                `http://localhost:8088/auth/get/${review.userId}`
+              );
+              if (!userResponse.ok)
+                throw new Error("Failed to fetch user details.");
+              const userData = await userResponse.json();
+              return { ...review, fullName: userData.fullName };
+            } catch {
+              // Fallback to userId if fetching fullName fails
+              return { ...review, fullName: `User ID: ${review.userId}` };
+            }
+          })
+        );
+
+        setReviews(reviewsWithFullName);
+      } catch (error) {
+        setError(error.message);
+      }
+    };
+
+    fetchReviewsWithUserDetails();
   }, [productId]);
 
   const handleWriteReview = () => setShowReviewModal(true);
@@ -283,7 +308,7 @@ const ProductDetails = () => {
           {reviews.length > 0 ? (
             reviews.map((review) => (
               <div key={review.reviewId} className="review">
-                <p className="review-name">User ID: {review.userId}</p>
+                <p className="review-name">User Name: {review.fullName}</p>
                 <div className="review-rating">
                   {[...Array(5)].map((_, index) =>
                     index < review.rating ? (
