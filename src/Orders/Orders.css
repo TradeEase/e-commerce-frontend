@@ -1,101 +1,90 @@
 /* Wrapper specific to the orders page */
 .orders-wrapper {
-  margin-top: 100px;
+  margin-top: 110px;
   background-color: #f5f7fa;
   font-family: 'Roboto', Arial, sans-serif;
   color: #333;
   display: flex;
-  justify-content: center;
-  align-items: flex-start;
-  min-height: 100vh;
-  padding: 40px 20px;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center; /* Center the container vertically */
+  min-height: 100vh; /* Full viewport height */
+  padding: 20px;
   box-sizing: border-box;
 }
 
+/* Header */
+.orders-header {
+  position: absolute;
+  top: 70px; /* Move the header to the top */
+  width: 100%;
+  text-align: center;
+  font-size: 2rem;
+  font-weight: bold;
+  color: #003580;
+  margin-bottom: 20px;
+  z-index: 10;
+}
+
+/* Container for orders */
 .orders-container {
-  margin-top: 100px;
   display: flex;
   flex-wrap: wrap; /* Allow wrapping of orders */
   justify-content: center; /* Center align orders */
   gap: 20px; /* Add spacing between orders */
-  width: 100%; /* Reduce container width */
-  max-width: 1000px; /* Limit maximum width */
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  width: 90%;
+  max-width: 1200px; /* Limit maximum width */
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
   background-color: #fff;
-  border-radius: 12px;
-  padding: 20px;
+  border-radius: 16px;
+  padding: 30px;
+  text-align: center;
 }
 
+/* Individual order card */
 .order-card {
   flex: 1 1 calc(45% - 20px); /* Allow cards to take up 45% of the container width */
   max-width: calc(45% - 20px); /* Same as flex basis */
-  background-color: #fff;
+  background-color: #ffffff;
   color: #333;
-  padding: 20px 30px;
-  border-radius: 10px;
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+  padding: 20px 25px;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .order-card:hover {
-  transform: translateY(-5px);
+  transform: translateY(-8px);
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
 }
 
-/* Responsive Design for Smaller Screens */
-@media (max-width: 768px) {
-  .order-card {
-    flex: 1 1 100%; /* Make cards take full width on smaller screens */
-    max-width: 100%;
-  }
-
-  .orders-container {
-    padding: 10px; /* Reduce padding for smaller screens */
-  }
-
-  .order-status-links {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
-  .order-filters {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
-  .order-items {
-    justify-content: center;
-  }
+/* Order details */
+.order-details h4 {
+  font-size: 1.4rem;
+  color: #003580;
+  margin: 10px 0;
 }
 
-.header-bar {
-  width: 100%;
-  height: 60px;
-  background-color: #003580;
-  display: flex;
-  align-items: center;
-  padding: 0 20px;
-  color: white;
-  font-size: 1.2rem;
-  font-weight: bold;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+.order-details p {
+  font-size: 1rem;
+  color: #555;
+  margin: 5px 0;
 }
 
-/* General button styles */
-.cancel-order,
-.track-order,
-.order-cancelled {
-  padding: 10px 20px;
+/* Buttons */
+.cancel-order {
+  margin-top: 20px;
+  padding: 10px 25px;
   border: none;
   border-radius: 8px;
-  cursor: pointer;
-  font-weight: bold;
-  transition: background-color 0.3s ease, transform 0.3s ease;
-}
-
-.cancel-order {
+  font-size: 0.9rem;
+  color: #fff;
   background-color: #dc3545;
-  color: white;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.3s ease;
 }
 
 .cancel-order:hover {
@@ -103,23 +92,15 @@
   transform: scale(1.05);
 }
 
-.track-order {
-  background-color: #007bff;
-  color: white;
-}
 
-.track-order:hover {
-  background-color: #0056b3;
-  transform: scale(1.05);
-}
+/* Responsive Design */
+@media (max-width: 768px) {
+  .order-card {
+    flex: 1 1 100%; /* Make cards take full width on smaller screens */
+    max-width: 100%;
+  }
 
-.order-cancelled {
-  background-color: #6c757d; /* Gray background */
-  color: white;
-  cursor: not-allowed; /* Indicates it's disabled */
-}
-
-.order-cancelled:hover {
-  background-color: #5a6268;
-  transform: none; /* No hover effect */
+  .orders-container {
+    padding: 15px; /* Reduce padding for smaller screens */
+  }
 }
