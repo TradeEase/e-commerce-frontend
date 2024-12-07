@@ -23,13 +23,18 @@ import Orders from "./Orders/Orders";
 import CategoryPage from "./customer/CategoryPage";
 import ReturnOrder from "./Orders/ReturnOrder";
 import Payments1 from "./Payments/Payments1";
+import { RequireToken } from "./login/Auth";
 
 // Layout component with Navbar, Outlet, and Footer
 const Layout = () => (
   <div>
-    <NavBar />
-    <Outlet /> {/* Render child routes */}
-    <Footer />
+    <RequireToken>
+      <div>
+        <NavBar />
+        <Outlet /> {/* Render child routes */}
+        <Footer />
+      </div>
+    </RequireToken>
   </div>
 );
 
