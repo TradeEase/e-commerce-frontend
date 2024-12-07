@@ -34,7 +34,7 @@ const ProductCreationPage = () => {
   const [editIndex, setEditIndex] = useState(null);
   const [showForm, setShowForm] = useState(false);
 
-  const API_URL = 'http://localhost:8083/api/product/products';
+  const API_URL = 'http://localhost:8080/api/product/products';
 
   // Fetch all products
   const fetchProducts = async () => {
@@ -157,7 +157,7 @@ const ProductCreationPage = () => {
       try {
         // Make the PUT request with the productData object
         const response = await axios.put(
-          `http://localhost:8083/api/product/products/${formData.productId}`, // Use the productId from formData
+          `http://localhost:8080/api/product/products/${formData.productId}`, // Use the productId from formData
           productData
         );
         console.log('Product updated successfully:', response.data);

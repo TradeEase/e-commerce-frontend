@@ -37,7 +37,7 @@ const ProductDetails = () => {
   console.log(userId)
 
   useEffect(() => {
-    fetch(`http://localhost:8083/api/product/products/${productId}`)
+    fetch(`http://localhost:8080/api/product/products/${productId}`)
       .then((response) => {
         if (!response.ok) throw new Error("Failed to fetch product details.");
         return response.json();
@@ -50,7 +50,7 @@ const ProductDetails = () => {
     const fetchReviewsWithUserDetails = async () => {
       try {
         const response = await fetch(
-          `http://localhost:8083/api/product/reviews`
+          `http://localhost:8080/api/product/reviews`
         );
         if (!response.ok) throw new Error("Failed to fetch reviews.");
 
@@ -64,7 +64,7 @@ const ProductDetails = () => {
           filteredReviews.map(async (review) => {
             try {
               const userResponse = await fetch(
-                `http://localhost:8088/auth/get/${review.userId}`
+                `http://localhost:8080/api/taskUserService/auth/get/${review.userId}`
               );
               if (!userResponse.ok)
                 throw new Error("Failed to fetch user details.");
@@ -103,7 +103,7 @@ const ProductDetails = () => {
       comment: reviewComment,
     };
 
-    fetch("http://localhost:8083/api/product/reviews", {
+    fetch("http://localhost:8080/api/product/reviews", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -154,7 +154,7 @@ const ProductDetails = () => {
     try {
       // Step 1: Get the cart ID for the user
       const cartResponse = await fetch(
-        `http://localhost:8082/api/carts/user/${userId}`
+        `http://localhost:8082/api/order/carts/user/${userId}`
       );
 
       if (!cartResponse.ok) {
@@ -173,7 +173,7 @@ const ProductDetails = () => {
       };
 
       const addCartItemResponse = await fetch(
-        "http://localhost:8082/api/cartItems",
+        "http://localhost:8080/api/orders/cartItems",
         {
           method: "POST",
           headers: {

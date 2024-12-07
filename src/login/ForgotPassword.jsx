@@ -36,7 +36,7 @@ function ForgotPassword() {
 
         try {
             // Construct the full URL with the email passed in the path
-            const url = `http://localhost:8088/auth/updatePasswordByEmail/${encodeURIComponent(email)}`;
+            const url = `http://localhost:8080/api/taskUserService/auth/updatePasswordByEmail/${encodeURIComponent(email)}`;
 
             // Make a POST request to the endpoint
             const response = await fetch(url, {

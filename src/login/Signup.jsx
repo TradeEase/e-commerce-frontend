@@ -58,7 +58,7 @@ function Signup() {
         if (validateForm()) {
             try {
                 // Sending the user data to the backend
-                const response = await axios.post('http://localhost:8088/auth/signup', {
+                const response = await axios.post('http://localhost:8080/api/taskUserService/auth/signup', {
                     email: formData.email,
                     password: formData.password,
                     fullName: `${formData.firstName} ${formData.lastName}`,

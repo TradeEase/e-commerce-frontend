@@ -19,18 +19,18 @@ const ShoppingCart = () => {
         const decodedToken = jwtDecode(token);
         const userId = decodedToken?.userId;
 
-        const cartResponse = await axios.get(`http://localhost:8082/api/carts/user/${userId}`);
+        const cartResponse = await axios.get(`http://localhost:8080/api/orders/carts/user/${userId}`);
         console.log('Cart Response:', cartResponse.data);
 
         const cartId = cartResponse.data.cartId;
 
-        const cartItemsResponse = await axios.get(`http://localhost:8082/api/cartItems/cart/${cartId}`);
+        const cartItemsResponse = await axios.get(`http://localhost:8080/api/orders/cartItems/cart/${cartId}`);
         console.log('Cart Items Response:', cartItemsResponse.data);
 
         const cartItems = cartItemsResponse.data;
 
         const productDetailsPromises = cartItems.map(item =>
-          axios.get(`http://localhost:8083/api/product/products/${item.productId}`)
+          axios.get(`http://localhost:8080/api/product/products/${item.productId}`)
         );
         const productDetailsResponses = await Promise.all(productDetailsPromises);
 
@@ -72,7 +72,7 @@ const ShoppingCart = () => {
         });
 
         if (amount !== 0) {
-          await axios.put(`http://localhost:8082/api/cartItems/${updatedProduct.cartItemId}`, {
+          await axios.put(`http://localhost:8080/api/orders/cartItems/${updatedProduct.cartItemId}`, {
             cartItemId: updatedProduct.cartItemId,
             productId: updatedProduct.productId,
             quantity: updatedProduct.quantity,
@@ -93,7 +93,7 @@ const ShoppingCart = () => {
       const productToRemove = cart.find(product => product.productId === id);
       if (productToRemove) {
         try {
-          await axios.delete(`http://localhost:8082/api/cartItems/${productToRemove.cartItemId}`);
+          await axios.delete(`http://localhost:8080/api/orders/cartItems/${productToRemove.cartItemId}`);
           setCart(prevCart => prevCart.filter(product => product.productId !== id));
         } catch (error) {
           console.error('Error removing item:', error);
@@ -127,13 +127,13 @@ const ShoppingCart = () => {
         console.log('Sending order data to backend:', orderPayload);
 
         // Post request to create the order for each item
-        await axios.post('http://localhost:8082/api/orders', orderPayload);
+        await axios.post('http://localhost:8080/api/orders', orderPayload);
       }
 
       // After posting all orders, delete all items from the cart
       const deleteCartItemPromises = cart.map(item => {
         console.log(`Deleting cart item with ID: ${item.cartItemId}`);
-        return axios.delete(`http://localhost:8082/api/cartItems/${item.cartItemId}`);
+        return axios.delete(`http://localhost:8080/api/orders/cartItems/${item.cartItemId}`);
       });
 
       await Promise.all(deleteCartItemPromises);

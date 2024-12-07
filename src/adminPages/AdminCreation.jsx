@@ -17,7 +17,7 @@ const AdminCreationPage = () => {
 
   useEffect(() => {
     // Fetch existing admins from the backend
-    Axios.get('http://localhost:8088/auth/getAllusersonly')
+    Axios.get('http://localhost:8080/api/taskUserService/auth/getAllusersonly')
       .then((response) => {
         setAdmins(response.data);
       })
@@ -45,7 +45,7 @@ const AdminCreationPage = () => {
       setAdmins(updatedAdmins);
 
       // Make a PUT request to update the admin on the backend
-      Axios.post(`http://localhost:8088/auth/update`, formData)
+      Axios.post(`http://localhost:8080/api/taskUserService/auth/update`, formData)
         .then((response) => {
           alert(response.data.message);
           setIsEditing(false);
@@ -60,7 +60,7 @@ const AdminCreationPage = () => {
       setAdmins([...admins, newAdmin]);
 
       // Make a POST request to create a new admin on the backend
-      Axios.post('http://localhost:8088/auth/update', newAdmin)
+      Axios.post('http://localhost:8080/api/taskUserService/auth/update', newAdmin)
         .then((response) => {
           alert(response.data.message);
         })
@@ -89,7 +89,7 @@ const AdminCreationPage = () => {
 
   const handleDelete = (index) => {
     // Make a DELETE request to delete the admin
-    Axios.delete(`http://localhost:8088/auth/delete/${admins[index].id}`)
+    Axios.delete(`http://localhost:8080/api/taskUserService/auth/delete/${admins[index].id}`)
       .then(() => {
         alert('Admin deleted successfully');
         setAdmins(admins.filter((_, i) => i !== index));

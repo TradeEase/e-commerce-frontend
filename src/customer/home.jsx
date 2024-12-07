@@ -11,7 +11,7 @@ function Home() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const fetchProducts = fetch("http://localhost:8083/api/product/products")
+    const fetchProducts = fetch("http://localhost:8080/api/product/products")
       .then((response) => {
         if (!response.ok) {
           throw new Error("Failed to fetch products");
@@ -24,7 +24,7 @@ function Home() {
       });
 
     const fetchCategories = fetch(
-      "http://localhost:8083/api/product/categories"
+      "http://localhost:8080/api/product/categories"
     )
       .then((response) => {
         if (!response.ok) {
