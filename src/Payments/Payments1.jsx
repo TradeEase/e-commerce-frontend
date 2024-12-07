@@ -43,7 +43,7 @@ function Payments1() {
                 <li key={item.productId} className="flex justify-between items-center">
                   <span className="font-medium text-gray-700">{item.name}</span>
                   <span className="text-gray-500">
-                    {item.quantity} x ${(item.price / 100).toFixed(2)} = ${(item.quantity * (item.price / 100)).toFixed(2)}
+                    {item.quantity} x ${(item.price).toFixed(2)} = ${(item.quantity * (item.price)).toFixed(2)}
                   </span>
                 </li>
               ))}
@@ -53,7 +53,7 @@ function Payments1() {
           )}
           <div className="mt-4 border-t pt-4">
             <h3 className="text-lg font-semibold text-gray-800">
-              Total Price: ${totalPrice ? (totalPrice / 100).toFixed(2) : '0.00'}
+              Total Price: ${totalPrice ? totalPrice : '0.00'}
             </h3>
           </div>
         </div>
@@ -76,13 +76,13 @@ function Payments1() {
             <CheckCircle className="h-16 w-16 text-green-500 mx-auto mb-4" />
             <h2 className="text-3xl font-bold text-green-700 mb-2">Payment Successful!</h2>
             <p className="text-gray-600 mb-6">
-              Thank you for your purchase. You will receive a confirmation email shortly.
+              Thank you for your purchase.Have a Nice Day!
             </p>
             <button
-              onClick={() => setPaymentStatus('idle')}
+
               className="bg-green-600 text-white py-3 px-8 rounded-lg font-semibold hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 transition-all"
             >
-              Make Another Payment
+              Thank you for your purchase.
             </button>
           </div>
         )}

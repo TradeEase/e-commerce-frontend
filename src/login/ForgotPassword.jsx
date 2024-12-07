@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Form.css";
-import signup from "../assets/SignIMG.jpg";
+import loginimg from '../assets/LoginIMG.jpg';
 
 function ForgotPassword() {
     const [email, setEmail] = useState("");
@@ -65,7 +65,7 @@ function ForgotPassword() {
         <div className="auth-container">
             <div className="auth-box">
                 <div className="auth-image">
-                    <img src={signup} alt="Forgot Password visual" />
+                    <img src={loginimg} alt="Forgot Password visual" />
                 </div>
                 <div className="auth-form">
                     <h1>BuySwift</h1>
