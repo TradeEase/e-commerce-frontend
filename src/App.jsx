@@ -21,20 +21,19 @@ import Checkout from "./checkout/Checkout";
 import Cartpage from "./Cartpage/cartpage";
 import Orders from "./Orders/Orders";
 import CategoryPage from "./customer/CategoryPage";
-import ReturnOrder from "./Orders/ReturnOrder";
 import Payments1 from "./Payments/Payments1";
-import { RequireToken } from "./login/Auth";
+
 
 // Layout component with Navbar, Outlet, and Footer
 const Layout = () => (
   <div>
-    <RequireToken>
-      <div>
-        <NavBar />
-        <Outlet /> {/* Render child routes */}
-        <Footer />
-      </div>
-    </RequireToken>
+
+    <div>
+      <NavBar />
+      <Outlet /> {/* Render child routes */}
+      <Footer />
+    </div>
+
   </div>
 );
 
@@ -53,7 +52,7 @@ const router = createBrowserRouter([
       { path: "/adminproducts", element: <AdminProductsPage /> },
       { path: "/customers", element: <CustomerPage /> },
       { path: "/orders", element: <Orders /> },
-      { path: "/returnorder", element: <ReturnOrder /> },
+
       { path: "/payments1", element: <Payments1 /> },
       { path: "/Cartpage", element: <Cartpage /> },
     ],
@@ -67,9 +66,9 @@ const router = createBrowserRouter([
 function App() {
   return (
     <div className="app">
-      
-        <RouterProvider router={router} />
-      
+
+      <RouterProvider router={router} />
+
     </div>
   );
 }
