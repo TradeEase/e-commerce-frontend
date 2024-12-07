@@ -1,18 +1,32 @@
 import React, { useState, useEffect } from 'react';
+import Select from 'react-select'; // Import React Select for dropdown
+
 import Navbar from './components/Navbar';
 import axios from 'axios';
+const categoriesOptions = [
+  { value: 1, label: "Women's Wear" },
+  { value: 2, label: "Kids' Wear" },
+  { value: 3, label: "Swimwear" },
+  { value: 4, label: "Men's Wear" },
+  { value: 5, label: "Sarees" },
+  { value: 6, label: "Frocks" },
+];
+const defaultReviewId = '1';
+
 
 const ProductCreationPage = () => {
   const [formData, setFormData] = useState({
     productId: '',
     name: '',
     description: '',
-    image: null, // Store the uploaded file
+    image: null,
     price: '',
     quantity: '',
-    categories: '',
-    review_id: '',
+    categories: [], // Ensure categories is initialized as an empty array
+
   });
+
+
 
   const [imagePreview, setImagePreview] = useState(null); // For previewing the image
   const [products, setProducts] = useState([]);
@@ -35,39 +49,38 @@ const ProductCreationPage = () => {
   useEffect(() => {
     fetchProducts();
   }, []);
-  // Add a new product
+
+
   const handleConfirmAddProduct = async () => {
     try {
-      const response = await axios.post(API_URL, formData);
-      console.log('Form Data before request:', formData);
-      setProducts([...products, { ...formData, productId: response.data }]);
-      setFormData({ name: '', productId: '', description: '', price: '', quantity: '', image: '' });
-      setShowPopup(false);
+      // Construct the product data in the expected format
+      const productData = {
+        productId: 0,
+        name: formData.name,
+        price: formData.price, // Set default value for invalid price
+        description: formData.description,
+        quantity: formData.quantity ? parseInt(formData.quantity, 10) : 0, // Set default value for invalid quantity
+        image: formData.image,
+        categories: formData.categories.length > 0 ? formData.categories : [0], // Handle empty categories
+        review: defaultReviewId,
+      };
+
+
+      console.log('Form Data before request:', productData);
+
+      const response = await axios.post(API_URL, productData);
+
+      // Add new product to state
+      setProducts([...products, { ...productData, productId: response.data }]);
+
+      // Reset the form
+      setFormData({ name: '', productId: '', description: '', price: '', quantity: '', image: '', categories: [] });
+      setImagePreview(null);
+
     } catch (error) {
-      console.error('Error adding product:', error);
+      console.error('Error adding product:', error.response?.data || error.message); // Log backend response
     }
   };
-  const handleSave = async (id) => {
-    if (!id) {
-      console.error('No product ID found.');
-      return;
-    }
-
-    const productToUpdate = products.find((product) => product.productId === id);
-    if (!productToUpdate) {
-      console.error('Product not found.');
-      return;
-    }
-
-    try {
-      await axios.put(`${API_URL}/${id}`, productToUpdate);
-      fetchProducts(); // Refresh the list
-    } catch (error) {
-      console.error('Error updating product:', error);
-    }
-  };
-
-
 
 
   const handleChange = (e) => {
@@ -79,41 +92,94 @@ const ProductCreationPage = () => {
     });
   };
 
-  const handleImageChange = (e) => {
+  const handleImageChange = async (e) => {
     const file = e.target.files[0];
     if (file) {
-      setFormData({
-        ...formData,
-        image: file, // Store the actual file for uploading
-      });
-      setImagePreview(URL.createObjectURL(file)); // Generate preview URL
+      setImagePreview(URL.createObjectURL(file)); // Generate a preview URL
+
+      // Upload to Cloudinary
+      const formData = new FormData();
+      formData.append('file', file);
+      formData.append('upload_preset', 'BuySwift'); // Replace with your upload preset
+
+      try {
+        const response = await axios.post(
+          'https://api.cloudinary.com/v1_1/dglwbdnlt/image/upload',
+          formData
+        );
+        setFormData({ ...formData, image: response.data.secure_url }); // Save the Cloudinary URL
+        console.log('Uploaded image URL:', response.data.secure_url);
+      } catch (error) {
+        console.error('Error uploading image to Cloudinary:', error);
+      }
     }
   };
 
 
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (isEditing) {
-      const updatedProduct = { ...formData };
+
+    const productData = {
+      ...formData,
+
+      review_id: defaultReviewId, // Ensure review_id is always included
+      categories: formData.categories || [], // Ensure categories is never undefined
+    };
+
+    try {
+      if (isEditing) {
+        await axios.put(`${API_URL}/${formData.productId}`, productData);
+      } else {
+        await axios.post(API_URL, productData);
+      }
+      fetchProducts(); // Refresh product list
+      resetForm();
+    } catch (error) {
+      console.error('Error saving product:', error);
+    }
+  };
+
+
+  const handleSave = async () => {
+    // Construct the productData object using formData
+    const productData = {
+      name: formData.name,
+      price: parseFloat(formData.price),
+      quantity: parseInt(formData.quantity, 10),
+      image: formData.image, // Ensure the image URL or object is passed
+      categories: formData.categories,
+      review_id: defaultReviewId, // Set the default review ID if needed
+    };
+
+    // Check if the productId is valid and other required fields are present
+    if (formData.productId && formData.name && formData.price && formData.quantity) {
       try {
-        await axios.put(`${API_URL}/${updatedProduct.productId}`, updatedProduct);
-        setProducts(
-          products.map((product) =>
-            product.productId === updatedProduct.productId ? updatedProduct : product
-          )
+        // Make the PUT request with the productData object
+        const response = await axios.put(
+          `http://localhost:8083/api/product/products/${formData.productId}`, // Use the productId from formData
+          productData
         );
+        console.log('Product updated successfully:', response.data);
+
+        // Refresh the product list after successful update
+        fetchProducts();
+
+        // Reset the form
+        resetForm();
       } catch (error) {
-        console.error('Error updating product:', error);
+        console.error('Error updating product:', error.response?.data || error.message);
+        alert(`Error: ${error.response?.data?.message || error.message}`);
       }
     } else {
-      const newProduct = { ...formData };
-      try {
-        const response = await axios.post(API_URL, newProduct);
-        setProducts([...products, { ...newProduct, productId: response.data }]);
-      } catch (error) {
-        console.error('Error adding product:', error);
-      }
+      alert('Please ensure all required fields are filled out.');
     }
+  };
+
+
+
+
+  const resetForm = () => {
     setFormData({
       productId: '',
       name: '',
@@ -121,8 +187,8 @@ const ProductCreationPage = () => {
       image: null,
       price: '',
       quantity: '',
-      categories: '',
-      review_id: '',
+      categories: [],
+      review_id: defaultReviewId, // Always include the default review ID
     });
     setImagePreview(null);
     setIsEditing(false);
@@ -133,7 +199,10 @@ const ProductCreationPage = () => {
 
   const handleEdit = (index) => {
     const product = products[index];
-    setFormData(product);
+    setFormData({
+      ...product,
+      categories: product.categories || [], // Ensure categories is an array
+    });
     setImagePreview(product.image || null);
     setIsEditing(true);
     setEditIndex(index);
@@ -278,7 +347,6 @@ const ProductCreationPage = () => {
                 <th style={styles.tableCell}>Price</th>
                 <th style={styles.tableCell}>Quantity</th>
                 <th style={styles.tableCell}>Categories</th>
-                <th style={styles.tableCell}>Review</th>
                 <th style={styles.tableCell}>Actions</th>
               </tr>
             </thead>
@@ -295,15 +363,13 @@ const ProductCreationPage = () => {
                         alt="Product"
                         style={{ maxWidth: '100px', height: 'auto' }}
                       />
-
                     ) : (
-                      "No Image"
+                      'No Image'
                     )}
                   </td>
                   <td style={styles.tableCell}>{product.price}</td>
                   <td style={styles.tableCell}>{product.quantity}</td>
                   <td style={styles.tableCell}>{product.categories}</td>
-                  <td style={styles.tableCell}>{product.review}</td>
                   <td style={styles.tableCell}>
                     <button
                       style={{ ...styles.actionButton, backgroundColor: 'green', color: 'white' }}
@@ -321,6 +387,7 @@ const ProductCreationPage = () => {
                 </tr>
               ))}
             </tbody>
+
           </table>
         )}
         {showForm && (
@@ -359,6 +426,7 @@ const ProductCreationPage = () => {
                     name="image"
                     onChange={handleImageChange}
                     style={styles.input}
+                    accept="image/*"
                   />
                 </div>
                 {imagePreview && (
@@ -370,6 +438,7 @@ const ProductCreationPage = () => {
                     />
                   </div>
                 )}
+
                 <div style={styles.formGroup}>
                   <label style={styles.label}>Price:</label>
                   <input
@@ -394,29 +463,28 @@ const ProductCreationPage = () => {
                 </div>
                 <div style={styles.formGroup}>
                   <label style={styles.label}>Categories:</label>
-                  <input
-                    type="text"
+                  <Select
+                    isMulti
                     name="categories"
-                    value={formData.categories}
-                    onChange={handleChange}
-                    style={styles.input}
+                    options={categoriesOptions}
+                    value={categoriesOptions.filter((option) =>
+                      formData.categories?.includes(option.value) // Use optional chaining to safely access categories
+                    )}
+                    onChange={(selectedOptions) => {
+                      const selectedValues = selectedOptions.map((option) => option.value);
+                      setFormData({ ...formData, categories: selectedValues });
+                    }}
+                    className="basic-multi-select"
+                    classNamePrefix="select"
                   />
-                </div>
-                <div style={styles.formGroup}>
-                  <label style={styles.label}>Review:</label>
-                  <textarea
-                    name="review_id"
-                    value={formData.review_id}
-                    onChange={handleChange}
-                    style={{ ...styles.input, height: '80px' }}
-                  />
+
                 </div>
                 <div style={styles.buttonContainerForm}>
                   <button
                     type="submit"
                     style={{ ...styles.actionButton, backgroundColor: 'blue', color: 'white' }}
                     onClick={(e) => {
-                      e.preventDefault(); // Prevent the default form submit behavior
+                      e.preventDefault();
                       if (isEditing) {
                         handleSave(products[editIndex].productId); // Pass productId when editing
                       } else {
@@ -424,7 +492,7 @@ const ProductCreationPage = () => {
                       }
                     }}
                   >
-                    {isEditing ? "Save Changes" : "Add Product"}
+                    {isEditing ? 'Save Changes' : 'Add Product'}
                   </button>
                   <button
                     type="button"
@@ -435,6 +503,7 @@ const ProductCreationPage = () => {
                   </button>
                 </div>
               </form>
+
             </div>
           </div>
         )}
