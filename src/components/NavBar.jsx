@@ -1,19 +1,36 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import jwtDecode from 'jwt-decode';
 import './Navbar.css';
-import Notification from '../notificaton/notification';
-import { FaSearch, FaUser, FaStar, FaShoppingCart, FaBell, FaKey, FaDoorOpen } from 'react-icons/fa';
+
+import { FaSearch, FaUser, FaShoppingCart, FaKey, FaDoorOpen } from 'react-icons/fa';
 
 function NavBar() {
-  const [showNotifications, setShowNotifications] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
-  const toggleNotifications = () => {
-    setShowNotifications(!showNotifications);
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (token && isTokenValid(token)) {
+      setIsAuthenticated(true);
+    } else {
+      localStorage.removeItem('token');
+      setIsAuthenticated(false);
+    }
+  }, []);
+
+  const isTokenValid = (token) => {
+    try {
+      const decoded = jwtDecode(token);
+      return decoded.exp * 1000 > Date.now();
+    } catch (e) {
+      return false;
+    }
   };
 
-  const handleLoginLogout = () => {
-    setIsAuthenticated(!isAuthenticated); // Toggle authentication status
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    setIsAuthenticated(false);
+    console.log('Logged out');
   };
 
   return (
@@ -23,34 +40,32 @@ function NavBar() {
       </div>
       <div className="navbar-links">
         <a href="/">Home</a>
-        <a href="/products">Products</a>
         <a href="/orders">Orders</a>
         <a href="/contact">Contact Us</a>
       </div>
-      
+      <div className="navbar-icons">
+        <Link to="">
+          <FaSearch className="icon" />
+        </Link>
+        <Link to="/profile">
+          <FaUser className="icon" />
+        </Link>
+        <Link to="/cartpage">
+          <FaShoppingCart className="icon" />
+        </Link>
 
-
-<div className="navbar-icons">
-  <Link to="">
-    <FaSearch className="icon" />
-  </Link>
-  <Link to="/profile">
-    <FaUser className="icon" />
-  </Link>
-  <Link to="/cartpage">
-    <FaShoppingCart className="icon" />
-  </Link>
-  <FaBell className="icon notification-icon" onClick={toggleNotifications} />
-  {showNotifications && <Notification />}
-  {isAuthenticated ? (
-    <FaDoorOpen className="icon auth-icon" onClick={handleLoginLogout} title="Logout" />
-  ) : (
-    <Link to="/login">
-      <FaKey className="icon auth-icon" title="Login" />
-    </Link>
-  )}
-</div>
-
+        {isAuthenticated ? (
+          <FaDoorOpen
+            className="icon auth-icon"
+            onClick={handleLogout}
+            title="Logout"
+          />
+        ) : (
+          <Link to="/login">
+            <FaKey className="icon auth-icon" title="Login" />
+          </Link>
+        )}
+      </div>
     </nav>
   );
 }

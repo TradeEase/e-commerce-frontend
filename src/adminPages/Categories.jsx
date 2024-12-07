@@ -44,7 +44,7 @@ const CategoriesPage = () => {
         const response = await axios.post(API_BASE_URL, formData);
         setCategories([...categories, { ...formData, categoryId: response.data }]);
         window.alert(`Category "${formData.name}" has been successfully added.`);
-        
+
       }
       // Reset the form state
       setFormData({ categoryId: '', name: '', description: '' });
@@ -56,7 +56,7 @@ const CategoriesPage = () => {
       window.alert('An error occurred while saving the category. Please try again.');
     }
   };
-  
+
   const handleEdit = (index) => {
     const category = categories[index];
     setFormData(category);
@@ -67,10 +67,10 @@ const CategoriesPage = () => {
 
   const handleDelete = async (index) => {
     const category = categories[index];
-  
+
     // Show confirmation prompt
     const isConfirmed = window.confirm(`Are you sure you want to delete the category "${category.name}"?`);
-  
+
     // Proceed only if the user confirms
     if (isConfirmed) {
       try {
@@ -83,8 +83,9 @@ const CategoriesPage = () => {
       console.log('Category deletion canceled by user.');
     }
   };
-  
 
+
+  // Styles
   const styles = {
     container: {
       display: 'flex',
@@ -93,12 +94,12 @@ const CategoriesPage = () => {
     },
     content: {
       flex: 1,
-      marginLeft: '200px',
+      marginLeft: '100px',
       padding: '20px',
     },
     buttonContainer: {
       position: 'absolute',
-      top: '60px',
+      top: '100px',
       right: '20px',
       zIndex: 1000,
     },
@@ -155,8 +156,8 @@ const CategoriesPage = () => {
     },
     table: {
       width: '100%',
-      marginTop: '100px',
-      marginRight: '100px',
+      marginTop: '150px',
+
       borderCollapse: 'collapse',
     },
     tableHeader: {
@@ -176,6 +177,7 @@ const CategoriesPage = () => {
       cursor: 'pointer',
     },
   };
+
 
   return (
     <div style={styles.container}>

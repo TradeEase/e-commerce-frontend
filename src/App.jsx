@@ -23,8 +23,6 @@ import Orders from "./Orders/Orders";
 import CategoryPage from "./customer/CategoryPage";
 import ReturnOrder from "./Orders/ReturnOrder";
 import Payments1 from "./Payments/Payments1";
-import Payments2 from "./Payments/Payments2";
-import Payments3 from "./Payments/Payments3";
 import { RequireToken } from "./login/Auth";
 
 // Layout component with Navbar, Outlet, and Footer
@@ -57,8 +55,6 @@ const router = createBrowserRouter([
       { path: "/orders", element: <Orders /> },
       { path: "/returnorder", element: <ReturnOrder /> },
       { path: "/payments1", element: <Payments1 /> },
-      { path: "/Payments2", element: <Payments2 /> },
-      { path: "/Payments3", element: <Payments3 /> },
       { path: "/Cartpage", element: <Cartpage /> },
     ],
   },

@@ -1,4 +1,3 @@
-// In Payments1.js
 import React, { useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import PaymentForm from './components/PaymentForm';
@@ -6,9 +5,8 @@ import { ShoppingBag, CheckCircle, XCircle } from 'lucide-react';
 
 function Payments1() {
   const location = useLocation();
-
-  const { cart, totalPrice } = location.state || {};
-  console.log('Total Price in Payments1:', totalPrice); // Debug to check the received value
+  const { cart, totalPrice, cartId } = location.state || {}; // Destructure cartId from location.state
+  console.log('Cart ID in Payments1:', cartId); // Debugging line
 
   const [paymentStatus, setPaymentStatus] = useState('idle');
   const [errorMessage, setErrorMessage] = useState('');
@@ -35,16 +33,43 @@ function Payments1() {
           </p>
         </div>
 
+        {/* Display the cart items */}
+        <div className="bg-white shadow-lg rounded-xl p-8 mb-8">
+          <h2 className="text-2xl font-bold text-gray-800 mb-4">Your Cart</h2>
+          {cart && cart.length > 0 ? (
+            <ul className="space-y-4">
+              {cart.map((item) => (
+                <li key={item.productId} className="flex justify-between items-center">
+                  <span className="font-medium text-gray-700">{item.name}</span>
+                  <span className="text-gray-500">
+                    {item.quantity} x ${(item.price / 100).toFixed(2)} = ${(item.quantity * (item.price / 100)).toFixed(2)}
+                  </span>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p className="text-gray-500">Your cart is empty.</p>
+          )}
+          <div className="mt-4 border-t pt-4">
+            <h3 className="text-lg font-semibold text-gray-800">
+              Total Price: ${totalPrice ? (totalPrice / 100).toFixed(2) : '0.00'}
+            </h3>
+          </div>
+        </div>
+
+        {/* Payment Form */}
         {paymentStatus === 'idle' && (
           <div className="bg-white shadow-lg rounded-xl p-8">
             <PaymentForm
               amount={totalPrice} // Pass the totalPrice from cart data
+              cartId={cartId} // Pass cartId as a prop
               onSuccess={handleSuccess}
               onError={handleError}
             />
           </div>
         )}
 
+        {/* Payment Success Message */}
         {paymentStatus === 'success' && (
           <div className="bg-green-50 shadow-lg rounded-xl p-8 text-center">
             <CheckCircle className="h-16 w-16 text-green-500 mx-auto mb-4" />
@@ -61,6 +86,7 @@ function Payments1() {
           </div>
         )}
 
+        {/* Payment Error Message */}
         {paymentStatus === 'error' && (
           <div className="bg-red-50 shadow-lg rounded-xl p-8 text-center">
             <XCircle className="h-16 w-16 text-red-500 mx-auto mb-4" />

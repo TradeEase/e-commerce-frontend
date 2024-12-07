@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import jwtDecode from 'jwt-decode';
 import axios from 'axios';
 
+
 const ShoppingCart = () => {
   const [cart, setCart] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -19,12 +20,12 @@ const ShoppingCart = () => {
         const userId = decodedToken?.userId;
 
         const cartResponse = await axios.get(`http://localhost:8082/api/carts/user/${userId}`);
-        console.log('Cart Response:', cartResponse.data); // Debug log to check if cartId is present
+        console.log('Cart Response:', cartResponse.data);
 
         const cartId = cartResponse.data.cartId;
 
         const cartItemsResponse = await axios.get(`http://localhost:8082/api/cartItems/cart/${cartId}`);
-        console.log('Cart Items Response:', cartItemsResponse.data); // Debug log to check structure of cart items
+        console.log('Cart Items Response:', cartItemsResponse.data);
 
         const cartItems = cartItemsResponse.data;
 
@@ -36,11 +37,11 @@ const ShoppingCart = () => {
         const updatedCart = cartItems.map((item, index) => ({
           ...item,
           ...productDetailsResponses[index].data,
-          quantity: item.quantity, // Ensure quantity is retained as a number
-          cartId: cartId, // Add cartId to each item
+          quantity: item.quantity,
+          cartId: cartId,
         }));
 
-        console.log('Updated Cart:', updatedCart); // Debug log to check the updated cart
+        console.log('Updated Cart:', updatedCart);
 
         setCart(updatedCart);
       } catch (error) {
@@ -67,7 +68,7 @@ const ShoppingCart = () => {
           cartItemId: updatedProduct.cartItemId,
           productId: updatedProduct.productId,
           quantity: updatedProduct.quantity,
-          cart: updatedProduct.cartId, // Ensure cartId is passed
+          cart: updatedProduct.cartId,
         });
 
         if (amount !== 0) {
@@ -75,7 +76,7 @@ const ShoppingCart = () => {
             cartItemId: updatedProduct.cartItemId,
             productId: updatedProduct.productId,
             quantity: updatedProduct.quantity,
-            cart: updatedProduct.cartId, // Ensure cartId is passed
+            cart: updatedProduct.cartId,
           });
         }
       } catch (error) {
@@ -87,18 +88,20 @@ const ShoppingCart = () => {
   };
 
   const handleRemove = async (id) => {
-    const productToRemove = cart.find(product => product.productId === id);
-    if (productToRemove) {
-      try {
-        // Call the DELETE endpoint to remove the product
-        await axios.delete(`http://localhost:8082/api/cartItems/${productToRemove.cartItemId}`);
-      } catch (error) {
-        console.error('Error removing item:', error);
+    const confirmRemove = window.confirm('Are you sure you want to remove this item?');
+    if (confirmRemove) {
+      const productToRemove = cart.find(product => product.productId === id);
+      if (productToRemove) {
+        try {
+          await axios.delete(`http://localhost:8082/api/cartItems/${productToRemove.cartItemId}`);
+          setCart(prevCart => prevCart.filter(product => product.productId !== id));
+        } catch (error) {
+          console.error('Error removing item:', error);
+        }
       }
     }
-
-    setCart(prevCart => prevCart.filter(product => product.productId !== id));
   };
+
 
   const handleCheckout = async () => {
     const totalPrice = cart.reduce((sum, product) => sum + product.price * product.quantity, 0);
@@ -108,15 +111,6 @@ const ShoppingCart = () => {
         totalPrice,
       },
     });
-
-    // Call DELETE for all items in the cart during checkout
-    for (const product of cart) {
-      try {
-        await axios.delete(`http://localhost:8082/api/cartItems/${product.cartItemId}`);
-      } catch (error) {
-        console.error('Error removing item during checkout:', error);
-      }
-    }
   };
 
   const getTotalPrice = () => {
@@ -124,42 +118,51 @@ const ShoppingCart = () => {
   };
 
   if (loading) {
-    return <div>Loading...</div>;
+    return (
+      <div style={styles.loadingContainer}>
+        <p>Loading your shopping cart...</p>
+        <div style={styles.spinner}></div>
+      </div>
+    );
   }
 
   return (
     <div style={styles.container}>
       <h1 style={styles.header}>Shopping Cart</h1>
-      <p>Home &gt; Your Shopping Cart</p>
 
-      {cart.map(product => (
-        <div key={product.productId} style={styles.cartItem}>
-          <img src={product.imageUrl} alt={product.name} style={styles.image} />
-          <div style={styles.details}>
-            <h2>{product.name}</h2>
-            <p>Price: ${product.price.toFixed(2)}</p>
-            <button style={styles.removeButton} onClick={() => handleRemove(product.productId)}>
-              Remove
-            </button>
+
+      {cart.length === 0 ? (
+        <p style={styles.emptyCartMessage}>Your cart is currently empty.</p>
+      ) : (
+        cart.map(product => (
+          <div key={product.productId} style={styles.cartItem}>
+            <img src={product.imageUrl} alt={product.name} style={styles.image} />
+            <div style={styles.details}>
+              <h2>{product.name}</h2>
+              <p>Price: ${product.price.toFixed(2)}</p>
+              <button style={styles.removeButton} onClick={() => handleRemove(product.productId)}>
+                Remove
+              </button>
+            </div>
+            <div style={styles.quantityControl}>
+              <button
+                onClick={() => handleQuantityChange(product.productId, -1)}
+                style={styles.quantityButton}
+              >
+                -
+              </button>
+              <span style={styles.quantityText}>{product.quantity}</span>
+              <button
+                onClick={() => handleQuantityChange(product.productId, 1)}
+                style={styles.quantityButton}
+              >
+                +
+              </button>
+            </div>
+            <div style={styles.totalPrice}>${(product.price * product.quantity).toFixed(2)}</div>
           </div>
-          <div style={styles.quantityControl}>
-            <button
-              onClick={() => handleQuantityChange(product.productId, -1)}
-              style={styles.quantityButton}
-            >
-              -
-            </button>
-            <span style={styles.quantityText}>{product.quantity}</span>
-            <button
-              onClick={() => handleQuantityChange(product.productId, 1)}
-              style={styles.quantityButton}
-            >
-              +
-            </button>
-          </div>
-          <div style={styles.totalPrice}>${(product.price * product.quantity).toFixed(2)}</div>
-        </div>
-      ))}
+        ))
+      )}
 
       <div style={styles.subtotal}>
         <p>Total Price</p>
@@ -173,75 +176,127 @@ const ShoppingCart = () => {
   );
 };
 
-// Styling
 const styles = {
   container: {
     maxWidth: '800px',
-    margin: '0 auto',
+    margin: '100px auto',
     padding: '20px',
-    fontFamily: 'Arial, sans-serif',
+    fontFamily: '"Roboto", Arial, sans-serif',
+    backgroundColor: '#f0f8ff',
+    borderRadius: '8px',
+    boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
+
   },
   header: {
-    fontSize: '24px',
+    fontSize: '28px',
+    fontWeight: '600',
     textAlign: 'center',
     marginBottom: '20px',
+    color: '#0077cc',
   },
   cartItem: {
+    color: 'black',
     display: 'flex',
     alignItems: 'center',
-    borderBottom: '1px solid #ccc',
+    borderBottom: '1px solid #ddd',
     paddingBottom: '20px',
     marginBottom: '20px',
+    padding: '10px 0',
   },
   image: {
     width: '80px',
     height: '80px',
     objectFit: 'cover',
+    borderRadius: '6px',
+    boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
   },
   details: {
     flex: 1,
     paddingLeft: '20px',
+    color: '#555',
   },
   removeButton: {
-    color: 'red',
+    color: '#d9534f',
     border: 'none',
     background: 'none',
     cursor: 'pointer',
     marginTop: '10px',
+    fontSize: '14px',
+    fontWeight: '500',
+    transition: 'color 0.3s',
   },
   quantityControl: {
     display: 'flex',
     alignItems: 'center',
   },
   quantityButton: {
-    padding: '5px',
-    fontSize: '16px',
+    padding: '5px 10px',
+    fontSize: '18px',
+    fontWeight: '600',
     cursor: 'pointer',
+    color: '#fff',
+    backgroundColor: '#0077cc',
+    border: 'none',
+    borderRadius: '4px',
+    margin: '0 5px',
+    transition: 'background-color 0.3s',
   },
   quantityText: {
     margin: '0 10px',
     fontSize: '16px',
+    color: '#333',
   },
   totalPrice: {
-    width: '80px',
+    width: '100px',
     textAlign: 'right',
+    fontSize: '16px',
+    fontWeight: '600',
+    color: '#333',
   },
   subtotal: {
     display: 'flex',
     justifyContent: 'space-between',
     fontSize: '18px',
-    marginBottom: '20px',
+    fontWeight: '600',
+    marginTop: '20px',
+    padding: '10px 0',
+    borderTop: '1px solid #ddd',
+    color: '#0077cc',
   },
   checkoutButton: {
     display: 'block',
     width: '100%',
-    padding: '10px',
-    backgroundColor: 'black',
-    color: 'white',
+    padding: '12px',
+    backgroundColor: '#0077cc',
+    color: '#fff',
     border: 'none',
-    fontSize: '16px',
+    fontSize: '18px',
+    fontWeight: '600',
+    textAlign: 'center',
+    borderRadius: '6px',
     cursor: 'pointer',
-    marginTop: '20px',
+    boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
+    transition: 'background-color 0.3s',
+  },
+  loadingContainer: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    padding: '20px',
+    textAlign: 'center',
+  },
+  spinner: {
+    border: '4px solid #f3f3f3',
+    borderTop: '4px solid #0077cc',
+    borderRadius: '50%',
+    width: '30px',
+    height: '30px',
+    animation: 'spin 1s linear infinite',
+  },
+  emptyCartMessage: {
+    textAlign: 'center',
+    fontSize: '20px',
+    color: 'black',
   },
 };
 

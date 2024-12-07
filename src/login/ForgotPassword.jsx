@@ -68,7 +68,7 @@ function ForgotPassword() {
                     <img src={signup} alt="Forgot Password visual" />
                 </div>
                 <div className="auth-form">
-                    <h1>FASCO</h1>
+                    <h1>BuySwift</h1>
                     <h2>Forgot Password</h2>
 
                     <div>
