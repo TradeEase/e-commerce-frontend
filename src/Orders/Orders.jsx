@@ -75,14 +75,12 @@ const Orders = () => {
     return <div>{error}</div>;
   }
 
-  return (
+ return (
+  <div className="orders-wrapper">
+    <h2 className="orders-header">My Orders</h2>
     <div className="orders-container">
-      <h2>My Orders</h2>
-
       {orders.map((order) => (
         <div key={order.orderId} className="order-card">
-
-
           <div className="order-details">
             {order.productDetails ? (
               <div className="order-item">
@@ -93,20 +91,24 @@ const Orders = () => {
                 <h4>{order.productDetails.name}</h4>
                 <p>Price: ${order.productDetails.price}</p>
                 <p>Quantity: {order.quantity}</p>
-                <p>Description:{order.productDetails.description}</p>
+                <p>Description: {order.productDetails.description}</p>
               </div>
             ) : (
               <p>Product details not available</p>
             )}
           </div>
-
-          <button className="cancel-order" onClick={() => cancelOrder(order.orderId)}>
+          <button
+            className="cancel-order"
+            onClick={() => cancelOrder(order.orderId)}
+          >
             Cancel Order
           </button>
         </div>
       ))}
     </div>
-  );
+  </div>
+);
 };
+
 
 export default Orders;
