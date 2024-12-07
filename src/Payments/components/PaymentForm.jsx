@@ -76,7 +76,7 @@ const CheckoutForm = ({ amount, onSuccess, onError }) => {
                     disabled={!stripe || loading}
                     className="w-full px-6 py-3 font-semibold text-white transition-colors bg-blue-600 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50"
                 >
-                    {loading ? 'Processing...' : `Pay $${(amount / 100).toFixed(2)}`}
+                    {loading ? 'Processing...' : `Pay $${(amount).toFixed(2)}`}
                 </button>
             </div>
         </form>
