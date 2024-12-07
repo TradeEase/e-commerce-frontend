@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import PaymentForm from './components/PaymentForm';
 import { ShoppingBag, CheckCircle, XCircle } from 'lucide-react';
+import './Payment.css';
 
 function Payments1() {
   const location = useLocation();
