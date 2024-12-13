@@ -47,7 +47,7 @@ const AdminCreationPage = () => {
       // Make a PUT request to update the admin on the backend
       Axios.post(`http://localhost:8088/auth/update`, formData)
         .then((response) => {
-          alert(response.data.message);
+          alert("Admin updated successfully!");
           setIsEditing(false);
           setEditIndex(null);
         })
@@ -62,7 +62,7 @@ const AdminCreationPage = () => {
       // Make a POST request to create a new admin on the backend
       Axios.post('http://localhost:8088/auth/update', newAdmin)
         .then((response) => {
-          alert(response.data.message);
+          alert("Admin created successfully!");
         })
         .catch((error) => {
           console.error('Error creating admin:', error);

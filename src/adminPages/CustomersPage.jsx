@@ -82,7 +82,7 @@ const CustomersPage = () => {
 
   const handleDelete = async (index) => {
     try {
-      const response = await axios.delete(`http://localhost:8080/deleteCustomer/${customers[index].id}`);
+      const response = await axios.delete(`http://localhost:8088/auth/delete/${customers[index].id}`);
       if (response.status === 200) {
         const updatedCustomers = customers.filter((_, i) => i !== index);
         setCustomers(updatedCustomers);
