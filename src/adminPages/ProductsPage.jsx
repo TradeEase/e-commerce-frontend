@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Select from 'react-select'; // Import React Select for dropdown
-
+import "./ProductPage.css";
 import Navbar from './components/Navbar';
 import axios from 'axios';
 const categoriesOptions = [
@@ -118,27 +118,35 @@ const ProductCreationPage = () => {
 
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
+  e.preventDefault();
 
-    const productData = {
-      ...formData,
-
-      review_id: defaultReviewId, // Ensure review_id is always included
-      categories: formData.categories || [], // Ensure categories is never undefined
-    };
-
-    try {
-      if (isEditing) {
-        await axios.put(`${API_URL}/${formData.productId}`, productData);
-      } else {
-        await axios.post(API_URL, productData);
-      }
-      fetchProducts(); // Refresh product list
-      resetForm();
-    } catch (error) {
-      console.error('Error saving product:', error);
-    }
+  // Prepare product data
+  const productData = {
+    name: formData.name,
+    price: parseFloat(formData.price),
+    quantity: parseInt(formData.quantity, 10),
+    description: formData.description,
+    categories: formData.categories,
+    review_id: defaultReviewId, // Ensure the review ID is included
   };
+
+  try {
+    if (isEditing) {
+      // Update existing product
+      await axios.put(`${API_URL}/${formData.productId}`, productData);
+    } else {
+      // Add new product
+      await axios.post(API_URL, productData);
+    }
+    // Refresh product list and reset form
+    fetchProducts();
+    resetForm();
+  } catch (error) {
+    console.error("Error saving product:", error.response?.data || error.message);
+    alert(`Error: ${error.response?.data?.message || error.message}`);
+  }
+};
+
 
 
   const handleSave = async () => {
@@ -147,10 +155,13 @@ const ProductCreationPage = () => {
       name: formData.name,
       price: parseFloat(formData.price),
       quantity: parseInt(formData.quantity, 10),
+      description: formData.description,
       image: formData.image, // Ensure the image URL or object is passed
       categories: formData.categories,
       review_id: defaultReviewId, // Set the default review ID if needed
     };
+
+    console.log('Product Data:', productData);
 
     // Check if the productId is valid and other required fields are present
     if (formData.productId && formData.name && formData.price && formData.quantity) {
@@ -233,282 +244,73 @@ const ProductCreationPage = () => {
     }
   };
 
-  // Styles
-  const styles = {
-    container: {
-      display: 'flex',
-      minHeight: '100vh',
-      position: 'relative',
-    },
-    content: {
-      flex: 1,
-      marginLeft: '100px',
-      padding: '20px',
-    },
-    buttonContainer: {
-      position: 'absolute',
-      top: '100px',
-      right: '20px',
-      zIndex: 1000,
-    },
-    button: {
-      width: '150px',
-      padding: '10px',
-      backgroundColor: 'blue',
-      color: 'white',
-      border: 'none',
-      borderRadius: '4px',
-      cursor: 'pointer',
-    },
-    formOverlay: {
-      position: 'fixed',
-      top: 0,
-      left: 0,
-      width: '100%',
-      height: '100%',
-      backgroundColor: 'rgba(0, 0, 0, 0.5)',
-      display: 'flex',
-      justifyContent: 'center',
-      alignItems: 'center',
-    },
-    formContainer: {
-      maxWidth: '600px',
-      padding: '20px',
-      backgroundColor: '#fff',
-      borderRadius: '8px',
-      boxShadow: '0 0 10px rgba(0,0,0,0.1)',
-    },
-    formHeader: {
-      textAlign: 'center',
-      marginBottom: '30px',
-    },
-    formGroup: {
-      display: 'flex',
-      alignItems: 'center',
-      marginBottom: '15px',
-    },
-    label: {
-      width: '150px',
-      marginRight: '20px',
-      fontWeight: 'bold',
-    },
-    input: {
-      width: '100%',
-      padding: '8px',
-      borderRadius: '4px',
-      border: '1px solid #ddd',
-    },
-    buttonContainerForm: {
-      textAlign: 'center',
-      marginTop: '30px',
-    },
-    table: {
-      width: '100%',
-      marginTop: '150px',
-
-      borderCollapse: 'collapse',
-    },
-    tableHeader: {
-      backgroundColor: '#f4f4f4',
-      fontWeight: 'bold',
-    },
-    tableCell: {
-      border: '1px solid #ddd',
-      padding: '8px',
-      textAlign: 'center',
-    },
-    actionButton: {
-      margin: '0 5px',
-      padding: '5px 10px',
-      border: 'none',
-      borderRadius: '4px',
-      cursor: 'pointer',
-    },
-  };
-
+  
 
   return (
-    <div style={styles.container}>
-      <Navbar />
-      <div style={styles.buttonContainer}>
-        <button style={styles.button} onClick={() => setShowForm(true)}>
-          Add New Product
-        </button>
-      </div>
-      <div style={styles.content}>
-        {products.length > 0 && (
-          <table style={styles.table}>
-            <thead style={styles.tableHeader}>
-              <tr>
-                <th style={styles.tableCell}>Product ID</th>
-                <th style={styles.tableCell}>Product Name</th>
-                <th style={styles.tableCell}>Description</th>
-                <th style={styles.tableCell}>Image</th>
-                <th style={styles.tableCell}>Price</th>
-                <th style={styles.tableCell}>Quantity</th>
-                <th style={styles.tableCell}>Categories</th>
-                <th style={styles.tableCell}>Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {products.map((product, index) => (
-                <tr key={index}>
-                  <td style={styles.tableCell}>{product.productId}</td>
-                  <td style={styles.tableCell}>{product.name}</td>
-                  <td style={styles.tableCell}>{product.description}</td>
-                  <td style={styles.tableCell}>
-                    {product.image ? (
-                      <img
-                        src={product.image}
-                        alt="Product"
-                        style={{ maxWidth: '100px', height: 'auto' }}
-                      />
-                    ) : (
-                      'No Image'
-                    )}
-                  </td>
-                  <td style={styles.tableCell}>{product.price}</td>
-                  <td style={styles.tableCell}>{product.quantity}</td>
-                  <td style={styles.tableCell}>{product.categories}</td>
-                  <td style={styles.tableCell}>
-                    <button
-                      style={{ ...styles.actionButton, backgroundColor: 'green', color: 'white' }}
-                      onClick={() => handleEdit(index)}
-                    >
-                      Edit
-                    </button>
-                    <button
-                      style={{ ...styles.actionButton, backgroundColor: 'red', color: 'white' }}
-                      onClick={() => handleDelete(index)}
-                    >
-                      Delete
-                    </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-
-          </table>
-        )}
-        {showForm && (
-          <div style={styles.formOverlay}>
-            <div style={styles.formContainer}>
-              <h2 style={styles.formHeader}>
-                {isEditing ? "Edit Product" : "Add New Product"}
-              </h2>
-              <form onSubmit={handleSubmit}>
-                <div style={styles.formGroup}>
-                  <label style={styles.label}>Product Name:</label>
-                  <input
-                    type="text"
-                    name="name"
-                    value={formData.name}
-                    onChange={handleChange}
-                    style={styles.input}
-                    required
+    <div className="container">
+  <Navbar />
+  <div className="button-container">
+    <button className="button" onClick={() => setShowForm(true)}>
+      Add New Product
+    </button>
+  </div>
+  <div className="content">
+    {products.length > 0 && (
+      <table className="table">
+        <thead className="table-header">
+          <tr>
+            <th className="table-cell">Product ID</th>
+            <th className="table-cell">Product Name</th>
+            <th className="table-cell">Description</th>
+            <th className="table-cell">Image</th>
+            <th className="table-cell">Price</th>
+            <th className="table-cell">Quantity</th>
+            <th className="table-cell">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {products.map((product, index) => (
+            <tr key={index}>
+              <td className="table-cell">{product.productId}</td>
+              <td className="table-cell">{product.name}</td>
+              <td className="table-cell">{product.description}</td>
+              <td className="table-cell">
+                {product.image ? (
+                  <img
+                    src={product.image}
+                    alt="Product"
+                    style={{ maxWidth: '100px', height: 'auto' }}
                   />
-                </div>
-                <div style={styles.formGroup}>
-                  <label style={styles.label}>Description:</label>
-                  <input
-                    type="text"
-                    name="description"
-                    value={formData.description}
-                    onChange={handleChange}
-                    style={styles.input}
-                    required
-                  />
-                </div>
-                <div style={styles.formGroup}>
-                  <label style={styles.label}>Image:</label>
-                  <input
-                    type="file"
-                    name="image"
-                    onChange={handleImageChange}
-                    style={styles.input}
-                    accept="image/*"
-                  />
-                </div>
-                {imagePreview && (
-                  <div style={{ textAlign: 'center', marginBottom: '15px' }}>
-                    <img
-                      src={imagePreview}
-                      alt="Preview"
-                      style={{ maxWidth: '100px', maxHeight: '100px' }}
-                    />
-                  </div>
+                ) : (
+                  'No Image'
                 )}
+              </td>
+              <td className="table-cell">{product.price}</td>
+              <td className="table-cell">{product.quantity}</td>
+              <td className="table-cell">
+                <button
+                  className="action-button"
+                  style={{ backgroundColor: 'green', color: 'white' }}
+                  onClick={() => handleEdit(index)}
+                >
+                  Edit
+                </button>
+                <button
+                  className="action-button"
+                  style={{ backgroundColor: 'red', color: 'white' }}
+                  onClick={() => handleDelete(index)}
+                >
+                  Delete
+                </button>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    )}
+  </div>
+</div>
 
-                <div style={styles.formGroup}>
-                  <label style={styles.label}>Price:</label>
-                  <input
-                    type="number"
-                    name="price"
-                    value={formData.price}
-                    onChange={handleChange}
-                    style={styles.input}
-                    required
-                  />
-                </div>
-                <div style={styles.formGroup}>
-                  <label style={styles.label}>Quantity:</label>
-                  <input
-                    type="number"
-                    name="quantity"
-                    value={formData.quantity}
-                    onChange={handleChange}
-                    style={styles.input}
-                    required
-                  />
-                </div>
-                <div style={styles.formGroup}>
-                  <label style={styles.label}>Categories:</label>
-                  <Select
-                    isMulti
-                    name="categories"
-                    options={categoriesOptions}
-                    value={categoriesOptions.filter((option) =>
-                      formData.categories?.includes(option.value) // Use optional chaining to safely access categories
-                    )}
-                    onChange={(selectedOptions) => {
-                      const selectedValues = selectedOptions.map((option) => option.value);
-                      setFormData({ ...formData, categories: selectedValues });
-                    }}
-                    className="basic-multi-select"
-                    classNamePrefix="select"
-                  />
-
-                </div>
-                <div style={styles.buttonContainerForm}>
-                  <button
-                    type="submit"
-                    style={{ ...styles.actionButton, backgroundColor: 'blue', color: 'white' }}
-                    onClick={(e) => {
-                      e.preventDefault();
-                      if (isEditing) {
-                        handleSave(products[editIndex].productId); // Pass productId when editing
-                      } else {
-                        handleConfirmAddProduct(); // Add product when not editing
-                      }
-                    }}
-                  >
-                    {isEditing ? 'Save Changes' : 'Add Product'}
-                  </button>
-                  <button
-                    type="button"
-                    style={{ ...styles.actionButton, backgroundColor: 'grey', color: 'white' }}
-                    onClick={() => setShowForm(false)}
-                  >
-                    Cancel
-                  </button>
-                </div>
-              </form>
-
-            </div>
-          </div>
-        )}
-      </div>
-    </div>
   );
 };
 
