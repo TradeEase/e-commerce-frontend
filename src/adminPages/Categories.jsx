@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Navbar from './components/Navbar';
 
-const API_BASE_URL = 'http://localhost:8080/api/product/categories';
+const API_BASE_URL = 'http://gateway:8080/api/product/categories';
 
 const CategoriesPage = () => {
   const [formData, setFormData] = useState({

@@ -22,7 +22,7 @@ const CustomersPage = () => {
   // Fetch customers from the backend
   const fetchCustomers = async () => {
     try {
-      const response = await axios.get('http://localhost:8080/api/taskUserService/auth/getAllcustomersonly');
+      const response = await axios.get('http://gateway:8080/api/taskUserService/auth/getAllcustomersonly');
       setCustomers(response.data);
     } catch (error) {
       console.error('Error fetching customers:', error);
@@ -50,7 +50,7 @@ const CustomersPage = () => {
       updatedCustomer.mobile = formData.mobile;
       updatedCustomer.address = formData.address;
 
-      const response = await axios.post(`http://localhost:8080/api/taskUserService/auth/update`, updatedCustomer);
+      const response = await axios.post(`http://gateway:8080/api/taskUserService/auth/update`, updatedCustomer);
       if (response.status === 200) {
         const updatedCustomers = [...customers];
         updatedCustomers[editIndex] = updatedCustomer;
@@ -82,7 +82,7 @@ const CustomersPage = () => {
 
   const handleDelete = async (index) => {
     try {
-      const response = await axios.delete(`http://localhost:8080/api/taskUserService/auth/delete/${customers[index].id}`);
+      const response = await axios.delete(`http://gateway:8080/api/taskUserService/auth/delete/${customers[index].id}`);
       if (response.status === 200) {
         const updatedCustomers = customers.filter((_, i) => i !== index);
         setCustomers(updatedCustomers);

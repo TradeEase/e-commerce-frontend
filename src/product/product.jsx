@@ -37,7 +37,7 @@ const ProductDetails = () => {
   console.log(userId)
 
   useEffect(() => {
-    fetch(`http://localhost:8080/api/product/products/${productId}`)
+    fetch(`http://gateway:8080/api/product/products/${productId}`)
       .then((response) => {
         if (!response.ok) throw new Error("Failed to fetch product details.");
         return response.json();
@@ -50,7 +50,7 @@ const ProductDetails = () => {
     const fetchReviewsWithUserDetails = async () => {
       try {
         const response = await fetch(
-          `http://localhost:8080/api/product/reviews`
+          `http://gateway:8080/api/product/reviews`
         );
         if (!response.ok) throw new Error("Failed to fetch reviews.");
 
@@ -64,7 +64,7 @@ const ProductDetails = () => {
           filteredReviews.map(async (review) => {
             try {
               const userResponse = await fetch(
-                `http://localhost:8080/api/taskUserService/auth/get/${review.userId}`
+                `http://gateway:8080/api/taskUserService/auth/get/${review.userId}`
               );
               if (!userResponse.ok)
                 throw new Error("Failed to fetch user details.");
@@ -103,7 +103,7 @@ const ProductDetails = () => {
       comment: reviewComment,
     };
 
-    fetch("http://localhost:8080/api/product/reviews", {
+    fetch("http://gateway:8080/api/product/reviews", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -121,7 +121,7 @@ const ProductDetails = () => {
         setReviewComment("");
 
         // Optionally fetch updated reviews
-        fetch(`http://localhost:8083/api/product/reviews`)
+        fetch(`http://gateway:8083/api/product/reviews`)
           .then((response) => response.json())
           .then((data) => {
             const filteredReviews = data.filter(
@@ -154,7 +154,7 @@ const ProductDetails = () => {
     try {
       // Step 1: Get the cart ID for the user
       const cartResponse = await fetch(
-        `http://localhost:8082/api/order/carts/user/${userId}`
+        `http://gateway:8082/api/order/carts/user/${userId}`
       );
 
       if (!cartResponse.ok) {
@@ -173,7 +173,7 @@ const ProductDetails = () => {
       };
 
       const addCartItemResponse = await fetch(
-        "http://localhost:8080/api/orders/cartItems",
+        "http://gateway:8080/api/orders/cartItems",
         {
           method: "POST",
           headers: {

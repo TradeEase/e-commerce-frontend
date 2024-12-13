@@ -18,7 +18,7 @@ const Orders = () => {
         const userId = decodedToken.userId;
 
         // Fetch orders for the user
-        const ordersResponse = await axios.get(`http://localhost:8080/api/orders/user?userId=${userId}`);
+        const ordersResponse = await axios.get(`http://gateway:8080/api/orders/user?userId=${userId}`);
         const ordersData = ordersResponse.data;
 
         if (!ordersData || !Array.isArray(ordersData)) {
@@ -30,7 +30,7 @@ const Orders = () => {
           ordersData.map(async (order) => {
             try {
               const productResponse = await axios.get(
-                `http://localhost:8080/api/product/products/${Number(order.productId)}`
+                `http://gateway:8080/api/product/products/${Number(order.productId)}`
               );
               const productDetails = productResponse.data;
 

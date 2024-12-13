@@ -44,7 +44,7 @@ function Login() {
         if (validate()) {
             try {
                 // Step 1: Login request
-                const response = await axios.post('http://localhost:8080/api/taskUserService/auth/signin', formData, {
+                const response = await axios.post('http://gateway:8080/api/taskUserService/auth/signin', formData, {
                     headers: {
                         'Content-Type': 'application/json',
                     },
@@ -61,7 +61,7 @@ function Login() {
                         console.log('User ID:', decodedToken.userId);
 
                         // Step 2: Fetch user details
-                        const userDetailsResponse = await axios.get(`http://localhost:8080/api/taskUserService/auth/get/${decodedToken.userId}`, {
+                        const userDetailsResponse = await axios.get(`http://gateway:8080/api/taskUserService/auth/get/${decodedToken.userId}`, {
                             headers: {
                                 Authorization: `Bearer ${response.data.jwt}`,
                             },
@@ -80,7 +80,7 @@ function Login() {
                         // Optional: Cart creation logic
                         try {
                             const cartResponse = await axios.post(
-                                'http://localhost:8080/api/orders/carts',
+                                'http://gateway:8080/api/orders/carts',
                                 { userId: decodedToken.userId },
                                 {
                                     headers: {

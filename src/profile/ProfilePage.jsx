@@ -36,7 +36,7 @@ function ProfilePage() {
         setError(null);
         try {
           const response = await fetch(
-            `http://localhost:8080/api/taskUserService/auth/get/${userId}`
+            `http://gateway:8080/api/taskUserService/auth/get/${userId}`
           );
           if (!response.ok) throw new Error("Server Error");
           const data = await response.json();
@@ -62,7 +62,7 @@ function ProfilePage() {
     event.preventDefault();
     setIsLoading(true);
     try {
-      const response = await fetch(`http://localhost:8080/api/taskUserService/auth/update`, {
+      const response = await fetch(`http://gateway:8080/api/taskUserService/auth/update`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

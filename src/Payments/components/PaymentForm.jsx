@@ -28,7 +28,7 @@ const CheckoutForm = ({ amount, onSuccess, onError }) => {
             };
 
             // Send the data to the backend
-            const response = await fetch('http://localhost:8080/api/payments/create-payment', {
+            const response = await fetch('http://gateway:8080/api/payments/create-payment', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(paymentRequest),

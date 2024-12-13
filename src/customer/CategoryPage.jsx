@@ -11,7 +11,7 @@ function CategoryPage() {
     const fetchProducts = async () => {
       setLoading(true);
       try {
-        const response = await fetch(`http://localhost:8080/api/product/categories/${categoryId}`);
+        const response = await fetch(`http://gateway:8080/api/product/categories/${categoryId}`);
         if (!response.ok) {
           throw new Error('Server Error');
         }
