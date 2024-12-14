@@ -1,102 +1,163 @@
+/* General container for the entire page */
 .container {
   display: flex;
   min-height: 100vh;
-  position: relative;
 }
 
+
+
+/* Content area styles */
 .content {
   flex: 1;
-  margin-left: 100px;
+  margin-left: 50px;
+  margin-right: 50px;
+  padding: '20px';
+  margin-top: 50px;
+}
+
+/* Form styling */
+.product-form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 20px;
+  background: white;
   padding: 20px;
+  border-radius: 5px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
-.button-container {
-  position: absolute;
-  top: 100px;
-  right: 20px;
-  z-index: 1000;
-}
-
+/* Buttons */
 .button {
-  width: 150px;
-  padding: 10px;
-  background-color: blue;
+  position: absolute;
+  top: 70px;
+  right: 20px;
+  margin-bottom: 10px;
+  background-color: #3a0fd8;
   color: white;
+  padding: 10px 15px;
   border: none;
-  border-radius: 4px;
+  border-radius: 5px;
+  cursor: pointer;
+  z-index: 10; /* Ensures the button is above other elements */
+}
+
+.button:hover {
+  background-color: #2980b9;
+}
+
+/* Product table */
+.product-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  margin-top: 80px;
+}
+
+.product-table th, .product-table td {
+  padding: 10px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+
+.product-table th {
+  background-color: #e8edf1;
+  
+}
+
+.product-table tr:hover {
+  background-color: #f4f4f4;
+}
+
+.product-table img.table-image {
+  width: 50px;
+  height: 50px;
+  object-fit: cover;
+}
+
+/* Image preview */
+.image-preview {
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+  margin-top: 10px;
+}
+
+/* Edit and delete buttons */
+.edit {
+  background-color: #4caf50;
+  color: white;
+  padding: 5px 10px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-right: 5px;
+}
+
+.edit:hover {
+  background-color: #4caf50;
+}
+
+.delete {
+  background-color: #e74c3c;
+  color: white;
+  padding: 5px 10px;
+  border: none;
+  border-radius: 5px;
   cursor: pointer;
 }
 
-.form-overlay {
+.delete:hover {
+  background-color: #c0392b;
+}
+/* Modal.css */
+.modal-overlay {
   position: fixed;
   top: 0;
   left: 0;
-  width: 100%;
-  height: 100%;
+  right: 0;
+  bottom: 0;
   background-color: rgba(0, 0, 0, 0.5);
   display: flex;
   justify-content: center;
   align-items: center;
+  z-index: 1000;
 }
 
-.form-container {
-  max-width: 600px;
+.modal-content {
+  background-color: white;
   padding: 20px;
-  background-color: #fff;
   border-radius: 8px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  width: 80%;
+  max-width: 600px;
+  position: relative;
 }
 
-.form-header {
-  text-align: center;
-  margin-bottom: 30px;
-}
-
-.form-group {
-  display: flex;
-  align-items: center;
-  margin-bottom: 15px;
-}
-
-.label {
-  width: 150px;
-  margin-right: 20px;
-  font-weight: bold;
-}
-
-.input {
-  width: 100%;
-  padding: 8px;
-  border-radius: 4px;
-  border: 1px solid #ddd;
-}
-
-.button-container-form {
-  text-align: center;
-  margin-top: 30px;
-}
-
-.table {
-  width: 100%;
-  margin-top: 150px;
-  border-collapse: collapse;
-}
-
-.table-header {
-  background-color: #f4f4f4;
-  font-weight: bold;
-}
-
-.table-cell {
-  border: 1px solid #ddd;
-  padding: 8px;
-  text-align: center;
-}
-
-.action-button {
-  margin: 0 5px;
-  padding: 5px 10px;
+.modal-close {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background-color: red;
+  color: white;
   border: none;
-  border-radius: 4px;
+  padding: 5px;
   cursor: pointer;
+}
+
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .container {
+    flex-direction: column;
+  }
+
+  .navbar {
+    width: 100%;
+  }
+
+  .content {
+    width: 100%;
+    padding: 10px;
+  }
 }

@@ -1,42 +1,42 @@
 import React, { useState, useEffect } from 'react';
-import Select from 'react-select'; // Import React Select for dropdown
-import "./ProductPage.css";
-import Navbar from './components/Navbar';
 import axios from 'axios';
-const categoriesOptions = [
-  { value: 1, label: "Women's Wear" },
-  { value: 2, label: "Kids' Wear" },
-  { value: 3, label: "Swimwear" },
-  { value: 4, label: "Men's Wear" },
-  { value: 5, label: "Sarees" },
-  { value: 6, label: "Frocks" },
-];
-const defaultReviewId = '1';
+import './ProductPage.css';
+import Navbar from '../adminPages/components/Navbar';
+import Modal from 'react-modal';
 
+// Set the app element for the modal to work properly with accessibility
+Modal.setAppElement('#root');
 
 const ProductCreationPage = () => {
   const [formData, setFormData] = useState({
     productId: '',
     name: '',
     description: '',
-    image: null,
     price: '',
     quantity: '',
-    categories: [], // Ensure categories is initialized as an empty array
-
+    image: null,
+    categories: [],
   });
 
-
-
-  const [imagePreview, setImagePreview] = useState(null); // For previewing the image
+  const [imagePreview, setImagePreview] = useState(null);
   const [products, setProducts] = useState([]);
   const [isEditing, setIsEditing] = useState(false);
   const [editIndex, setEditIndex] = useState(null);
   const [showForm, setShowForm] = useState(false);
 
-  const API_URL = 'http://localhost:8083/api/product/products';
+  // Hardcoded categories
+  const categories = [
+    { id: 1, name: "Women's Wear" },
+    { id: 3, name: "Kids' Wear" },
+    { id: 4, name: "Swimwear" },
+    { id: 6, name: "Men's Wear" },
+    { id: 7, name: "Sarees" },
+    { id: 8, name: "Frocks" },
+    { id: 12, name: "Party Frocks" },
+  ];
 
-  // Fetch all products
+  const API_URL = 'http://localhost:8083/api/product/products';
+  // Fetch products
   const fetchProducts = async () => {
     try {
       const response = await axios.get(API_URL);
@@ -50,271 +50,218 @@ const ProductCreationPage = () => {
     fetchProducts();
   }, []);
 
-
-  const handleConfirmAddProduct = async () => {
-    try {
-      // Construct the product data in the expected format
-      const productData = {
-        productId: 0,
-        name: formData.name,
-        price: formData.price, // Set default value for invalid price
-        description: formData.description,
-        quantity: formData.quantity ? parseInt(formData.quantity, 10) : 0, // Set default value for invalid quantity
-        image: formData.image,
-        categories: formData.categories.length > 0 ? formData.categories : [0], // Handle empty categories
-        review: defaultReviewId,
-      };
-
-
-      console.log('Form Data before request:', productData);
-
-      const response = await axios.post(API_URL, productData);
-
-      // Add new product to state
-      setProducts([...products, { ...productData, productId: response.data }]);
-
-      // Reset the form
-      setFormData({ name: '', productId: '', description: '', price: '', quantity: '', image: '', categories: [] });
-      setImagePreview(null);
-
-    } catch (error) {
-      console.error('Error adding product:', error.response?.data || error.message); // Log backend response
-    }
-  };
-
-
+  // Handle form input change
   const handleChange = (e) => {
-
     const { name, value } = e.target;
-    setFormData({
-      ...formData,
-      [name]: value,
-    });
+    setFormData({ ...formData, [name]: value });
   };
 
+  // Handle category change (multiple categories)
+  const handleCategoryChange = (e) => {
+    const selectedCategories = Array.from(e.target.selectedOptions, (option) => option.value);
+    setFormData({ ...formData, categories: selectedCategories });
+  };
+
+  // Handle image change
   const handleImageChange = async (e) => {
     const file = e.target.files[0];
     if (file) {
-      setImagePreview(URL.createObjectURL(file)); // Generate a preview URL
+      setImagePreview(URL.createObjectURL(file));
 
-      // Upload to Cloudinary
-      const formData = new FormData();
-      formData.append('file', file);
-      formData.append('upload_preset', 'BuySwift'); // Replace with your upload preset
+      const imageFormData = new FormData();
+      imageFormData.append('file', file);
+      imageFormData.append('upload_preset', 'BuySwift'); // Replace with your upload preset
 
       try {
         const response = await axios.post(
           'https://api.cloudinary.com/v1_1/dglwbdnlt/image/upload',
-          formData
+          imageFormData
         );
-        setFormData({ ...formData, image: response.data.secure_url }); // Save the Cloudinary URL
-        console.log('Uploaded image URL:', response.data.secure_url);
+        setFormData({ ...formData, image: response.data.secure_url });
       } catch (error) {
-        console.error('Error uploading image to Cloudinary:', error);
+        console.error('Error uploading image:', error);
       }
     }
   };
 
-
-
+  // Handle form submission
   const handleSubmit = async (e) => {
-  e.preventDefault();
-
-  // Prepare product data
-  const productData = {
-    name: formData.name,
-    price: parseFloat(formData.price),
-    quantity: parseInt(formData.quantity, 10),
-    description: formData.description,
-    categories: formData.categories,
-    review_id: defaultReviewId, // Ensure the review ID is included
-  };
-
-  try {
-    if (isEditing) {
-      // Update existing product
-      await axios.put(`${API_URL}/${formData.productId}`, productData);
-    } else {
-      // Add new product
-      await axios.post(API_URL, productData);
-    }
-    // Refresh product list and reset form
-    fetchProducts();
-    resetForm();
-  } catch (error) {
-    console.error("Error saving product:", error.response?.data || error.message);
-    alert(`Error: ${error.response?.data?.message || error.message}`);
-  }
-};
-
-
-
-  const handleSave = async () => {
-    // Construct the productData object using formData
+    e.preventDefault();
     const productData = {
       name: formData.name,
       price: parseFloat(formData.price),
       quantity: parseInt(formData.quantity, 10),
       description: formData.description,
-      image: formData.image, // Ensure the image URL or object is passed
-      categories: formData.categories,
-      review_id: defaultReviewId, // Set the default review ID if needed
+      image: formData.image,
+      categories: formData.categories,  // Pass selected categories (multiple)
     };
 
-    console.log('Product Data:', productData);
-
-    // Check if the productId is valid and other required fields are present
-    if (formData.productId && formData.name && formData.price && formData.quantity) {
-      try {
-        // Make the PUT request with the productData object
-        const response = await axios.put(
-          `http://localhost:8083/api/product/products/${formData.productId}`, // Use the productId from formData
-          productData
-        );
-        console.log('Product updated successfully:', response.data);
-
-        // Refresh the product list after successful update
-        fetchProducts();
-
-        // Reset the form
-        resetForm();
-      } catch (error) {
-        console.error('Error updating product:', error.response?.data || error.message);
-        alert(`Error: ${error.response?.data?.message || error.message}`);
+    try {
+      if (isEditing) {
+        await axios.put(`${API_URL}/${formData.productId}`, productData);
+      } else {
+        await axios.post(API_URL, productData);
       }
-    } else {
-      alert('Please ensure all required fields are filled out.');
+      fetchProducts(); // Refresh the product list
+      resetForm();
+      setShowForm(false); // Close the modal after submitting
+    } catch (error) {
+      console.error('Error saving product:', error);
     }
   };
 
+  const handleEdit = (index) => {
+    const product = products[index];
+    setFormData({ ...product });
+    setImagePreview(product.image);
+    setIsEditing(true);
+    setEditIndex(index);
+    setShowForm(true);
+  };
 
+  const handleDelete = async (index) => {
+    const productId = products[index]?.productId;
+    if (!productId) return;
 
+    try {
+      await axios.delete(`${API_URL}/${productId}`);
+      fetchProducts(); // Refresh the product list
+    } catch (error) {
+      console.error('Error deleting product:', error);
+    }
+  };
 
   const resetForm = () => {
     setFormData({
       productId: '',
       name: '',
       description: '',
-      image: null,
       price: '',
       quantity: '',
+      image: null,
       categories: [],
-      review_id: defaultReviewId, // Always include the default review ID
     });
     setImagePreview(null);
     setIsEditing(false);
-    setShowForm(false);
   };
-
-
-
-  const handleEdit = (index) => {
-    const product = products[index];
-    setFormData({
-      ...product,
-      categories: product.categories || [], // Ensure categories is an array
-    });
-    setImagePreview(product.image || null);
-    setIsEditing(true);
-    setEditIndex(index);
-    setShowForm(true);
-  };
-
-
-
-
-  const handleDelete = async (index) => {
-    // Get the product ID from the product at the given index
-    const productId = products[index]?.productId;
-
-    if (!productId) {
-      console.error('Product ID not found');
-      return;
-    }
-
-    // Remove the product from the local state
-    const updatedProducts = products.filter((_, i) => i !== index);
-    setProducts(updatedProducts);
-
-    try {
-      // Make the delete request using the product ID
-      await axios.delete(`${API_URL}/${productId}`);
-    } catch (error) {
-      console.error('Error deleting product:', error);
-    }
-  };
-
-  
 
   return (
     <div className="container">
-  <Navbar />
-  <div className="button-container">
-    <button className="button" onClick={() => setShowForm(true)}>
-      Add New Product
-    </button>
-  </div>
-  <div className="content">
-    {products.length > 0 && (
-      <table className="table">
-        <thead className="table-header">
-          <tr>
-            <th className="table-cell">Product ID</th>
-            <th className="table-cell">Product Name</th>
-            <th className="table-cell">Description</th>
-            <th className="table-cell">Image</th>
-            <th className="table-cell">Price</th>
-            <th className="table-cell">Quantity</th>
-            <th className="table-cell">Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          {products.map((product, index) => (
-            <tr key={index}>
-              <td className="table-cell">{product.productId}</td>
-              <td className="table-cell">{product.name}</td>
-              <td className="table-cell">{product.description}</td>
-              <td className="table-cell">
-                {product.image ? (
-                  <img
-                    src={product.image}
-                    alt="Product"
-                    style={{ maxWidth: '100px', height: 'auto' }}
-                  />
-                ) : (
-                  'No Image'
-                )}
-              </td>
-              <td className="table-cell">{product.price}</td>
-              <td className="table-cell">{product.quantity}</td>
-              <td className="table-cell">
-                <button
-                  className="action-button"
-                  style={{ backgroundColor: 'green', color: 'white' }}
-                  onClick={() => handleEdit(index)}
-                >
-                  Edit
-                </button>
-                <button
-                  className="action-button"
-                  style={{ backgroundColor: 'red', color: 'white' }}
-                  onClick={() => handleDelete(index)}
-                >
-                  Delete
-                </button>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    )}
-  </div>
-</div>
+      {/* Navbar */}
+      <Navbar />
 
+      {/* Content Area */}
+      <div className="content">
+        {/* Add New Product button */}
+        <button className="button" onClick={() => setShowForm(true)}>
+          Add New Product
+        </button>
+
+        {/* Modal for adding/editing product */}
+        <Modal
+          isOpen={showForm}
+          onRequestClose={() => setShowForm(false)}
+          contentLabel="Product Form"
+          className="modal"
+          overlayClassName="overlay"
+        >
+          <h2>{isEditing ? 'Edit Product' : 'Add New Product'}</h2>
+          <form className="product-form" onSubmit={handleSubmit}>
+            <input
+              type="text"
+              name="name"
+              placeholder="Product Name"
+              value={formData.name}
+              onChange={handleChange}
+              required
+            />
+            <textarea
+              name="description"
+              placeholder="Product Description"
+              value={formData.description}
+              onChange={handleChange}
+              required
+            />
+            <input
+              type="number"
+              name="price"
+              placeholder="Price"
+              value={formData.price}
+              onChange={handleChange}
+              required
+            />
+            <input
+              type="number"
+              name="quantity"
+              placeholder="Quantity"
+              value={formData.quantity}
+              onChange={handleChange}
+              required
+            />
+            <input type="file" onChange={handleImageChange} />
+            {imagePreview && <img src={imagePreview} alt="Preview" className="image-preview" />}
+
+            {/* Categories selection (multiple selection) */}
+            <select
+              name="categories"
+              multiple
+              value={formData.categories}
+              onChange={handleCategoryChange}
+              required
+            >
+              {categories.map((category) => (
+                <option key={category.id} value={category.id}>
+                  {category.name}
+                </option>
+              ))}
+            </select>
+
+            <button type="submit">{isEditing ? 'Update' : 'Add'} Product</button>
+            <button type="button" onClick={() => setShowForm(false)}>Cancel</button>
+          </form>
+        </Modal>
+
+        {/* Product Table */}
+        {products.length > 0 && (
+          <table className="product-table">
+            <thead>
+              <tr>
+                <th>Product Name</th>
+                <th>Description</th>
+                <th>Price</th>
+                <th>Quantity</th>
+                <th>Image</th>
+                <th>Categories</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {products.map((product, index) => (
+                <tr key={index}>
+                  <td>{product.name}</td>
+                  <td>{product.description}</td>
+                  <td>{product.price}</td>
+                  <td>{product.quantity}</td>
+                  <td>
+                    {product.image ? (
+                      <img src={product.image} alt="Product" className="table-image" />
+                    ) : (
+                      'No Image'
+                    )}
+                  </td>
+                  <td>{product.categories.join(', ')}</td>
+                  <td>
+                    <button className="edit" onClick={() => handleEdit(index)}>Edit</button>
+                    <button className="delete" onClick={() => handleDelete(index)}>Delete</button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
+      </div>
+    </div>
   );
 };
 
 export default ProductCreationPage;
-
-
-
